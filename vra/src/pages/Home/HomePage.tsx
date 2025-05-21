@@ -24,7 +24,8 @@ import RegisterForm, {
   RegisterFormData,
 } from "../../components/Auth/RegisterForm";
 import { apiConfig } from "../../api/config";
-import { AuroraBackground } from "../../components/lib-animated/AuroraBackground";
+import { TextHoverEffect } from "../../components/lib-animated/text-hover-effect";
+import RotatingText from "../../components/lib-animated/RoatingText";
 
 // Define the context type from MainLayout
 type MainLayoutContext = {
@@ -326,234 +327,252 @@ const HomePage: React.FC = () => {
       <div className="w-full main-content">
         {/* Hero Section */}
         <section className="hero-section w-full flex items-center justify-center overflow-hidden relative bg-slate-900">
-            <div className="max-w-7xl mx-auto px-6 md:px-8 w-full py-8 md:py-12 z-99">
-              <div className="flex flex-col md:flex-row items-center justify-between gap-8 lg:gap-12">
-                <div className="w-full md:w-1/2 pt-4 animate-slideUp">
-                  <div className="mb-8 md:mb-12">
-                    <h1 className="text-white font-bold text-4xl md:text-5xl lg:text-6xl mb-3 hero-text leading-tight">
-                      Nền tảng học tập
-                      <span className="block mt-2">cho em trẻ mắc chứng</span>
-                      <span style={{ color: "#50EDD1" }}>tự kỷ</span>
-                    </h1>
-                  </div>
-  
-                  <div
-                    className="flex flex-col space-y-3 mb-10"
-                    data-aos="stagger"
-                  >
-                    {[
-                      "Tự tin giao tiếp",
-                      "Khơi dậy đam mê khám phá",
-                      "Quản lý dễ dàng, chăm sóc tận tâm",
-                      "Ứng dụng công nghệ, nâng cao chất lượng",
-                    ].map((item, idx) => (
-                      <div
-                        key={idx}
-                        className="inline-flex items-center bg-blue-950 bg-opacity-70 px-5 py-3 rounded-lg transform transition-all duration-500 hover:scale-105 hover:bg-opacity-90"
-                      >
-                        <CheckCircle className="text-white mr-3 h-5 w-5 flex-shrink-0" />
-                        <span className="text-white text-base">{item}</span>
-                      </div>
-                    ))}
-                  </div>
-  
-                  <div className="flex flex-wrap gap-4">
-                    <button
-                      onClick={scrollToLoginForm}
-                      className="btn btn-primary text-white font-bold px-6 py-3 rounded-full flex items-center shadow-lg hover:shadow-xl transition-all duration-500 transform hover:scale-105"
-                    >
-                      Bắt đầu ngay
-                      <ChevronRight className="ml-1 h-5 w-5" />
-                    </button>
-                    <a
-                      href="#features"
-                      className="btn text-white border-2 border-white font-bold px-6 py-3 rounded-full transition-all duration-500"
-                    >
-                      Tìm hiểu thêm
-                    </a>
-                  </div>
+          <div className="max-w-7xl mx-auto px-6 md:px-8 w-full py-8 md:py-12 z-99">
+            <div className="flex flex-col md:flex-row items-center justify-between gap-8 lg:gap-12">
+              <div className="w-full md:w-1/2 pt-4 animate-slideUp">
+                <div className="mb-8 md:mb-12">
+                  <h1 className="text-white font-bold text-4xl md:text-5xl lg:text-6xl mb-3 hero-text leading-tight">
+                    Nền tảng học tập
+                    <span className="block mt-2">cho em trẻ mắc chứng</span>
+                    {/* <span style={{ color: "#50EDD1" }}>tự kỷ</span> */}
+                    <RotatingText
+                      texts={['tự kỷ', 'chậm nói', 'chậm nhận thức', 'chậm phản xạ']}
+                      mainClassName="px-2 sm:px-2.5 md:px-3 bg-cyan-300 text-black overflow-hidden py-0.5 sm:py-1 md:py-2 flex justify-center rounded-lg mt-4 leading-[65px]"
+                      staggerFrom={"last"}
+                      initial={{ y: "100%", opacity: 0 }}
+                      animate={{ y: 0, opacity: 1 }}
+                      exit={{ y: "-120%", opacity: 0 }}
+                      staggerDuration={0.020}
+                      splitLevelClassName="overflow-hidden pb-0.5 sm:pb-1 md:pb-1 flex justify-center"
+                      transition={{ 
+                        type: "spring", 
+                        damping: 30, 
+                        stiffness: 400,
+                        duration: 0.5
+                      }}
+                      rotationInterval={3000}
+                    />
+                  </h1>
+
                 </div>
-  
-                {/* Right side content */}
-                <div className="w-full md:w-5/12 mt-8 md:mt-0">
-                  {isLoggedIn ? (
-                    <div className="bg-white/10 backdrop-blur-lg p-6 rounded-2xl animate-slideInRight">
-                      <div className="flex items-center gap-4 mb-6">
-                        <div className="h-16 w-16 rounded-full bg-primary-color flex items-center justify-center">
-                          <User className="h-8 w-8 text-white" />
-                        </div>
-                        <div>
-                          <h3 className="text-white text-xl font-bold">
-                            {user?.username}
-                          </h3>
-                          <p className="text-blue-100">
-                            Phụ huynh của {childData.name}
-                          </p>
-                        </div>
-                      </div>
-  
-                      <div className="bg-white/5 p-4 rounded-xl mb-6">
-                        <h4 className="text-white font-semibold mb-3">
-                          Thông tin học sinh
-                        </h4>
-                        <div className="flex items-center gap-4">
-                          <div className="h-12 w-12 rounded-full bg-accent-color flex items-center justify-center">
-                            <User className="h-6 w-6 text-white" />
-                          </div>
-                          <div>
-                            <h5 className="text-white font-medium">
-                              {childData.name}
-                            </h5>
-                            <p className="text-blue-100">{childData.age} tuổi</p>
-                          </div>
-                        </div>
-                      </div>
-  
-                      <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
-                        <div className="bg-white/5 p-4 rounded-xl">
-                          <h4 className="text-white font-semibold mb-2">
-                            Buổi học đã tham gia
-                          </h4>
-                          <p className="text-2xl text-white font-bold">
-                            {childData.sessionsCompleted}
-                          </p>
-                        </div>
-                        <div className="bg-white/5 p-4 rounded-xl">
-                          <h4 className="text-white font-semibold mb-2">
-                            Điểm trung bình học tập
-                          </h4>
-                          <p className="text-2xl text-white font-bold">
-                            {childData.averageScore}
-                          </p>
-                        </div>
-                        <div className="bg-white/5 p-4 rounded-xl">
-                          <h4 className="text-white font-semibold mb-2">
-                            Tổng thời gian học
-                          </h4>
-                          <p className="text-2xl text-white font-bold">
-                            {childData.totalStudyTime}h
-                          </p>
-                        </div>
-                      </div>
-  
-                      <div className="flex justify-end">
-                        <button
-                          onClick={() => alert("Chức năng đang được phát triển")}
-                          className="btn text-white border-2 border-white font-bold px-6 py-2 rounded-full transition-all duration-500 hover:bg-white/10"
-                        >
-                          Xem chi tiết
-                        </button>
-                      </div>
-                    </div>
-                  ) : (
+
+                <div
+                  className="flex flex-col space-y-3 mb-10"
+                  data-aos="stagger"
+                >
+                  {[
+                    "Tự tin giao tiếp",
+                    "Khơi dậy đam mê khám phá",
+                    "Quản lý dễ dàng, chăm sóc tận tâm",
+                    "Ứng dụng công nghệ, nâng cao chất lượng",
+                  ].map((item, idx) => (
                     <div
-                      id="login-form"
-                      className="hero-login-container animate-slideInRight"
+                      key={idx}
+                      className="inline-flex items-center bg-blue-950 bg-opacity-70 px-5 py-3 rounded-lg transform transition-all duration-500 hover:scale-105 hover:bg-opacity-90"
                     >
-                      <div className="bg-white/10 backdrop-blur-lg p-2 md:p-3 rounded-3xl shadow-2xl transform transition-all duration-500 hover:scale-[1.02]">
-                        <div className="bg-white p-6 rounded-2xl">
-                          <h2 className="text-gray-900 text-xl font-bold mb-5">
-                            Học giao tiếp và khám phá thế giới với VRA
-                          </h2>
-  
-                          <div className="space-y-4 mb-5">
-                            <div className="form-input flex items-center border-2 border-gray-200 rounded-lg px-4 py-3 focus-within:border-primary-color transition-all duration-300">
-                              <User className="h-5 w-5 text-gray-400 mr-3" />
-                              <input
-                                type="email"
-                                placeholder="Email*"
-                                value={email}
-                                onChange={(e) => setEmail(e.target.value)}
-                                className="flex-1 text-gray-800 bg-transparent border-0 focus:outline-none"
-                              />
-                            </div>
-  
-                            <div className="space-y-2">
-                              <div className="form-input flex items-center border-2 border-gray-200 rounded-lg px-4 py-3 focus-within:border-primary-color transition-all duration-300">
-                                <input
-                                  type={showPassword ? "text" : "password"}
-                                  placeholder="Mật khẩu*"
-                                  value={password}
-                                  onChange={(e) => setPassword(e.target.value)}
-                                  className="flex-1 text-gray-800 bg-transparent border-0 focus:outline-none"
-                                />
-                                <button
-                                  onClick={() => setShowPassword(!showPassword)}
-                                  className="text-gray-500 hover:text-primary-color transition-colors duration-300"
-                                >
-                                  {showPassword ? (
-                                    <Eye className="h-5 w-5" />
-                                  ) : (
-                                    <EyeOff className="h-5 w-5" />
-                                  )}
-                                </button>
-                              </div>
-                              <div className="text-right">
-                                <button
-                                  className="text-primary-color text-sm hover:underline transition-all duration-300 border-none bg-transparent cursor-pointer"
-                                  onClick={() =>
-                                    alert("Chức năng đang được phát triển")
-                                  }
-                                >
-                                  Quên mật khẩu?
-                                </button>
-                              </div>
-                            </div>
-  
-                            <button
-                              className="btn btn-primary text-white font-bold w-full py-3 rounded-lg hover:bg-primary-light transform hover:scale-[1.02] transition-all duration-300 shadow-md hover:shadow-lg"
-                              onClick={handleLogin}
-                            >
-                              Đăng nhập
-                            </button>
-                          </div>
-  
-                          <div className="mb-5">
-                            <div className="flex items-center mb-3">
-                              <span className="text-gray-500 text-sm mr-2">
-                                Hoặc tiếp tục với
-                              </span>
-                              <div className="h-px bg-gray-300 flex-1"></div>
-                            </div>
-  
-                            <button className="bg-gray-100 w-full py-3 rounded-lg flex items-center justify-center hover:bg-gray-200 transform hover:scale-[1.02] transition-all duration-300 shadow-sm hover:shadow-md">
-                              <img
-                                src={googleLogo}
-                                alt="Google"
-                                className="h-5 w-5 mr-2"
-                              />
-                              <span className="text-gray-700">
-                                Đăng nhập với Google
-                              </span>
-                            </button>
-                          </div>
-  
-                          <div className="text-center mb-4">
-                            <span className="text-gray-900 text-sm">
-                              Nếu bạn chưa có tài khoản, vui lòng{" "}
-                              <button
-                                className="text-primary-color font-semibold hover:underline transition-all duration-300 border-none bg-transparent cursor-pointer p-0"
-                                onClick={() => setShowRegisterForm(true)}
-                              >
-                                Đăng ký
-                              </button>
-                            </span>
-                          </div>
-  
-                          <div className="text-center">
-                            <div className="h-px bg-gray-300 w-full mb-3"></div>
-                            <p className="text-gray-700 text-xs">
-                              Trang này được bảo vệ bởi reCAPTCHA và áp dụng Điều
-                              khoản sử dụng.
-                            </p>
-                          </div>
-                        </div>
-                      </div>
+                      <CheckCircle className="text-white mr-3 h-5 w-5 flex-shrink-0" />
+                      <span className="text-white text-base">{item}</span>
                     </div>
-                  )}
+                  ))}
+                </div>
+
+                <div className="flex flex-wrap gap-4">
+                  <button
+                    onClick={scrollToLoginForm}
+                    className="btn btn-primary text-white font-bold px-6 py-3 rounded-full flex items-center shadow-lg hover:shadow-xl transition-all duration-500 transform hover:scale-105"
+                  >
+                    Bắt đầu ngay
+                    <ChevronRight className="ml-1 h-5 w-5" />
+                  </button>
+                  <a
+                    href="#features"
+                    className="btn text-white border-2 border-white font-bold px-6 py-3 rounded-full transition-all duration-500"
+                  >
+                    Tìm hiểu thêm
+                  </a>
                 </div>
               </div>
+
+              {/* Right side content */}
+              <div className="w-full md:w-5/12 mt-8 md:mt-0">
+                {isLoggedIn ? (
+                  <div className="bg-white/10 backdrop-blur-lg p-6 rounded-2xl animate-slideInRight">
+                    <div className="flex items-center gap-4 mb-6">
+                      <div className="h-16 w-16 rounded-full bg-primary-color flex items-center justify-center">
+                        <User className="h-8 w-8 text-white" />
+                      </div>
+                      <div>
+                        <h3 className="text-white text-xl font-bold">
+                          {user?.username}
+                        </h3>
+                        <p className="text-blue-100">
+                          Phụ huynh của {childData.name}
+                        </p>
+                      </div>
+                    </div>
+
+                    <div className="bg-white/5 p-4 rounded-xl mb-6">
+                      <h4 className="text-white font-semibold mb-3">
+                        Thông tin học sinh
+                      </h4>
+                      <div className="flex items-center gap-4">
+                        <div className="h-12 w-12 rounded-full bg-accent-color flex items-center justify-center">
+                          <User className="h-6 w-6 text-white" />
+                        </div>
+                        <div>
+                          <h5 className="text-white font-medium">
+                            {childData.name}
+                          </h5>
+                          <p className="text-blue-100">{childData.age} tuổi</p>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+                      <div className="bg-white/5 p-4 rounded-xl">
+                        <h4 className="text-white font-semibold mb-2">
+                          Buổi học đã tham gia
+                        </h4>
+                        <p className="text-2xl text-white font-bold">
+                          {childData.sessionsCompleted}
+                        </p>
+                      </div>
+                      <div className="bg-white/5 p-4 rounded-xl">
+                        <h4 className="text-white font-semibold mb-2">
+                          Điểm trung bình học tập
+                        </h4>
+                        <p className="text-2xl text-white font-bold">
+                          {childData.averageScore}
+                        </p>
+                      </div>
+                      <div className="bg-white/5 p-4 rounded-xl">
+                        <h4 className="text-white font-semibold mb-2">
+                          Tổng thời gian học
+                        </h4>
+                        <p className="text-2xl text-white font-bold">
+                          {childData.totalStudyTime}h
+                        </p>
+                      </div>
+                    </div>
+
+                    <div className="flex justify-end">
+                      <button
+                        onClick={() => alert("Chức năng đang được phát triển")}
+                        className="btn text-white border-2 border-white font-bold px-6 py-2 rounded-full transition-all duration-500 hover:bg-white/10"
+                      >
+                        Xem chi tiết
+                      </button>
+                    </div>
+                  </div>
+                ) : (
+                  <div
+                    id="login-form"
+                    className="hero-login-container animate-slideInRight"
+                  >
+                    <div className="bg-white/10 backdrop-blur-lg p-2 md:p-3 rounded-3xl shadow-2xl transform transition-all duration-500 hover:scale-[1.02]">
+                      <div className="bg-white p-6 rounded-2xl">
+                        <h2 className="text-gray-900 text-xl font-bold mb-5">
+                          Học giao tiếp và khám phá thế giới với VRA
+                        </h2>
+
+                        <div className="space-y-4 mb-5">
+                          <div className="form-input flex items-center border-2 border-gray-200 rounded-lg px-4 py-3 focus-within:border-primary-color transition-all duration-300">
+                            <User className="h-5 w-5 text-gray-400 mr-3" />
+                            <input
+                              type="email"
+                              placeholder="Email*"
+                              value={email}
+                              onChange={(e) => setEmail(e.target.value)}
+                              className="flex-1 text-gray-800 bg-transparent border-0 focus:outline-none"
+                            />
+                          </div>
+
+                          <div className="space-y-2">
+                            <div className="form-input flex items-center border-2 border-gray-200 rounded-lg px-4 py-3 focus-within:border-primary-color transition-all duration-300">
+                              <input
+                                type={showPassword ? "text" : "password"}
+                                placeholder="Mật khẩu*"
+                                value={password}
+                                onChange={(e) => setPassword(e.target.value)}
+                                className="flex-1 text-gray-800 bg-transparent border-0 focus:outline-none"
+                              />
+                              <button
+                                onClick={() => setShowPassword(!showPassword)}
+                                className="text-gray-500 hover:text-primary-color transition-colors duration-300"
+                              >
+                                {showPassword ? (
+                                  <Eye className="h-5 w-5" />
+                                ) : (
+                                  <EyeOff className="h-5 w-5" />
+                                )}
+                              </button>
+                            </div>
+                            <div className="text-right">
+                              <button
+                                className="text-primary-color text-sm hover:underline transition-all duration-300 border-none bg-transparent cursor-pointer"
+                                onClick={() =>
+                                  alert("Chức năng đang được phát triển")
+                                }
+                              >
+                                Quên mật khẩu?
+                              </button>
+                            </div>
+                          </div>
+
+                          <button
+                            className="btn btn-primary text-white font-bold w-full py-3 rounded-lg hover:bg-primary-light transform hover:scale-[1.02] transition-all duration-300 shadow-md hover:shadow-lg"
+                            onClick={handleLogin}
+                          >
+                            Đăng nhập
+                          </button>
+                        </div>
+
+                        <div className="mb-5">
+                          <div className="flex items-center mb-3">
+                            <span className="text-gray-500 text-sm mr-2">
+                              Hoặc tiếp tục với
+                            </span>
+                            <div className="h-px bg-gray-300 flex-1"></div>
+                          </div>
+
+                          <button className="bg-gray-100 w-full py-3 rounded-lg flex items-center justify-center hover:bg-gray-200 transform hover:scale-[1.02] transition-all duration-300 shadow-sm hover:shadow-md">
+                            <img
+                              src={googleLogo}
+                              alt="Google"
+                              className="h-5 w-5 mr-2"
+                            />
+                            <span className="text-gray-700">
+                              Đăng nhập với Google
+                            </span>
+                          </button>
+                        </div>
+
+                        <div className="text-center mb-4">
+                          <span className="text-gray-900 text-sm">
+                            Nếu bạn chưa có tài khoản, vui lòng{" "}
+                            <button
+                              className="text-primary-color font-semibold hover:underline transition-all duration-300 border-none bg-transparent cursor-pointer p-0"
+                              onClick={() => setShowRegisterForm(true)}
+                            >
+                              Đăng ký
+                            </button>
+                          </span>
+                        </div>
+
+                        <div className="text-center">
+                          <div className="h-px bg-gray-300 w-full mb-3"></div>
+                          <p className="text-gray-700 text-xs">
+                            Trang này được bảo vệ bởi reCAPTCHA và áp dụng Điều
+                            khoản sử dụng.
+                          </p>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                )}
+              </div>
             </div>
+          </div>
         </section>
 
         {/* Why Choose VRA Section */}
@@ -856,9 +875,8 @@ const HomePage: React.FC = () => {
                         <p className="text-gray-500">{item.role}</p>
                       </div>
                       <div
-                        className={`h-12 w-12 rounded-full flex items-center justify-center ${
-                          item.gender === "male" ? "bg-blue-100" : "bg-pink-100"
-                        }`}
+                        className={`h-12 w-12 rounded-full flex items-center justify-center ${item.gender === "male" ? "bg-blue-100" : "bg-pink-100"
+                          }`}
                       >
                         {item.gender === "male" ? (
                           <User className={`h-7 w-7 text-blue-600`} />
@@ -876,11 +894,10 @@ const HomePage: React.FC = () => {
               {[0, 3, 6, 9].map((index) => (
                 <button
                   key={index}
-                  className={`h-3 w-3 rounded-full transition-all duration-300 ${
-                    currentTestimonial === index
+                  className={`h-3 w-3 rounded-full transition-all duration-300 ${currentTestimonial === index
                       ? "bg-primary-color w-10"
                       : "bg-gray-300 hover:bg-gray-400"
-                  }`}
+                    }`}
                   onClick={() => setCurrentTestimonial(index)}
                 />
               ))}
