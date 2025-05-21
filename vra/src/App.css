@@ -325,8 +325,8 @@ body {
 .hero-section {
   background: linear-gradient(135deg, var(--background-blue), var(--primary-color));
   position: relative;
-  padding-top: calc(var(--header-height)); /* Further reduced padding-top */
-  padding-bottom: calc(var(--section-spacing-md) + var(--header-height)); /* Reduced padding */
+  padding-top: 32px;  
+  padding-bottom: calc(var(--section-spacing-md) + var(--header-height)); 
   min-height: 75vh; /* Reduced for better balance */
   display: flex;
   align-items: center;
@@ -339,7 +339,6 @@ body {
   left: 0;
   right: 0;
   bottom: 0;
-  /* background: url('/path-to-pattern.svg') repeat; */
   opacity: 0.05;
 }
 
