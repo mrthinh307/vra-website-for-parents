@@ -24,8 +24,10 @@ import RegisterForm, {
   RegisterFormData,
 } from "../../components/Auth/RegisterForm";
 import { apiConfig } from "../../api/config";
-import { TextHoverEffect } from "../../components/lib-animated/text-hover-effect";
 import RotatingText from "../../components/lib-animated/RoatingText";
+import { CardBody, CardContainer, CardItem } from "../../components/lib-animated/3d-card";
+import { PinContainer } from "../../components/lib-animated/3d-pin";
+import Stack from "../../components/lib-animated/CardRotate";
 
 // Define the context type from MainLayout
 type MainLayoutContext = {
@@ -344,9 +346,9 @@ const HomePage: React.FC = () => {
                       exit={{ y: "-120%", opacity: 0 }}
                       staggerDuration={0.020}
                       splitLevelClassName="overflow-hidden pb-0.5 sm:pb-1 md:pb-1 flex justify-center"
-                      transition={{ 
-                        type: "spring", 
-                        damping: 30, 
+                      transition={{
+                        type: "spring",
+                        damping: 30,
                         stiffness: 400,
                         duration: 0.5
                       }}
@@ -615,29 +617,56 @@ const HomePage: React.FC = () => {
                   delay: 0.4,
                 },
               ].map((item, index) => (
-                <div
-                  key={index}
-                  className="feature-card bg-white rounded-2xl shadow-lg overflow-hidden transform transition-all duration-500 hover:scale-105"
-                  data-aos="fade-up"
-                  style={{ animationDelay: `${item.delay}s` }}
-                >
-                  <div className="card-image-container">
-                    <img
-                      src={item.image}
-                      className="w-full h-full object-cover transform transition-all duration-500 hover:scale-110"
-                      alt={item.title}
-                    />
-                  </div>
-                  <div className="card-content">
-                    <h3 className="card-title">{item.title}</h3>
-                    <p className="card-description">{item.desc}</p>
-                    <button className="group flex items-center text-primary-color font-semibold transform transition-all duration-300 hover:translate-x-2">
-                      <span className="group-hover:underline">
-                        Tìm hiểu thêm
-                      </span>
-                      <ArrowRight className="ml-2 h-4 w-4 transition-transform duration-300 group-hover:translate-x-1" />
-                    </button>
-                  </div>
+                <div key={index} className="h-full w-full flex">
+                  <CardContainer
+                    className="group/card bg-gray-100 rounded-3xl shadow-sm border border-gray-300 w-full"
+                    containerClassName="py-0 h-full w-full"
+                  >
+                    <CardBody className="w-full h-full rounded-3xl p-10 flex flex-col">
+                      <div className="mb-6">
+                        <CardItem
+                          translateZ="50"
+                          className="text-2xl font-semibold text-gray-700 mb-2"
+                        >
+                          {item.title}
+                        </CardItem>
+                        <CardItem
+                          as="p"
+                          translateZ="40"
+                          className="text-gray-500 text-base"
+                        >
+                          {item.desc}
+                        </CardItem>
+                      </div>
+
+                      <CardItem translateZ="60" className="w-full mb-10">
+                        <div className="rounded-xl overflow-hidden">
+                          <img
+                            src={item.image}
+                            className="w-full h-60 object-cover"
+                            alt={item.title}
+                          />
+                        </div>
+                      </CardItem>
+
+                      <div className="mt-auto flex justify-between items-center">
+                        <CardItem
+                          translateZ={30}
+                          as="a"
+                          className="text-gray-700 hover:text-black text-lg flex items-center font-medium"
+                        >
+                          Try now →
+                        </CardItem>
+                        <CardItem
+                          translateZ={30}
+                          as="button"
+                          className="px-6 py-3 rounded-full bg-black text-white font-medium"
+                        >
+                          Sign up
+                        </CardItem>
+                      </div>
+                    </CardBody>
+                  </CardContainer>
                 </div>
               ))}
             </div>
@@ -697,11 +726,31 @@ const HomePage: React.FC = () => {
               <div className="w-full md:w-1/2" data-aos="fade-left">
                 <div className="rounded-2xl overflow-hidden shadow-2xl transform transition-all duration-500 hover:scale-[1.03] hover:rotate-1 relative group">
                   <div className="absolute inset-0 bg-gradient-to-tr from-primary-color/30 to-transparent mix-blend-overlay opacity-80 group-hover:opacity-40 transition-opacity duration-500"></div>
-                  <img
-                    src={Manage}
-                    alt="Dashboard"
-                    className="w-full h-auto rounded-2xl"
-                  />
+
+                  <div className="h-[40rem] w-full flex items-center justify-center ">
+                    <PinContainer
+                      title="/ui.aceternity.com"
+                      href="https://twitter.com/mannupaaji"
+                    >
+                      <div className="flex basis-full flex-col p-4 tracking-tight text-slate-100/50 sm:basis-1/2 w-[32rem] h-[32rem] ">
+                        <h3 className="max-w-xs !pb-2 !m-0 font-bold  text-base text-slate-100">
+                          Hệ thống VRA
+                        </h3>
+                        <div className="text-base !m-0 !p-0 font-normal">
+                          <span className="text-slate-500 ">
+                            Hệ thống VRA giúp phụ huynh và giáo viên theo dõi tiến độ học tập của trẻ nhỏ.
+                          </span>
+                        </div>
+                        <div className="flex flex-1 w-full rounded-lg mt-4 bg-gradient-to-br from-violet-500 via-purple-500 to-blue-500">
+                          <img
+                            src={Manage}
+                            alt="Dashboard"
+                            className="w-full h-auto rounded-2xl"
+                          />
+                        </div>
+                      </div>
+                    </PinContainer>
+                  </div>
                   <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-500">
                     <div className="bg-primary-color text-white px-6 py-3 rounded-full font-bold shadow-lg transform -translate-y-4 group-hover:translate-y-0 transition-transform duration-500">
                       Xem chi tiết
@@ -716,19 +765,28 @@ const HomePage: React.FC = () => {
                 className="w-full md:w-1/2 order-2 md:order-1"
                 data-aos="fade-right"
               >
-                <div className="rounded-2xl overflow-hidden shadow-2xl transform transition-all duration-500 hover:scale-[1.03] hover:rotate-1 relative group">
-                  <div className="absolute inset-0 bg-gradient-to-bl from-primary-color/30 to-transparent mix-blend-overlay opacity-80 group-hover:opacity-40 transition-opacity duration-500"></div>
-                  <img
-                    src={dotor}
-                    alt="Doctors Team"
-                    className="w-full h-auto rounded-2xl"
-                  />
-                  <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-500">
-                    <div className="bg-primary-color text-white px-6 py-3 rounded-full font-bold shadow-lg transform -translate-y-4 group-hover:translate-y-0 transition-transform duration-500">
+                {/* <div className="rounded-2xl shadow-2xl transform transition-all duration-500 hover:scale-[1.03] hover:rotate-1 relative 
+                group">
+                  <div className="absolute inset-0 bg-gradient-to-bl from-primary-color/30 to-transparent mix-blend-overlay opacity-80 
+                  group-hover:opacity-40 transition-opacity duration-500"></div>
+                  <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity 
+                  duration-500">
+                    <div className="bg-primary-color text-white px-6 py-3 rounded-full font-bold shadow-lg transform -translate-y-4 
+                    group-hover:translate-y-0 transition-transform duration-500">
                       Gặp đội ngũ chuyên gia
-                    </div>
+                    </div> 
                   </div>
-                </div>
+
+                </div> */}
+                <Stack
+                  cardsData={[
+                    { id: 1, img: dotor },
+                    { id: 2, img: AI },
+                  ]}
+                  cardDimensions={{ width: 400, height: 300 }}
+                  sensitivity={150}
+                  randomRotation={true}
+                />
               </div>
               <div
                 className="w-full md:w-1/2 flex flex-col justify-center order-1 md:order-2"
@@ -895,8 +953,8 @@ const HomePage: React.FC = () => {
                 <button
                   key={index}
                   className={`h-3 w-3 rounded-full transition-all duration-300 ${currentTestimonial === index
-                      ? "bg-primary-color w-10"
-                      : "bg-gray-300 hover:bg-gray-400"
+                    ? "bg-primary-color w-10"
+                    : "bg-gray-300 hover:bg-gray-400"
                     }`}
                   onClick={() => setCurrentTestimonial(index)}
                 />
