@@ -17,6 +17,7 @@ import {
 } from "lucide-react";
 import { memo } from "react";
 import type { Task } from "./index";
+import Magnet from '../../../components/lib-animated/Magnet' 
 
 export const tasks = [
   { stt: 1, name: "Bật vòi nước", remind: 4, response: 3.5, note: "Bật vòi hơi lâu" },
@@ -96,7 +97,8 @@ const TaskList: React.FC<TaskListProps> = ({
                   Phản hồi
                 </div>
               </th>
-              <th className="px-6 py-3 text-sm font-medium text-gray-500 uppercase tracking-wider text-center">
+              <Magnet padding={300} disabled={false} magnetStrength={10}>
+                <th className="px-6 py-3 text-sm font-medium text-gray-500 uppercase tracking-wider text-center">
                 {hasFeedback ? (
                   <div className="flex items-center justify-center bg-blue-100 rounded-full px-3 py-1.5">
                     <MessageCircle className="h-3 w-3 text-[#19395E] mr-2" />
@@ -115,13 +117,14 @@ const TaskList: React.FC<TaskListProps> = ({
                 ) : (
                   <button
                     onClick={onGenerateFeedback}
-                    className="w-full flex items-center justify-center bg-blue-100 hover:bg-blue-200 rounded-full px-3 py-1.5 transition-colors duration-200"
+                    className="w-full flex items-center justify-center bg-blue-100 hover:bg-blue-200 rounded-full px-16  py-1.5 transition-colors duration-200"
                   >
                     <Bot className="h-3 w-3 text-[#19395E] mr-2" />
-                    <span>Thêm nhận xét từ VRA AI</span>
+                    <span>THÊM NHẬN XÉT TỪ VRA AI</span>
                   </button>
                 )}
               </th>
+              </Magnet>
             </tr>
           </thead>
           <tbody className="divide-y divide-gray-200">
