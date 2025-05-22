@@ -12,8 +12,15 @@ import {
   BookOpen,
   Award
 } from "lucide-react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useOutletContext } from "react-router-dom";
 import { LessonListService, LessonListItem } from "../../services/lessonService";
+import { SupervisorService, Supervisor } from "../../services/supervisorService";
+
+// Define the context type from MainLayout
+type MainLayoutContext = {
+  isLoggedIn: boolean;
+  user: { username: string; avatar?: string } | null;
+};
 
 const LessonList: React.FC = () => {
   const [currentPage, setCurrentPage] = useState(1);
@@ -22,29 +29,64 @@ const LessonList: React.FC = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [selectedStatus, setSelectedStatus] = useState('all');
+  const [supervisor, setSupervisor] = useState<Supervisor | null>(null);
+  const [hasShownAlert, setHasShownAlert] = useState(false);
   const navigate = useNavigate();
+  const { isLoggedIn, user } = useOutletContext<MainLayoutContext>();
 
-  // Giả lập ID giám sát viên - trong thực tế sẽ lấy từ context hoặc props
-  const supervisorId = "5aa59cf9-5cf2-48eb-ad2e-881bd209d8be";
+  // Redirect to login if not authenticated
+  useEffect(() => {
+    if (!isLoggedIn && !hasShownAlert) {
+      setHasShownAlert(true);
+      window.alert("Bạn chưa đăng nhập, vui lòng đăng nhập để tiếp tục!");
+      navigate('/');
+    }
+  }, [isLoggedIn, navigate, hasShownAlert]);
+
+  // Fetch supervisor data when user is available
+  useEffect(() => {
+    const fetchSupervisor = async () => {
+      if (!user?.username) return;
+      
+      try {
+        console.log('Fetching supervisor for email:', user.username);
+        const supervisorService = SupervisorService.getInstance();
+        const supervisorData = await supervisorService.getSupervisorByEmail(user.username);
+        console.log('Fetched supervisor data:', supervisorData);
+        setSupervisor(supervisorData);
+      } catch (err) {
+        console.error('Error fetching supervisor:', err);
+      }
+    };
+
+    fetchSupervisor();
+  }, [user?.username]);
 
   useEffect(() => {
     const fetchLessons = async () => {
+      if (!supervisor?.id) {
+        console.log('No supervisor ID available, skipping fetch');
+        return;
+      }
+      
       try {
         setIsLoading(true);
         const lessonService = LessonListService.getInstance();
-        const lessonData = await lessonService.getLessonList(supervisorId, selectedStatus);
+        console.log('Fetching lessons for supervisorId:', supervisor.id);
+        const lessonData = await lessonService.getLessonList(supervisor.id, selectedStatus);
+        console.log('Fetched lessons:', lessonData);
         setLessons(lessonData);
         setError(null);
       } catch (err) {
-        setError('Có lỗi xảy ra khi tải dữ liệu bài học');
         console.error('Error fetching lessons:', err);
+        setError('Có lỗi xảy ra khi tải dữ liệu bài học');
       } finally {
         setIsLoading(false);
       }
     };
 
     fetchLessons();
-  }, [selectedStatus]);
+  }, [selectedStatus, supervisor?.id]);
 
   // Filter lessons based on search query
   const filteredLessons = lessons.filter(lesson =>
