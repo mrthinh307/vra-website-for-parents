@@ -424,17 +424,17 @@ const DetailReport: React.FC = () => {
                           </div>
                         </div>
                       </div>
-                      <button
-                        onClick={handleOpenEvaluationChat}
-                        className="w-full px-5 py-3 bg-[#19395E] hover:bg-[#254b76] text-white rounded-lg font-medium transition-all duration-200 shadow-sm flex items-center justify-center group text-base glow-button relative overflow-hidden"
+                      <AnimatedButton
+                        icon={MessageCircle}
+                        text="Trao đổi thêm với VRA AI"
+                        size="full"
+                        className="bg-[#19395E] hover:bg-[#254b76] text-white rounded-lg font-medium transition-all duration-200 shadow-sm flex items-center justify-center group text-base glow-button relative"
                         style={{
                           boxShadow: '0 0 10px 2px rgba(25, 57, 94, 0.6), 0 0 20px 4px rgba(25, 57, 94, 0.4)'
                         }}
-                      >
-                        <MessageCircle size={22} className="mr-2 group-hover:animate-pulse" />
-                        Trao đổi thêm với VRA AI
-                        <div className="absolute inset-0 bg-white/30 shine-effect"></div>
-                      </button>
+                        withFullWidth={true}
+                        onClick={handleOpenEvaluationChat}
+                      />
                     </div>
                   )}
                 </div>
