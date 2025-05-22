@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from "react";
 import { Link, useLocation } from "react-router-dom";
-import { Menu, X, User, LogOut } from "lucide-react";
+import { Menu, X, User, LogOut, Plane, DoorOpen, DoorClosedLocked, Key, KeyIcon, KeyRoundIcon } from "lucide-react";
 import { Logo1 } from "../../assets/images";
 import UserMenu from "../Navigation/UserMenu";
+import AnimatedButton from "../lib-animated/Button";
 
 interface HeaderProps {
   scrollToLoginForm: () => void;
@@ -15,8 +16,8 @@ interface HeaderProps {
   onLogout?: () => void;
 }
 
-const Header: React.FC<HeaderProps> = ({ 
-  scrollToLoginForm, 
+const Header: React.FC<HeaderProps> = ({
+  scrollToLoginForm,
   setShowRegisterForm,
   isLoggedIn = false,
   user,
@@ -25,7 +26,7 @@ const Header: React.FC<HeaderProps> = ({
   const [isHeaderScrolled, setIsHeaderScrolled] = useState(false);
   const [showMobileMenu, setShowMobileMenu] = useState(false);
   const location = useLocation();
-  
+
   // Helper function to check active routes
   const isActive = (path: string) => {
     if (path === '/' && location.pathname === '/') return true;
@@ -59,53 +60,51 @@ const Header: React.FC<HeaderProps> = ({
               className="logo transition-transform duration-300 hover:scale-105"
             />
             <div className="hidden md:flex space-x-6">
-              <Link 
-                to="/" 
-                className={`nav-link font-semibold rounded transition-all duration-300 ${
-                  isActive('/') 
-                    ? 'text-primary-color border-b-2 border-primary-color' 
+              <Link
+                to="/"
+                className={`nav-link font-semibold rounded transition-all duration-300 ${isActive('/')
+                    ? 'text-primary-color border-b-2 border-primary-color'
                     : 'text-gray-800 hover:text-primary-light'
-                }`}
+                  }`}
               >
                 Trang chủ
               </Link>
-              <Link 
-                to="/lesson-list" 
-                className={`nav-link font-semibold rounded transition-all duration-300 ${
-                  isActive('/lesson-list') 
-                    ? 'text-primary-color border-b-2 border-primary-color' 
+              <Link
+                to="/lesson-list"
+                className={`nav-link font-semibold rounded transition-all duration-300 ${isActive('/lesson-list')
+                    ? 'text-primary-color border-b-2 border-primary-color'
                     : 'text-gray-800 hover:text-primary-light'
-                }`}
+                  }`}
               >
                 Danh sách học sinh
               </Link>
-              <button 
-                className={`nav-link font-semibold rounded transition-all duration-300 ${
-                  location.pathname.includes('config') 
-                    ? 'text-primary-color border-b-2 border-primary-color' 
+              <button
+                className={`nav-link font-semibold rounded transition-all duration-300 ${location.pathname.includes('config')
+                    ? 'text-primary-color border-b-2 border-primary-color'
                     : 'text-gray-800 hover:text-primary-light'
-                }`}
+                  }`}
               >
                 Quản lý cấu hình
               </button>
             </div>
           </div>
-          
-          <div className="flex items-center space-x-4">
+
+          <div className="hidden md:flex items-center space-x-4">
             {!isLoggedIn ? (
               <>
-                <button 
+                <button
                   className="btn text-primary-color font-semibold px-4 py-1.5 rounded-full transition-all duration-300"
                   onClick={scrollToLoginForm}
                 >
                   Đăng nhập
                 </button>
-                <button 
-                  className="btn btn-primary text-white font-semibold px-5 py-1.5 rounded-full shadow-lg hover:shadow-xl transition-all duration-300"
+                <AnimatedButton
+                  icon={KeyRoundIcon}
+                  text="Đăng ký"
+                  size="sm"
+                  className="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700"
                   onClick={() => setShowRegisterForm(true)}
-                >
-                  Đăng ký
-                </button>
+                />
               </>
             ) : (
               <div className="flex items-center gap-4">
@@ -115,11 +114,11 @@ const Header: React.FC<HeaderProps> = ({
                   </div>
                   <span className="text-primary-color font-medium">{user?.username}</span>
                 </div>
-                <UserMenu onLogout={onLogout || (() => {})} />
+                <UserMenu onLogout={onLogout || (() => { })} />
               </div>
             )}
           </div>
-          <button 
+          <button
             className="md:hidden text-gray-800 p-2"
             onClick={() => setShowMobileMenu(true)}
           >
@@ -131,9 +130,9 @@ const Header: React.FC<HeaderProps> = ({
       {/* Mobile Menu */}
       {showMobileMenu && (
         <div className="fixed inset-0 bg-black bg-opacity-50 z-50" onClick={() => setShowMobileMenu(false)}>
-          <div 
+          <div
             className="mobile-menu absolute top-0 right-0 h-full w-4/5 max-w-xs bg-white shadow-xl transform transition-transform duration-300"
-            style={{ transform: 'translateX(0)' }} 
+            style={{ transform: 'translateX(0)' }}
             onClick={(e) => e.stopPropagation()}
           >
             <div className="flex justify-between items-center p-5 border-b">
@@ -143,34 +142,31 @@ const Header: React.FC<HeaderProps> = ({
               </button>
             </div>
             <div className="flex flex-col p-5 space-y-4">
-              <Link 
-                to="/" 
-                className={`text-lg py-2 border-b border-gray-100 ${
-                  isActive('/') 
-                    ? 'text-primary-color font-bold' 
+              <Link
+                to="/"
+                className={`text-lg py-2 border-b border-gray-100 ${isActive('/')
+                    ? 'text-primary-color font-bold'
                     : 'text-gray-800 font-semibold'
-                }`}
+                  }`}
                 onClick={() => setShowMobileMenu(false)}
               >
                 Trang chủ
               </Link>
-              <Link 
-                to="/lesson-list" 
-                className={`text-lg py-2 border-b border-gray-100 ${
-                  isActive('/lesson-list') 
-                    ? 'text-primary-color font-bold' 
+              <Link
+                to="/lesson-list"
+                className={`text-lg py-2 border-b border-gray-100 ${isActive('/lesson-list')
+                    ? 'text-primary-color font-bold'
                     : 'text-gray-800 font-semibold'
-                }`}
+                  }`}
                 onClick={() => setShowMobileMenu(false)}
               >
                 Danh sách học sinh
               </Link>
-              <button 
-                className={`text-lg py-2 border-b border-gray-100 text-left ${
-                  location.pathname.includes('config') 
-                    ? 'text-primary-color font-bold' 
+              <button
+                className={`text-lg py-2 border-b border-gray-100 text-left ${location.pathname.includes('config')
+                    ? 'text-primary-color font-bold'
                     : 'text-gray-800 font-semibold'
-                }`}
+                  }`}
                 onClick={() => setShowMobileMenu(false)}
               >
                 Quản lý cấu hình
@@ -178,7 +174,7 @@ const Header: React.FC<HeaderProps> = ({
               <div className="pt-4 flex flex-col space-y-3">
                 {!isLoggedIn ? (
                   <>
-                    <button 
+                    <button
                       className="bg-white text-primary-color border-2 border-primary-color font-bold w-full py-2.5 rounded-full"
                       onClick={() => {
                         scrollToLoginForm();
@@ -187,7 +183,7 @@ const Header: React.FC<HeaderProps> = ({
                     >
                       Đăng nhập
                     </button>
-                    <button 
+                    <button
                       className="bg-primary-color text-white font-bold w-full py-2.5 rounded-full"
                       onClick={() => {
                         setShowRegisterForm(true);

@@ -1,5 +1,7 @@
 import React, { useState } from "react";
-import { Eye, X, Heart, Mail, Phone, User } from "lucide-react";
+import { Eye, X, Heart, Mail, Phone, User, HeartHandshake } from "lucide-react";
+import AnimatedButton from "../lib-animated/Button";
+import { HeartFilled } from "@ant-design/icons";
 
 interface RegisterFormProps {
   isOpen: boolean;
@@ -62,9 +64,8 @@ const RegisterForm: React.FC<RegisterFormProps> = ({
       onClick={onClose}
     >
       <div
-        className={`bg-white p-8 rounded-3xl w-[95%] max-w-[480px] relative border-4 border-primary-color shadow-2xl modal ${
-          isOpen ? "modal-visible" : ""
-        }`}
+        className={`bg-white p-8 rounded-3xl w-[95%] max-w-[480px] relative border-4 border-primary-color shadow-2xl modal ${isOpen ? "modal-visible" : ""
+          }`}
         onClick={(e) => e.stopPropagation()}
       >
         <button
@@ -147,14 +148,15 @@ const RegisterForm: React.FC<RegisterFormProps> = ({
               className="flex-1 text-gray-800 bg-transparent border-0 focus:outline-none"
             />
           </div>
-
-          <button
-            className="btn btn-primary text-white font-bold w-full py-3 rounded-lg flex items-center justify-center hover:bg-primary-light transform hover:scale-[1.02] transition-all duration-300 shadow-md hover:shadow-lg mt-4"
+          <AnimatedButton
+            icon={HeartHandshake}
+            text="Đăng ký"
+            size="full"
+            withFullWidth={true}
+            primary
+            className="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700"
             onClick={() => handleRegisterSubmit(registerData)}
-          >
-            <Heart className="mr-2 h-5 w-5" />
-            Tạo tài khoản
-          </button>
+          />
         </div>
 
         <div className="text-center mt-6 text-gray-500 text-xs">

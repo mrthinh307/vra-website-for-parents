@@ -4,21 +4,26 @@ import {
   Eye,
   EyeOff,
   CheckCircle,
-  ChevronRight,
   Star,
   User,
   User2,
+  Key,
+  LogIn,
   ArrowRight,
-  LogOut,
+  ArrowLeft,
+  Rotate3dIcon,
+  NotebookText,
 } from "lucide-react";
 import {
   anh1,
   anh2,
   anh3,
-  Manage,
-  dotor,
+  doctor,
   AI,
   googleLogo,
+  doctor4,
+  doctor1,
+  doctor3,
 } from "../../assets/images";
 import RegisterForm, {
   RegisterFormData,
@@ -26,8 +31,9 @@ import RegisterForm, {
 import { apiConfig } from "../../api/config";
 import RotatingText from "../../components/lib-animated/RoatingText";
 import { CardBody, CardContainer, CardItem } from "../../components/lib-animated/3d-card";
-import { PinContainer } from "../../components/lib-animated/3d-pin";
 import Stack from "../../components/lib-animated/CardRotate";
+import AnimatedButton from "../../components/lib-animated/Button";
+import { LensDemo } from "./components/Lens";
 
 // Define the context type from MainLayout
 type MainLayoutContext = {
@@ -379,13 +385,20 @@ const HomePage: React.FC = () => {
                 </div>
 
                 <div className="flex flex-wrap gap-4">
-                  <button
+                  {/* <button
                     onClick={scrollToLoginForm}
                     className="btn btn-primary text-white font-bold px-6 py-3 rounded-full flex items-center shadow-lg hover:shadow-xl transition-all duration-500 transform hover:scale-105"
                   >
                     Bắt đầu ngay
                     <ChevronRight className="ml-1 h-5 w-5" />
-                  </button>
+                  </button> */}
+                  <AnimatedButton
+                    icon={ArrowRight}
+                    text="Bắt đầu ngay"
+                    size="md"
+                    className="bg-[linear-gradient(135deg,_var(--primary-color),_var(--primary-light))] px-8"
+                    onClick={scrollToLoginForm}
+                  />
                   <a
                     href="#features"
                     className="btn text-white border-2 border-white font-bold px-6 py-3 rounded-full transition-all duration-500"
@@ -491,6 +504,7 @@ const HomePage: React.FC = () => {
 
                           <div className="space-y-2">
                             <div className="form-input flex items-center border-2 border-gray-200 rounded-lg px-4 py-3 focus-within:border-primary-color transition-all duration-300">
+                              <Key className="h-5 w-5 text-gray-400 mr-3" />
                               <input
                                 type={showPassword ? "text" : "password"}
                                 placeholder="Mật khẩu*"
@@ -520,13 +534,21 @@ const HomePage: React.FC = () => {
                               </button>
                             </div>
                           </div>
-
+                          {/* 
                           <button
                             className="btn btn-primary text-white font-bold w-full py-3 rounded-lg hover:bg-primary-light transform hover:scale-[1.02] transition-all duration-300 shadow-md hover:shadow-lg"
                             onClick={handleLogin}
                           >
                             Đăng nhập
-                          </button>
+                          </button> */}
+                          <AnimatedButton
+                            icon={LogIn}
+                            text="Đăng nhập"
+                            className="bg-[linear-gradient(135deg,_var(--primary-color),_var(--primary-light))] font-bold"
+                            size="full"
+                            withFullWidth={true}
+                            primary
+                          />
                         </div>
 
                         <div className="mb-5">
@@ -596,7 +618,7 @@ const HomePage: React.FC = () => {
               </p>
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-10">
               {[
                 {
                   image: anh1,
@@ -613,14 +635,14 @@ const HomePage: React.FC = () => {
                 {
                   image: anh3,
                   title: "Đồng hành cùng gia đình và giáo viên",
-                  desc: "Giáo viên và phụ huynh có thể quản lý và điều chỉnh lộ trình học cho trẻ qua giao diện web thân thiện, dễ sử dụng.",
+                  desc: "Giáo viên và phụ huynh có thể quản lý qvà điều chỉnh lộ trình học cho trẻ qua giao diện website thân thiện, dễ dàng làm quen, sử dụng.",
                   delay: 0.4,
                 },
               ].map((item, index) => (
-                <div key={index} className="h-full w-full flex">
+                <div key={index} className="flex h-full w-full">
                   <CardContainer
-                    className="group/card bg-gray-100 rounded-3xl shadow-sm border border-gray-300 w-full"
-                    containerClassName="py-0 h-full w-full"
+                    className="group/card bg-gray-100 rounded-3xl shadow-md border border-gray-200 w-full h-full transition-all duration-300 hover:shadow-lg"
+                    containerClassName="py-0"
                   >
                     <CardBody className="w-full h-full rounded-3xl p-10 flex flex-col">
                       <div className="mb-6">
@@ -640,29 +662,27 @@ const HomePage: React.FC = () => {
                       </div>
 
                       <CardItem translateZ="60" className="w-full mb-10">
-                        <div className="rounded-xl overflow-hidden">
+                        <div className="rounded-xl overflow-hidden relative">
                           <img
                             src={item.image}
-                            className="w-full h-60 object-cover"
+                            className="w-full h-60 object-cover transition-all duration-300"
                             alt={item.title}
                           />
                         </div>
                       </CardItem>
 
-                      <div className="mt-auto flex justify-between items-center">
-                        <CardItem
-                          translateZ={30}
-                          as="a"
-                          className="text-gray-700 hover:text-black text-lg flex items-center font-medium"
-                        >
-                          Try now →
-                        </CardItem>
+                      <div className="mt-auto flex justify-end">
                         <CardItem
                           translateZ={30}
                           as="button"
-                          className="px-6 py-3 rounded-full bg-black text-white font-medium"
+                          className="!p-0"
                         >
-                          Sign up
+                          <AnimatedButton
+                            icon={NotebookText}
+                            text="Chi tiết"
+                            size="md"
+                            className="bg-black text-white hover:shadow-[0_0_20px_3px_rgba(255,255,255,0.3)]"
+                          />
                         </CardItem>
                       </div>
                     </CardBody>
@@ -697,7 +717,7 @@ const HomePage: React.FC = () => {
                 className="w-full md:w-1/2 flex flex-col justify-center"
                 data-aos="fade-right"
               >
-                <span className="inline-block text-accent-color font-semibold mb-2 text-sm tracking-wider uppercase">
+                <span className="inline-block font-semibold mb-2 text-sm tracking-wider uppercase">
                   Theo dõi học tập
                 </span>
                 <h3 className="text-white text-2xl md:text-3xl lg:text-4xl font-bold mb-5 leading-tight">
@@ -713,49 +733,18 @@ const HomePage: React.FC = () => {
                   quá trình học tập để phụ huynh có thể xem lại và đánh giá hiệu
                   quả.
                 </p>
-                <div className="flex flex-wrap gap-4 mt-auto">
-                  <button
-                    className="btn btn-primary bg-white text-primary-color px-6 py-3 rounded-full flex items-center hover:bg-blue-50 transform hover:scale-[1.02] transition-all duration-300 shadow-lg hover:shadow-xl"
+                <div className="flex mt-12">
+                  <AnimatedButton
+                    icon={ArrowRight}
+                    text="Tìm hiểu ngay"
+                    size="md"
+                    className="bg-[linear-gradient(135deg,_var(--primary-color),_var(--primary-light))]"
                     onClick={scrollToTop}
-                  >
-                    Tìm hiểu ngay
-                    <ChevronRight className="ml-2 h-5 w-5" />
-                  </button>
+                  />
                 </div>
-              </div>
-              <div className="w-full md:w-1/2" data-aos="fade-left">
-                <div className="rounded-2xl overflow-hidden shadow-2xl transform transition-all duration-500 hover:scale-[1.03] hover:rotate-1 relative group">
-                  <div className="absolute inset-0 bg-gradient-to-tr from-primary-color/30 to-transparent mix-blend-overlay opacity-80 group-hover:opacity-40 transition-opacity duration-500"></div>
-
-                  <div className="h-[40rem] w-full flex items-center justify-center ">
-                    <PinContainer
-                      title="/ui.aceternity.com"
-                      href="https://twitter.com/mannupaaji"
-                    >
-                      <div className="flex basis-full flex-col p-4 tracking-tight text-slate-100/50 sm:basis-1/2 w-[32rem] h-[32rem] ">
-                        <h3 className="max-w-xs !pb-2 !m-0 font-bold  text-base text-slate-100">
-                          Hệ thống VRA
-                        </h3>
-                        <div className="text-base !m-0 !p-0 font-normal">
-                          <span className="text-slate-500 ">
-                            Hệ thống VRA giúp phụ huynh và giáo viên theo dõi tiến độ học tập của trẻ nhỏ.
-                          </span>
-                        </div>
-                        <div className="flex flex-1 w-full rounded-lg mt-4 bg-gradient-to-br from-violet-500 via-purple-500 to-blue-500">
-                          <img
-                            src={Manage}
-                            alt="Dashboard"
-                            className="w-full h-auto rounded-2xl"
-                          />
-                        </div>
-                      </div>
-                    </PinContainer>
-                  </div>
-                  <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-500">
-                    <div className="bg-primary-color text-white px-6 py-3 rounded-full font-bold shadow-lg transform -translate-y-4 group-hover:translate-y-0 transition-transform duration-500">
-                      Xem chi tiết
-                    </div>
-                  </div>
+              </div>              <div className="w-full md:w-1/2 h-full min-h-[500px] flex items-center justify-center" data-aos="fade-left">
+                <div className="w-full h-full max-h-[600px]">
+                  <LensDemo />
                 </div>
               </div>
             </div>
@@ -780,10 +769,12 @@ const HomePage: React.FC = () => {
                 </div> */}
                 <Stack
                   cardsData={[
-                    { id: 1, img: dotor },
-                    { id: 2, img: AI },
+                    { id: 1, img: doctor },
+                    { id: 2, img: doctor1 },
+                    { id: 3, img: doctor3 },
+                    { id: 4, img: doctor4 },
                   ]}
-                  cardDimensions={{ width: 400, height: 300 }}
+                  // cardDimensions={{ width: 400, height: 300 }}
                   sensitivity={150}
                   randomRotation={true}
                 />
@@ -824,14 +815,14 @@ const HomePage: React.FC = () => {
                   ))}
                 </div>
 
-                <div className="flex flex-wrap gap-4 mt-auto">
-                  <button
-                    className="btn btn-primary bg-white text-primary-color px-6 py-3 rounded-full flex items-center hover:bg-blue-50 transform hover:scale-[1.02] transition-all duration-300 shadow-lg hover:shadow-xl"
+                <div className="flex mt-auto">
+                  <AnimatedButton
+                    icon={ArrowLeft}
+                    text="Tìm hiểu ngay"
+                    size="md"
+                    className="bg-[linear-gradient(135deg,_var(--primary-color),_var(--primary-light))]"
                     onClick={scrollToTop}
-                  >
-                    Tìm hiểu ngay
-                    <ChevronRight className="ml-2 h-5 w-5" />
-                  </button>
+                  />
                 </div>
               </div>
             </div>
@@ -855,18 +846,18 @@ const HomePage: React.FC = () => {
                   sinh đều được học tập theo cách hiệu quả nhất, giúp tối ưu hóa
                   khả năng tiếp thu và phát triển.
                 </p>
-                <div className="flex flex-wrap gap-4 mt-auto">
-                  <button
-                    className="btn btn-primary bg-white text-primary-color px-6 py-3 rounded-full flex items-center hover:bg-blue-50 transform hover:scale-[1.02] transition-all duration-300 shadow-lg hover:shadow-xl"
+                <div className="flex mt-auto">
+                  <AnimatedButton
+                    icon={ArrowRight}
+                    text="Tìm hiểu ngay"
+                    size="md"
+                    className="bg-blue-600"
                     onClick={scrollToTop}
-                  >
-                    Tìm hiểu ngay
-                    <ChevronRight className="ml-2 h-5 w-5" />
-                  </button>
+                  />
                 </div>
               </div>
               <div className="w-full md:w-1/2" data-aos="fade-left">
-                <div className="rounded-2xl overflow-hidden shadow-2xl transform transition-all duration-500 hover:scale-[1.03] hover:rotate-1 relative group">
+                <div className="rounded-2xl overflow-hidden shadow-2xl transform transition-all duration-500 hover:scale-[1.03] hover:rotate-1 relative group flex">
                   <div className="absolute inset-0 bg-gradient-to-tr from-primary-color/30 to-transparent mix-blend-overlay opacity-80 group-hover:opacity-40 transition-opacity duration-500"></div>
                   <img
                     src={AI}
@@ -962,10 +953,13 @@ const HomePage: React.FC = () => {
             </div>
 
             <div className="flex justify-center mt-12">
-              <button className="btn btn-primary text-white px-8 py-3 rounded-full flex items-center shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105">
-                Xem tất cả đánh giá
-                <ChevronRight className="ml-2 h-5 w-5" />
-              </button>
+              <AnimatedButton
+                icon={Rotate3dIcon}
+                text="Xem tất cả đánh giá"
+                size="md"
+                className="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700"
+                onClick={scrollToTop}
+              />
             </div>
           </div>
         </section>

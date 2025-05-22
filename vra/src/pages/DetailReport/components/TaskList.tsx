@@ -13,11 +13,11 @@ import {
   Loader2,
   Info,
   Bot,
-  AlertCircle
+  AlertCircle,
+  BotIcon
 } from "lucide-react";
 import { memo } from "react";
 import type { Task } from "./index";
-import Magnet from '../../../components/lib-animated/Magnet' 
 
 export const tasks = [
   { stt: 1, name: "Bật vòi nước", remind: 4, response: 3.5, note: "Bật vòi hơi lâu" },
@@ -73,7 +73,7 @@ const TaskList: React.FC<TaskListProps> = ({
           </colgroup>
           <thead>
             <tr className="bg-gray-50 text-left">
-              <th className="px-2 py-3 text-sm font-medium text-gray-500 uppercase tracking-wider text-center">
+              <th className="px-3 py-3 text-sm font-medium text-gray-500 uppercase tracking-wider text-center">
                 <div className="flex items-center justify-center bg-blue-100 rounded-full px-2 py-1.5">
                   <ListChecks className="h-3 w-3 text-blue-600 mr-1" />
                   STT
@@ -85,20 +85,19 @@ const TaskList: React.FC<TaskListProps> = ({
                   Tên nhiệm vụ
                 </div>
               </th>
-              <th className="px-2 py-3 text-sm font-medium text-gray-500 uppercase tracking-wider text-center">
+              <th className="px-3 py-3 text-sm font-medium text-gray-500 uppercase tracking-wider text-center">
                 <div className="flex items-center justify-center bg-blue-100 rounded-full px-2 py-1.5">
                   <Bell className="h-3 w-3 text-blue-600 mr-1" />
                   Nhắc nhở
                 </div>
               </th>
-              <th className="px-2 py-3 text-sm font-medium text-gray-500 uppercase tracking-wider text-center">
+              <th className="px-3 py-3 text-sm font-medium text-gray-500 uppercase tracking-wider text-center">
                 <div className="flex items-center justify-center bg-blue-100 rounded-full px-2 py-1.5">
                   <Clock className="h-3 w-3 text-blue-600 mr-1" />
                   Phản hồi
                 </div>
               </th>
-              <Magnet padding={300} disabled={false} magnetStrength={10}>
-                <th className="px-6 py-3 text-sm font-medium text-gray-500 uppercase tracking-wider text-center">
+              <th className="px-6 py-3 text-sm font-medium text-gray-500 uppercase tracking-wider text-center">
                 {hasFeedback ? (
                   <div className="flex items-center justify-center bg-blue-100 rounded-full px-3 py-1.5">
                     <MessageCircle className="h-3 w-3 text-[#19395E] mr-2" />
@@ -113,18 +112,20 @@ const TaskList: React.FC<TaskListProps> = ({
                   <div className="flex items-center justify-center bg-red-100 rounded-full px-3 py-1.5">
                     <AlertCircle className="h-3 w-3 text-red-600 mr-2" />
                     <span>Lỗi kết nối</span>
-                  </div>
-                ) : (
+                  </div>                ) : (
                   <button
                     onClick={onGenerateFeedback}
-                    className="w-full flex items-center justify-center bg-blue-100 hover:bg-blue-200 rounded-full px-16  py-1.5 transition-colors duration-200"
+                    className="w-full flex items-center justify-center bg-blue-100 hover:bg-blue-200 rounded-full px-16 py-1.5 transition-colors duration-200 glow-button animate-pulse-slow relative overflow-hidden"
+                    style={{
+                      boxShadow: '0 0 10px 2px rgba(59, 130, 246, 0.6), 0 0 20px 4px rgba(59, 130, 246, 0.4)'
+                    }}
                   >
-                    <Bot className="h-3 w-3 text-[#19395E] mr-2" />
+                    <Bot className="h-5 w-5 text-[#19395E] mr-2 animate-bounce-slow" />
                     <span>THÊM NHẬN XÉT TỪ VRA AI</span>
+                    <div className="absolute inset-0 bg-white/30 shine-effect"></div>
                   </button>
                 )}
               </th>
-              </Magnet>
             </tr>
           </thead>
           <tbody className="divide-y divide-gray-200">

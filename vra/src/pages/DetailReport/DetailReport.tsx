@@ -8,6 +8,10 @@ import {
   AlertTriangle,
   Timer,
   Bot,
+  BoldIcon,
+  BotIcon,
+  BookKeyIcon,
+  BotMessageSquareIcon,
 } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import {
@@ -18,6 +22,7 @@ import {
 } from "./components";
 import { tasks } from "./components/TaskList";
 import { generateText } from "../../services/geminiAiService";
+import AnimatedButton from "../../components/lib-animated/Button";
 
 const DetailReport: React.FC = () => {
   const navigate = useNavigate();
@@ -116,13 +121,13 @@ const DetailReport: React.FC = () => {
   const requestAIEvaluation = useCallback(async () => {
     setIsGeneratingEvaluation(true);
     setEvaluationError(false);
-    
+
     try {
       // Prepare data about all tasks for the AI prompt
       const taskData = tasks.map(task => {
         // Get feedback for this task if available
         const feedback = taskFeedbacks[task.stt];
-        
+
         return `
         Nhiệm vụ: ${task.name}
         - Số lần nhắc nhở: ${task.remind} lần (càng ít càng tốt, ≥3 lần là cần cải thiện)
@@ -131,7 +136,7 @@ const DetailReport: React.FC = () => {
         ${feedback ? `- Nhận xét chi tiết: ${feedback.full}` : ''}
         `;
       }).join('\n');
-      
+
       // Create prompt for overall evaluation
       const evaluationPrompt = `
       Hãy đánh giá tổng quan về buổi học rửa tay của học sinh dựa trên thông tin về từng nhiệm vụ sau:
@@ -147,23 +152,23 @@ const DetailReport: React.FC = () => {
       Điểm: [Điểm số từ 1-10]
       Nhận xét: [Nhận xét tổng quan]
       `;
-      
+
       // Call Gemini API
       const aiResponse = await generateText(evaluationPrompt);
-      
+
       // Extract score from response (format expected: "Điểm: X" at beginning of response)
       const scoreMatch = aiResponse?.match(/Điểm:\s*(\d+)/i);
       const extractedScore = scoreMatch ? parseInt(scoreMatch[1], 10) : null;
-      
+
       // Make sure score is within 1-10 range
       const validScore = extractedScore && !isNaN(extractedScore) && extractedScore >= 1 && extractedScore <= 10
         ? extractedScore
         : Math.floor(Math.random() * 3) + 7; // Fallback score between 7-9 if AI didn't provide valid score
-      
+
       // Extract evaluation summary
       const summaryMatch = aiResponse?.match(/Nhận xét:\s*([\s\S]+)/i);
       const extractedSummary = summaryMatch ? summaryMatch[1].trim() : '';
-      
+
       // Set state with AI generated content
       setScore(validScore);
       setEvaluationSummary(extractedSummary || "Học sinh đã hoàn thành các nhiệm vụ trong buổi học với một số điểm cần cải thiện. Cần hướng dẫn thêm về kỹ năng xịt xà phòng và rửa tay kỹ hơn.");
@@ -171,7 +176,7 @@ const DetailReport: React.FC = () => {
       console.error("Error generating AI evaluation:", error);
       // Show error state
       setEvaluationError(true);
-      
+
       // Clear error after 3 seconds
       setTimeout(() => {
         setEvaluationError(false);
@@ -321,7 +326,7 @@ const DetailReport: React.FC = () => {
                           <div className="text-center p-4">
                             <AlertTriangle size={40} className="text-red-500 mx-auto mb-3" />
                             <span className="text-red-500 font-medium block mb-4 text-base">Lỗi kết nối</span>
-                            <button 
+                            <button
                               onClick={requestAIEvaluation}
                               className="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-full transition-all duration-200 flex items-center mx-auto shadow-sm hover:shadow-md text-sm"
                             >
@@ -340,32 +345,44 @@ const DetailReport: React.FC = () => {
                       // Request evaluation button
                       <div className="flex flex-col items-center justify-center text-center py-6 flex-grow">
                         <div className="w-40 h-40 flex items-center justify-center mb-6 bg-gray-50 rounded-full border border-gray-200 shadow-sm">
-                          <div className="text-center p-4">
+                          <div className="text-center">
                             <Bot size={40} className="text-gray-400 mx-auto mb-1" />
-                            <span className="text-gray-500 font-medium block mb-2 text-base">Chưa có đánh giá</span>
+                            <span className="text-gray-500 font-medium block mb-5 text-base">Chưa có đánh giá</span>
                             {Object.keys(taskFeedbacks).length > 0 ? (
-                              <button 
+                              // <button
+                              //   onClick={requestAIEvaluation}
+                              //   className="bg-[#19395E] hover:bg-[#254b76] text-white px-4 py-2 rounded-full transition-all duration-200 flex items-center mx-auto shadow-sm hover:shadow-md text-sm glow-button animate-pulse-slow relative overflow-hidden"
+                              //   style={{
+                              //     boxShadow: '0 0 10px 2px rgba(25, 57, 94, 0.6), 0 0 20px 4px rgba(25, 57, 94, 0.4)'
+                              //   }}
+                              // >
+                              //   <span>Yêu cầu đánh giá</span>
+                              //   <div className="absolute inset-0 bg-white/30 shine-effect"></div>
+                              // </button>
+                              <AnimatedButton
+                                icon={BotMessageSquareIcon}
+                                text="Yêu cầu đánh giá"
+                                size="sm"
+                                className="bg-[#19395E] hover:bg-[#254b76] text-white rounded-full transition-all duration-200 shadow-sm hover:shadow-md glow-button animate-pulse-slow relative"
+                                style={{
+                                  boxShadow: '0 0 10px 2px rgba(25, 57, 94, 0.6), 0 0 20px 4px rgba(25, 57, 94, 0.4)'
+                                }}
                                 onClick={requestAIEvaluation}
-                                className="bg-[#19395E] hover:bg-[#254b76] text-white px-4 py-2 rounded-full transition-all duration-200 flex items-center mx-auto shadow-sm hover:shadow-md text-sm"
-                              >
-                                <Bot size={20} className="mr-2" />
-                                <span>Yêu cầu đánh giá</span>
-                              </button>
+                              />
                             ) : (
-                              <button 
-                                className="bg-gray-300 text-gray-600 px-4 py-2 rounded-full flex items-center mx-auto shadow-sm text-sm cursor-not-allowed"
+                              <button
+                                className="bg-gray-300 text-gray-600 px-4 py-2 rounded-full flex items-center mx-auto shadow-sm text-[15px] cursor-not-allowed"
                                 title="Cần tạo nhận xét cho các nhiệm vụ trước khi đánh giá"
                               >
-                                <Bot size={18} className="mr-2" />
                                 <span>Yêu cầu đánh giá</span>
                               </button>
                             )}
                           </div>
                         </div>
                         <div className="bg-blue-50 rounded-lg p-5 border border-blue-100 w-full">
-                          <p className="text-gray-600 text-sm mb-0 leading-relaxed">
-                            {Object.keys(taskFeedbacks).length > 0 
-                              ? "Sử dụng trí tuệ nhân tạo để phân tích và đưa ra đánh giá tổng quan về buổi học. AI sẽ đánh giá điểm số dựa trên các tiêu chí chất lượng." 
+                          <p className="text-gray-600 text-[15px] mb-0 leading-relaxed">
+                            {Object.keys(taskFeedbacks).length > 0
+                              ? "Sử dụng trí tuệ nhân tạo để phân tích và đưa ra đánh giá tổng quan về buổi học. AI sẽ đánh giá điểm số dựa trên các tiêu chí chất lượng."
                               : "Vui lòng tạo nhận xét cho từng nhiệm vụ trước khi yêu cầu đánh giá tổng thể buổi học."}
                           </p>
                         </div>
@@ -391,13 +408,13 @@ const DetailReport: React.FC = () => {
                           </div>
                         </div>
                       </div>
-                      
+
                       <div className="text-center w-full mb-6">
                         <span className="text-xl font-semibold text-blue-900 inline-block">Điểm số đánh giá</span>
                       </div>
 
                       {/* Evaluation Summary - improve scrolling for long content */}
-                      <div className="bg-blue-50 rounded-lg p-4 border border-blue-100 mb-6 w-full max-h-[180px] overflow-y-auto custom-scrollbar">
+                      <div className="bg-blue-50 rounded-lg p-4 border border-blue-100 mb-8 w-full max-h-[180px] overflow-y-auto custom-scrollbar">
                         <div className="flex items-start">
                           <div className="bg-white p-3 rounded-full flex-shrink-0 mr-4 mt-0.5 shadow-sm">
                             <Bot size={24} className="text-[#19395E]" />
@@ -407,13 +424,16 @@ const DetailReport: React.FC = () => {
                           </div>
                         </div>
                       </div>
-
                       <button
                         onClick={handleOpenEvaluationChat}
-                        className="w-full px-5 py-3 bg-[#19395E] hover:bg-[#254b76] text-white rounded-lg font-medium transition-all duration-200 shadow-sm flex items-center justify-center group text-base"
+                        className="w-full px-5 py-3 bg-[#19395E] hover:bg-[#254b76] text-white rounded-lg font-medium transition-all duration-200 shadow-sm flex items-center justify-center group text-base glow-button relative overflow-hidden"
+                        style={{
+                          boxShadow: '0 0 10px 2px rgba(25, 57, 94, 0.6), 0 0 20px 4px rgba(25, 57, 94, 0.4)'
+                        }}
                       >
                         <MessageCircle size={22} className="mr-2 group-hover:animate-pulse" />
                         Trao đổi thêm với VRA AI
+                        <div className="absolute inset-0 bg-white/30 shine-effect"></div>
                       </button>
                     </div>
                   )}

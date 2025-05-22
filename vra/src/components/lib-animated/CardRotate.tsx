@@ -52,7 +52,7 @@ interface StackProps {
 export default function Stack({
   randomRotation = false,
   sensitivity = 200,
-  cardDimensions = { width: 208, height: 208 },
+  cardDimensions = { width: 580, height: 380 },
   cardsData = [],
   animationConfig = { stiffness: 260, damping: 20 },
   sendToBackOnClick = false
@@ -116,14 +116,14 @@ export default function Stack({
                 damping: animationConfig.damping,
               }}
               style={{
-                width: "90%",
-                height: "90%",
+                width: "100%",
+                height: "100%",
               }}
             >
               <img
                 src={card.img}
                 alt={`card-${card.id}`}
-                className="w-full h-full object-cover pointer-events-none"
+                className="w-full h-full object-contain pointer-events-none"
               />
             </motion.div>
           </CardRotate>
