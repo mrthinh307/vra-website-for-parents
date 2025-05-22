@@ -262,13 +262,25 @@ const HomePage: React.FC = () => {
           name: data.name,
           avatar_url: data.avatar_url,
         }),
-      });
-      const result = await res.json();
+      });      const result = await res.json();
       if (res.ok) {
         alert("Đăng ký thành công!");
         setShowRegisterForm(false);
       } else {
-        alert(result.error || "Đăng ký thất bại!");
+        // Xử lý các loại thông báo lỗi khác nhau từ server
+        if (result.errors && Array.isArray(result.errors)) {
+          // Hiển thị lỗi validation từ express-validator
+          const errorMessages = result.errors.map((err: { msg: any; }) => err.msg).join('\n');
+          alert(errorMessages);
+        } else if (result.message) {
+          // Hiển thị message từ server
+          alert(result.message);
+        } else if (result.error) {
+          // Hiển thị error từ server
+          alert(result.error);
+        } else {
+          alert("Đăng ký thất bại! Vui lòng thử lại.");
+        }
       }
     } catch (err) {
       alert("Có lỗi xảy ra khi đăng ký!");

@@ -18,12 +18,23 @@ export type RegisterFormData = {
   avatar_url?: string;
 };
 
+// Hàm kiểm tra định dạng email
+const isValidEmail = (email: string): boolean => {
+  const emailRegex = /^[a-zA-Z0-9._%+-]+@(gmail\.com|edu\.vn)$/;
+  return emailRegex.test(email);
+};
+
+// Hàm kiểm tra định dạng số điện thoại
+const isValidPhone = (phone: string): boolean => {
+  const phoneRegex = /^0\d{9}$/;
+  return phoneRegex.test(phone);
+};
+
 const RegisterForm: React.FC<RegisterFormProps> = ({
   isOpen,
   onClose,
   onSubmit,
-}) => {
-  const [registerData, setRegisterData] = useState<RegisterFormData>({
+}) => {  const [registerData, setRegisterData] = useState<RegisterFormData>({
     name: "",
     email: "",
     phone: "",
@@ -32,17 +43,48 @@ const RegisterForm: React.FC<RegisterFormProps> = ({
     avatar_url: "",
   });
 
+  // State để lưu trạng thái lỗi
+  const [errors, setErrors] = useState({
+    name: "",
+    email: "",
+    phone: "",
+    password: "",
+    confirmPassword: "",
+  });
+
   const handleRegisterChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     setRegisterData((prev) => ({
       ...prev,
       [name]: value,
     }));
+    
+    // Xóa lỗi khi người dùng bắt đầu nhập lại
+    setErrors(prev => ({
+      ...prev,
+      [name]: ""
+    }));
   };
-
   const handleRegisterSubmit = async (data: RegisterFormData) => {
     console.log("Dữ liệu gửi đăng ký:", data);
-    // Here you could add validation before submitting
+    
+    // Kiểm tra validation
+    const newErrors = {
+      name: data.name ? "" : "Vui lòng nhập họ và tên",
+      email: data.email ? (isValidEmail(data.email) ? "" : "Email phải có đuôi gmail.com hoặc edu.vn") : "Vui lòng nhập email",
+      phone: data.phone ? (isValidPhone(data.phone) ? "" : "Số điện thoại phải bắt đầu bằng số 0 và có 10 chữ số") : "Vui lòng nhập số điện thoại",
+      password: data.password ? "" : "Vui lòng nhập mật khẩu",
+      confirmPassword: data.confirmPassword === data.password ? "" : "Mật khẩu và xác nhận mật khẩu phải giống nhau"
+    };
+    
+    setErrors(newErrors);
+    
+    // Kiểm tra xem có lỗi nào không
+    if (Object.values(newErrors).some(error => error !== "")) {
+      return; // Không tiếp tục nếu có lỗi
+    }
+    
+    // Nếu không có lỗi, tiếp tục gửi dữ liệu
     onSubmit(data);
 
     // Reset form after submission
@@ -85,10 +127,8 @@ const RegisterForm: React.FC<RegisterFormProps> = ({
           <p className="text-gray-600 text-sm">
             Tham gia cùng cộng đồng để hỗ trợ trẻ phát triển toàn diện
           </p>
-        </div>
-
-        <div className="space-y-4">
-          <div className="form-input flex items-center border-2 border-gray-300 rounded-lg px-4 py-3 focus-within:border-primary-color transition-all duration-300">
+        </div>        <div className="space-y-4">
+          <div className={`form-input flex items-center border-2 ${errors.name ? 'border-red-500' : 'border-gray-300'} rounded-lg px-4 py-3 focus-within:border-primary-color transition-all duration-300`}>
             <User className="h-5 w-5 text-gray-400 mr-3" />
             <input
               type="text"
@@ -100,8 +140,9 @@ const RegisterForm: React.FC<RegisterFormProps> = ({
               className="flex-1 text-gray-800 bg-transparent border-0 focus:outline-none"
             />
           </div>
+          {errors.name && <p className="text-red-500 text-xs mt-1">{errors.name}</p>}
 
-          <div className="form-input flex items-center border-2 border-gray-300 rounded-lg px-4 py-3 focus-within:border-primary-color transition-all duration-300">
+          <div className={`form-input flex items-center border-2 ${errors.email ? 'border-red-500' : 'border-gray-300'} rounded-lg px-4 py-3 focus-within:border-primary-color transition-all duration-300`}>
             <Mail className="h-5 w-5 text-gray-400 mr-3" />
             <input
               type="email"
@@ -112,8 +153,9 @@ const RegisterForm: React.FC<RegisterFormProps> = ({
               className="flex-1 text-gray-800 bg-transparent border-0 focus:outline-none"
             />
           </div>
+          {errors.email && <p className="text-red-500 text-xs mt-1">{errors.email}</p>}
 
-          <div className="form-input flex items-center border-2 border-gray-300 rounded-lg px-4 py-3 focus-within:border-primary-color transition-all duration-300">
+          <div className={`form-input flex items-center border-2 ${errors.phone ? 'border-red-500' : 'border-gray-300'} rounded-lg px-4 py-3 focus-within:border-primary-color transition-all duration-300`}>
             <Phone className="h-5 w-5 text-gray-400 mr-3" />
             <input
               type="tel"
@@ -124,8 +166,7 @@ const RegisterForm: React.FC<RegisterFormProps> = ({
               className="flex-1 text-gray-800 bg-transparent border-0 focus:outline-none"
             />
           </div>
-
-          <div className="form-input flex items-center border-2 border-gray-300 rounded-lg px-4 py-3 focus-within:border-primary-color transition-all duration-300">
+          {errors.phone && <p className="text-red-500 text-xs mt-1">{errors.phone}</p>}          <div className={`form-input flex items-center border-2 ${errors.password ? 'border-red-500' : 'border-gray-300'} rounded-lg px-4 py-3 focus-within:border-primary-color transition-all duration-300`}>
             <Eye className="h-5 w-5 text-gray-400 mr-3" />
             <input
               type="password"
@@ -136,8 +177,9 @@ const RegisterForm: React.FC<RegisterFormProps> = ({
               className="flex-1 text-gray-800 bg-transparent border-0 focus:outline-none"
             />
           </div>
+          {errors.password && <p className="text-red-500 text-xs mt-1">{errors.password}</p>}
 
-          <div className="form-input flex items-center border-2 border-gray-300 rounded-lg px-4 py-3 focus-within:border-primary-color transition-all duration-300">
+          <div className={`form-input flex items-center border-2 ${errors.confirmPassword ? 'border-red-500' : 'border-gray-300'} rounded-lg px-4 py-3 focus-within:border-primary-color transition-all duration-300`}>
             <Eye className="h-5 w-5 text-gray-400 mr-3" />
             <input
               type="password"
@@ -148,6 +190,7 @@ const RegisterForm: React.FC<RegisterFormProps> = ({
               className="flex-1 text-gray-800 bg-transparent border-0 focus:outline-none"
             />
           </div>
+          {errors.confirmPassword && <p className="text-red-500 text-xs mt-1">{errors.confirmPassword}</p>}
           <AnimatedButton
             icon={HeartHandshake}
             text="Đăng ký"
