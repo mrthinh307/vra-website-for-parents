@@ -1,20 +1,22 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { Award, Bot, Info, Send, X, Loader2 } from 'lucide-react';
 import { generateText } from '../../../services/geminiAiService';
-import { tasks } from './TaskList';
+import { Task } from './index';
 
 interface EvaluationChatModalProps {
   isOpen: boolean;
   onClose: () => void;
   score: number | null;
   evaluationSummary: string;
+  tasks: Task[];
 }
 
 const EvaluationChatModal: React.FC<EvaluationChatModalProps> = ({
   isOpen,
   onClose,
   score,
-  evaluationSummary
+  evaluationSummary,
+  tasks = []
 }) => {
   const [evaluationMessages, setEvaluationMessages] = useState<{type: 'user' | 'ai', content: string}[]>([]);
   const [evaluationNewMessage, setEvaluationNewMessage] = useState('');
@@ -83,7 +85,7 @@ const EvaluationChatModal: React.FC<EvaluationChatModalProps> = ({
     } finally {
       setIsTyping(false);
     }
-  }, [evaluationMessages, score, evaluationSummary]);
+  }, [evaluationMessages, score, evaluationSummary, tasks]);
 
   const handleSendEvaluationMessage = async () => {
     if (!evaluationNewMessage.trim() || isTyping) return;

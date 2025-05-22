@@ -8,26 +8,29 @@ import {
   AlertTriangle,
   Timer,
   Bot,
+  Loader2,
   BoldIcon,
   BotIcon,
   BookKeyIcon,
   BotMessageSquareIcon,
 } from "lucide-react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import {
   FeedbackDetailModal,
   EvaluationChatModal,
   TaskList,
   Task
 } from "./components";
-import { tasks } from "./components/TaskList";
 import { generateText } from "../../services/geminiAiService";
+import { DetailReportService } from "../../services/missionService";
 import AnimatedButton from "../../components/lib-animated/Button";
 
 const DetailReport: React.FC = () => {
   const navigate = useNavigate();
+  const { lessonProgressId } = useParams<{ lessonProgressId: string }>();
   const [currentTask, setCurrentTask] = useState<Task | null>(null);
   const [score, setScore] = useState<number | null>(null);
+  const [tasks, setTasks] = useState<Task[]>([]);
 
   // AI feedback
   const [isGeneratingFeedback, setIsGeneratingFeedback] = useState(false);
@@ -46,7 +49,27 @@ const DetailReport: React.FC = () => {
     console.log(`Gemini API key status: ${apiKeyStatus}`);
   }, []);
 
+  // Fetch tasks when component mounts
+  useEffect(() => {
+    const fetchTasks = async () => {
+      if (!lessonProgressId) return;
+      
+      try {
+        const missionService = DetailReportService.getInstance();
+        // Convert to string if needed
+        const taskData = await missionService.getTasks(String(lessonProgressId));
+        setTasks(taskData);
+      } catch (err) {
+        console.error("Error fetching tasks:", err);
+      }
+    };
+
+    fetchTasks();
+  }, [lessonProgressId]);
+
   const generateAllFeedback = useCallback(async () => {
+    if (!tasks.length) return;
+    
     setIsGeneratingFeedback(true);
     setFeedbackError(false);
 
@@ -99,7 +122,7 @@ const DetailReport: React.FC = () => {
     } finally {
       setIsGeneratingFeedback(false);
     }
-  }, []);
+  }, [tasks]);
 
   const getStarColor = (score: number) => {
     if (score >= 8) return '#FFD700'; // vàng
@@ -119,6 +142,8 @@ const DetailReport: React.FC = () => {
 
   // Function to request AI evaluation
   const requestAIEvaluation = useCallback(async () => {
+    if (!tasks.length) return;
+    
     setIsGeneratingEvaluation(true);
     setEvaluationError(false);
 
@@ -188,7 +213,7 @@ const DetailReport: React.FC = () => {
       // End loading state
       setIsGeneratingEvaluation(false);
     }
-  }, [taskFeedbacks]); // Add taskFeedbacks dependency to re-create the function when feedbacks change
+  }, [tasks, taskFeedbacks]); // Add taskFeedbacks dependency to re-create the function when feedbacks change
 
   // Handle opening the evaluation chat
   const handleOpenEvaluationChat = useCallback(() => {
@@ -245,6 +270,7 @@ const DetailReport: React.FC = () => {
             onGenerateFeedback={generateAllFeedback}
             isGeneratingFeedback={isGeneratingFeedback}
             feedbackError={feedbackError}
+            lessonProgressId={lessonProgressId}
           />
 
           {/* Legend for icons */}
@@ -253,7 +279,7 @@ const DetailReport: React.FC = () => {
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div className="flex items-center">
                 <AlertTriangle className="h-4 w-4 text-amber-500 mr-2" />
-                <span className="text-sm text-gray-600">Nhiều lần nhắc nhở (≥ 3 lần)</span>
+                <span className="text-sm text-gray-600">Nhiều lần nhắc nhở (≥3 lần)</span>
               </div>
               <div className="flex items-center">
                 <Timer className="h-4 w-4 text-red-500 mr-2" />
@@ -262,8 +288,8 @@ const DetailReport: React.FC = () => {
             </div>
           </div>
 
-          {/* Two column layout for video and score */}
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+{/* Two column layout for video and score */}
+<div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
             {/* Video thực hành */}
             <div className="lg:col-span-2">
               <div className="bg-white rounded-lg shadow-lg overflow-hidden border border-gray-100 h-full flex flex-col">
@@ -446,21 +472,21 @@ const DetailReport: React.FC = () => {
 
       {/* Modals */}
       {currentTask && (
-        <>
-          <FeedbackDetailModal
-            isOpen={showFeedbackDetail}
-            onClose={handleCloseFeedbackDetail}
-            currentTask={currentTask}
-            taskFeedbacks={taskFeedbacks}
-          />
-        </>
+        <FeedbackDetailModal
+          isOpen={showFeedbackDetail}
+          onClose={handleCloseFeedbackDetail}
+          currentTask={currentTask}
+          taskFeedbacks={taskFeedbacks}
+        />
       )}
 
+      {/* Evaluation Chat Modal */}
       <EvaluationChatModal
         isOpen={showEvaluationChat}
         onClose={handleCloseEvaluationChat}
         score={score}
         evaluationSummary={evaluationSummary}
+        tasks={tasks}
       />
     </div>
   );

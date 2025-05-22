@@ -39,6 +39,7 @@ function App() {
           {/* Child routes rendered within MainLayout */}
           <Route path="/" element={<HomePage />} />
           <Route path="/lesson-list" element={<VRALessonList />} />
+          <Route path="/report-detail/:lessonProgressId" element={<VRADetailReport />} />
           <Route path="/report-detail" element={<VRADetailReport />} />
           <Route path="/profile" element={<PersonalInfoPage />} />
         </Route>
