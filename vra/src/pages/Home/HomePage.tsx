@@ -548,6 +548,7 @@ const HomePage: React.FC = () => {
                             size="full"
                             withFullWidth={true}
                             primary
+                            onClick={handleLogin}
                           />
                         </div>
 
