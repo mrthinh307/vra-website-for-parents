@@ -31,6 +31,7 @@ const LessonList: React.FC = () => {
   const [selectedStatus, setSelectedStatus] = useState('all');
   const [supervisor, setSupervisor] = useState<Supervisor | null>(null);
   const [hasShownAlert, setHasShownAlert] = useState(false);
+  const [searchTimeout, setSearchTimeout] = useState<NodeJS.Timeout | null>(null);
   const navigate = useNavigate();
   const { isLoggedIn, user } = useOutletContext<MainLayoutContext>();
 
@@ -88,11 +89,41 @@ const LessonList: React.FC = () => {
     fetchLessons();
   }, [selectedStatus, supervisor?.id]);
 
-  // Filter lessons based on search query
-  const filteredLessons = lessons.filter(lesson =>
-    lesson.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-    lesson.device.toLowerCase().includes(searchQuery.toLowerCase())
-  );
+  // Hàm tìm kiếm bài học
+  const searchLessons = (query: string) => {
+    if (searchTimeout) {
+      clearTimeout(searchTimeout);
+    }
+
+    const timeout = setTimeout(() => {
+      const searchResults = lessons.filter(lesson => {
+        const searchLower = query.toLowerCase();
+        return (
+          lesson.title.toLowerCase().includes(searchLower) ||
+          lesson.device.toLowerCase().includes(searchLower) ||
+          lesson.date.toLowerCase().includes(searchLower) ||
+          lesson.status.toLowerCase().includes(searchLower)
+        );
+      });
+      setFilteredLessons(searchResults);
+    }, 300); // Debounce 300ms
+
+    setSearchTimeout(timeout);
+  };
+
+  const [filteredLessons, setFilteredLessons] = useState<LessonListItem[]>([]);
+
+  // Cập nhật filteredLessons khi lessons thay đổi
+  useEffect(() => {
+    setFilteredLessons(lessons);
+  }, [lessons]);
+
+  // Xử lý thay đổi search query
+  const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = e.target.value;
+    setSearchQuery(value);
+    searchLessons(value);
+  };
 
   const handlePageChange = (page: number) => {
     setCurrentPage(page);
@@ -172,9 +203,9 @@ const LessonList: React.FC = () => {
                 <div className="relative flex-grow">
                   <input
                     type="text"
-                    placeholder="Tìm kiếm bài học..."
+                    placeholder="Tìm kiếm theo tên bài học, thiết bị, ngày hoặc trạng thái..."
                     value={searchQuery}
-                    onChange={(e) => setSearchQuery(e.target.value)}
+                    onChange={handleSearchChange}
                     className="pl-9 pr-4 py-2 w-full border rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-primary-color focus:border-primary-color transition-colors duration-200"
                   />
                   <Search className="absolute left-3 top-2.5 text-gray-400" size={16} />
@@ -251,7 +282,7 @@ const LessonList: React.FC = () => {
                   ) : filteredLessons.length === 0 ? (
                     <tr>
                       <td colSpan={5} className="px-6 py-4 text-center text-gray-500">
-                        Không tìm thấy bài học nào
+                        {searchQuery ? 'Không tìm thấy bài học phù hợp với từ khóa tìm kiếm' : 'Không có bài học nào'}
                       </td>
                     </tr>
                   ) : (
