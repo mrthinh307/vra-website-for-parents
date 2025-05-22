@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   ChevronLeft,
   ChevronRight,
@@ -13,40 +13,65 @@ import {
   Award
 } from "lucide-react";
 import { useNavigate } from "react-router-dom";
+import { LessonListService, LessonListItem } from "../../services/lessonService";
 
 const LessonList: React.FC = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [searchQuery, setSearchQuery] = useState("");
+  const [lessons, setLessons] = useState<LessonListItem[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+  const [selectedStatus, setSelectedStatus] = useState('all');
   const navigate = useNavigate();
 
-  const lessons = [
-    { id: 1, device: "device_02", date: "13/04/2025", title: "Bài học rửa tay", level: "Chi tiết", status: "Completed" },
-    { id: 2, device: "device_02", date: "13/04/2025", title: "Khám phá thế giới động vật", level: "Chi tiết", status: "In Progress" },
-    { id: 3, device: "device_02", date: "13/04/2025", title: "Khám phá thế giới động vật", level: "Chi tiết", status: "Completed" },
-    { id: 4, device: "device_02", date: "13/04/2025", title: "Bài học rửa tay", level: "Chi tiết", status: "New" },
-    { id: 5, device: "device_02", date: "13/04/2025", title: "Khám phá thế giới đại dương", level: "Chi tiết", status: "Completed" },
-    { id: 6, device: "device_02", date: "13/04/2025", title: "Khám phá con người", level: "Chi tiết", status: "In Progress" },
-    { id: 7, device: "device_02", date: "13/04/2025", title: "Khám phá thế giới thực vật", level: "Chi tiết", status: "Completed" },
-    { id: 8, device: "device_02", date: "13/04/2025", title: "Giao tiếp với Doraemon", level: "Chi tiết", status: "New" },
-    { id: 9, device: "device_02", date: "13/04/2025", title: "Khám phá thế giới thực vật", level: "Chi tiết", status: "Completed" },
-    { id: 10, device: "device_02", date: "13/04/2025", title: "Khám phá lịch sử cùng Nobita", level: "Chi tiết", status: "In Progress" },
-  ];
+  // Giả lập ID giám sát viên - trong thực tế sẽ lấy từ context hoặc props
+  const supervisorId = "5aa59cf9-5cf2-48eb-ad2e-881bd209d8be";
+
+  useEffect(() => {
+    const fetchLessons = async () => {
+      try {
+        setIsLoading(true);
+        const lessonService = LessonListService.getInstance();
+        const lessonData = await lessonService.getLessonList(supervisorId, selectedStatus);
+        setLessons(lessonData);
+        setError(null);
+      } catch (err) {
+        setError('Có lỗi xảy ra khi tải dữ liệu bài học');
+        console.error('Error fetching lessons:', err);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    fetchLessons();
+  }, [selectedStatus]);
+
+  // Filter lessons based on search query
+  const filteredLessons = lessons.filter(lesson =>
+    lesson.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
+    lesson.device.toLowerCase().includes(searchQuery.toLowerCase())
+  );
 
   const handlePageChange = (page: number) => {
     setCurrentPage(page);
   };
 
   const handleDetailClick = (lessonId: number) => {
-    navigate('/report-detail');
+    navigate(`/report-detail/${lessonId}`);
+  };
+
+  const handleStatusChange = (status: string) => {
+    setSelectedStatus(status);
+    setCurrentPage(1); // Reset về trang 1 khi thay đổi status
   };
 
   const getStatusClass = (status: string) => {
     switch (status) {
-      case "Completed":
+      case "completed":
         return "bg-green-100 text-green-800";
-      case "In Progress":
+      case "in_progress":
         return "bg-blue-100 text-blue-800";
-      case "New":
+      case "assigned":
         return "bg-yellow-100 text-yellow-800";
       default:
         return "bg-gray-100 text-gray-800";
@@ -113,11 +138,15 @@ const LessonList: React.FC = () => {
                   <Search className="absolute left-3 top-2.5 text-gray-400" size={16} />
                 </div>
                 <div className="relative">
-                  <select className="pl-4 pr-10 py-2 w-full border rounded-lg text-sm appearance-none focus:outline-none focus:ring-2 focus:ring-primary-color focus:border-primary-color transition-colors duration-200">
-                    <option>Tất cả</option>
-                    <option>Hoàn thành</option>
-                    <option>Đang tiến hành</option>
-                    <option>Mới</option>
+                  <select 
+                    value={selectedStatus}
+                    onChange={(e) => handleStatusChange(e.target.value)}
+                    className="pl-4 pr-10 py-2 w-full border rounded-lg text-sm appearance-none focus:outline-none focus:ring-2 focus:ring-primary-color focus:border-primary-color transition-colors duration-200"
+                  >
+                    <option value="all">Tất cả</option>
+                    <option value="completed">Hoàn thành</option>
+                    <option value="in_progress">Đang tiến hành</option>
+                    <option value="assigned">Mới</option>
                   </select>
                   <ChevronRight className="absolute right-3 top-2.5 text-gray-400 pointer-events-none" size={16} />
                 </div>
@@ -162,29 +191,52 @@ const LessonList: React.FC = () => {
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-gray-200">
-                  {lessons.map((lesson, index) => (
-                    <tr
-                      key={lesson.id}
-                      className="hover:bg-blue-50 transition-colors duration-150 cursor-pointer"
-                      onClick={() => handleDetailClick(lesson.id)}
-                    >
-                      <td className="px-6 py-4 text-base text-gray-700 font-medium text-center">{lesson.id}</td>
-                      <td className="px-6 py-4 text-base text-center">
-                        <span className="font-medium text-blue-600">{lesson.device}</span>
-                      </td>
-                      <td className="px-6 py-4 text-base text-gray-700 text-center">
-                        {lesson.date}
-                      </td>
-                      <td className="px-6 py-4 text-base font-medium text-blue-700 text-center">
-                        {lesson.title}
-                      </td>
-                      <td className="px-6 py-4 text-center">
-                        <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-sm font-medium ${getStatusClass(lesson.status)}`}>
-                          {lesson.status}
-                        </span>
+                  {isLoading ? (
+                    <tr>
+                      <td colSpan={5} className="px-6 py-4 text-center">
+                        <div className="flex items-center justify-center">
+                          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary-color"></div>
+                          <span className="ml-2">Đang tải dữ liệu...</span>
+                        </div>
                       </td>
                     </tr>
-                  ))}
+                  ) : error ? (
+                    <tr>
+                      <td colSpan={5} className="px-6 py-4 text-center text-red-600">
+                        {error}
+                      </td>
+                    </tr>
+                  ) : filteredLessons.length === 0 ? (
+                    <tr>
+                      <td colSpan={5} className="px-6 py-4 text-center text-gray-500">
+                        Không tìm thấy bài học nào
+                      </td>
+                    </tr>
+                  ) : (
+                    filteredLessons.map((lesson, index) => (
+                      <tr
+                        key={lesson.id}
+                        className="hover:bg-blue-50 transition-colors duration-150 cursor-pointer"
+                        onClick={() => handleDetailClick(lesson.id)}
+                      >
+                        <td className="px-6 py-4 text-base text-gray-700 font-medium text-center">{lesson.id}</td>
+                        <td className="px-6 py-4 text-base text-center">
+                          <span className="font-medium text-blue-600">{lesson.device}</span>
+                        </td>
+                        <td className="px-6 py-4 text-base text-gray-700 text-center">
+                          {lesson.date}
+                        </td>
+                        <td className="px-6 py-4 text-base font-medium text-blue-700 text-center">
+                          {lesson.title}
+                        </td>
+                        <td className="px-6 py-4 text-center">
+                          <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-sm font-medium ${getStatusClass(lesson.status)}`}>
+                            {lesson.status}
+                          </span>
+                        </td>
+                      </tr>
+                    ))
+                  )}
                 </tbody>
               </table>
             </div>
