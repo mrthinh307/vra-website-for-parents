@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { Home, ChevronRight } from 'lucide-react';
 import PersonalInfo from '../../components/PersonalInfo';
 import dayjs from 'dayjs';
+import './PersonalInfoPage.css';
 
 const PersonalInfoPage: React.FC = () => {
   const navigate = useNavigate();
@@ -20,28 +21,10 @@ const PersonalInfoPage: React.FC = () => {
     guardianEmail: "nguyenvanb@example.com",
     relationship: "parent"
   };
-
   return (
-    <div className="flex flex-col min-h-screen bg-gray-50">
-      {/* Breadcrumb */}
-      <div className="bg-white border-b shadow-sm">
-        <div className="container mx-auto px-12 py-3">
-          <div className="flex items-center text-sm text-gray-600">
-            <Home size={16} className="mr-2 text-primary-color" />
-            <button 
-              onClick={() => navigate('/')} 
-              className="hover:text-primary-color transition-colors duration-200 border-none bg-transparent cursor-pointer text-gray-600 p-0"
-            >
-              Trang chủ
-            </button>
-            <ChevronRight size={16} className="mx-2 text-gray-400" />
-            <span className="font-medium text-primary-color">Thông tin cá nhân</span>
-          </div>
-        </div>
-      </div>
-
-      {/* Main Content */}
-      <div className="container mx-auto px-4 py-8">
+    <div className="personal-info-container">
+      <div className="personal-info-form">
+        <h2>Thông tin cá nhân</h2>
         <PersonalInfo studentData={mockStudentData} />
       </div>
     </div>

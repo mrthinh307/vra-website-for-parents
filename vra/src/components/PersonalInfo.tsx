@@ -128,25 +128,22 @@ const PersonalInfo: React.FC<PersonalInfoProps> = ({ studentData }) => {
       setLoading(false);
       message.success('Upload ảnh thành công!');
     }
-  };
-
-  return (
-    <div className="max-w-4xl mx-auto p-6 bg-white rounded-lg shadow-md">
-      <h2 className="text-2xl font-bold mb-6">Thông tin cá nhân</h2>
-      
-      <Form
+  };  return (
+    <div>
+      {/* Title is already in parent component */}
+        <Form
         form={form}
         layout="vertical"
         initialValues={currentData}
-        className="space-y-4"
+        className="personal-form"
+        requiredMark={false}
         onFinish={handleSubmit}
-      >
-        <div className="flex flex-col items-center justify-center mb-6">
+      >        <div className="flex flex-col items-center justify-center mb-8">
           <Avatar
-            size={120}
+            size={150}
             src={avatarUrl || currentData?.avatar}
             icon={<UserOutlined />}
-            className="border-2 border-gray-200 mb-4"
+            className="avatar-glow mb-4"
           />
           <Upload
             name="avatar"
@@ -158,48 +155,46 @@ const PersonalInfo: React.FC<PersonalInfoProps> = ({ studentData }) => {
                 onSuccess?.("ok");
               }, 0);
             }}
-          >
-            <button
+          >              <button
               type="button"
-              className="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600 transition-colors flex items-center"
+              className="flex items-center justify-center px-3 py-1 bg-black bg-opacity-25 rounded-md border border-white border-opacity-20 hover:bg-opacity-40 transition-all duration-300 text-sm avatar-upload-btn"
             >
-              <UploadOutlined className="mr-2" />
-              Thay đổi ảnh đại diện
+              <UploadOutlined className="mr-1" />
+              Thay đổi ảnh
             </button>
           </Upload>
-        </div>
-
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <Form.Item
+        </div><div className="grid grid-cols-1 md:grid-cols-2 gap-6">          <Form.Item
             label="Họ và tên"
             name="fullName"
             rules={[{ required: true, message: 'Vui lòng nhập họ và tên' }]}
+            className="flex-1"
           >
-            <Input prefix={<UserOutlined />} placeholder="Nhập họ và tên" />
+            <Input prefix={<UserOutlined />} placeholder="Nhập họ và tên" style={{ height: '42px' }} />
           </Form.Item>
-
+          
           <Form.Item
             label="Tuổi"
             name="age"
             rules={[{ required: true, message: 'Vui lòng nhập tuổi' }]}
+            className="flex-1"
           >
-            <Input type="number" placeholder="Nhập tuổi" />
-          </Form.Item>
-
-          <Form.Item
+            <Input prefix={<UserOutlined />} placeholder="Nhập tuổi" style={{ height: '42px' }} />
+          </Form.Item><Form.Item
             label="Ngày sinh"
             name="dateOfBirth"
             rules={[{ required: true, message: 'Vui lòng chọn ngày sinh' }]}
+            className="flex-1"
           >
-            <DatePicker className="w-full" />
+            <DatePicker className="w-full" placeholder="Chọn ngày sinh" style={{ height: '42px' }} />
           </Form.Item>
 
           <Form.Item
             label="Giới tính"
             name="gender"
             rules={[{ required: true, message: 'Vui lòng chọn giới tính' }]}
+            className="flex-1"
           >
-            <Select placeholder="Chọn giới tính">
+            <Select placeholder="Chọn giới tính" style={{ height: '42px' }}>
               <Option value="male">Nam</Option>
               <Option value="female">Nữ</Option>
               <Option value="other">Khác</Option>
@@ -210,6 +205,8 @@ const PersonalInfo: React.FC<PersonalInfoProps> = ({ studentData }) => {
             label="Ngôn ngữ"
             name="language"
             rules={[{ required: true, message: 'Vui lòng chọn ngôn ngữ' }]}
+            className="md:col-span-2"
+            style={{ marginTop: '8px' }}
           >
             <Select placeholder="Chọn ngôn ngữ">
               <Option value="vietnamese">Tiếng Việt</Option>
@@ -217,18 +214,16 @@ const PersonalInfo: React.FC<PersonalInfoProps> = ({ studentData }) => {
               <Option value="chinese">Tiếng Trung</Option>
             </Select>
           </Form.Item>
-        </div>
-
-        <div className="border-t pt-6 mt-6">
-          <h3 className="text-xl font-semibold mb-4">Thông tin người giám hộ</h3>
+        </div><div className="border-t pt-6 mt-6">
+          <h3 className="text-xl font-semibold mb-6">Thông tin người giám hộ</h3>
           
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <Form.Item
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">            <Form.Item
               label="Tên người giám hộ"
               name="guardianName"
               rules={[{ required: true, message: 'Vui lòng nhập tên người giám hộ' }]}
+              className="flex-1"
             >
-              <Input prefix={<UserOutlined />} placeholder="Nhập tên người giám hộ" />
+              <Input prefix={<UserOutlined />} placeholder="Nhập tên người giám hộ" style={{ height: '42px' }} />
             </Form.Item>
 
             <Form.Item
@@ -238,27 +233,28 @@ const PersonalInfo: React.FC<PersonalInfoProps> = ({ studentData }) => {
                 { required: true, message: 'Vui lòng nhập số điện thoại' },
                 { pattern: /^[0-9]{10}$/, message: 'Số điện thoại không hợp lệ' }
               ]}
+              className="flex-1"
             >
-              <Input prefix={<PhoneOutlined />} placeholder="Nhập số điện thoại" />
-            </Form.Item>
-
-            <Form.Item
+              <Input prefix={<PhoneOutlined />} placeholder="Nhập số điện thoại" style={{ height: '42px' }} />
+            </Form.Item><Form.Item
               label="Email"
               name="guardianEmail"
               rules={[
                 { required: true, message: 'Vui lòng nhập email' },
                 { type: 'email', message: 'Email không hợp lệ' }
               ]}
+              className="flex-1"
             >
-              <Input prefix={<MailOutlined />} placeholder="Nhập email" />
+              <Input prefix={<MailOutlined />} placeholder="Nhập email" style={{ height: '42px' }} />
             </Form.Item>
 
             <Form.Item
               label="Mối quan hệ"
               name="relationship"
               rules={[{ required: true, message: 'Vui lòng chọn mối quan hệ' }]}
+              className="flex-1"
             >
-              <Select placeholder="Chọn mối quan hệ">
+              <Select placeholder="Chọn mối quan hệ" style={{ height: '42px' }}>
                 <Option value="parent">Cha/Mẹ</Option>
                 <Option value="grandparent">Ông/Bà</Option>
                 <Option value="sibling">Anh/Chị</Option>
@@ -266,14 +262,12 @@ const PersonalInfo: React.FC<PersonalInfoProps> = ({ studentData }) => {
               </Select>
             </Form.Item>
           </div>
-        </div>
-
-        <div className="flex justify-end mt-6">
+        </div>        <div className="flex justify-center mt-8">
           <button
             type="button"
             disabled={loading}
-            className="bg-blue-500 text-white px-6 py-2 rounded-md hover:bg-blue-600 transition-colors disabled:bg-blue-300 disabled:cursor-not-allowed"
             onClick={showConfirmAndSubmit}
+            className="px-8 py-3 w-auto min-w-[200px] text-white font-medium rounded-md hover:bg-opacity-90 transition-all duration-300"
           >
             {loading ? 'Đang lưu...' : 'Lưu thông tin'}
           </button>
