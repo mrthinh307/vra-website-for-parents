@@ -1,0 +1,182 @@
+
+    <!DOCTYPE html>
+    <html lang="vi">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Báo cáo phân tích mức độ nghiêm trọng - VRA Test</title>
+        <style>
+            body {
+                font-family: Arial, sans-serif;
+                line-height: 1.6;
+                margin: 0;
+                padding: 20px;
+                color: #333;
+            }
+            .container {
+                max-width: 1400px;
+                margin: 0 auto;
+            }
+            h1, h2 {
+                color: #2c3e50;
+            }
+            header {
+                background-color: #f8f9fa;
+                padding: 20px;
+                border-radius: 5px;
+                margin-bottom: 20px;
+                border-left: 5px solid #3498db;
+            }
+            .summary {
+                display: grid;
+                grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+                gap: 15px;
+                margin-bottom: 30px;
+            }
+            .summary-item {
+                padding: 15px;
+                border-radius: 5px;
+                text-align: center;
+            }
+            .minor { background-color: #d4edda; }
+            .cosmetic { background-color: #fff3cd; }
+            .blocker { background-color: #fff0e6; }
+            .critical { background-color: #f8d7da; }
+            .unknown { background-color: #e2e3e5; }
+            .number {
+                font-size: 24px;
+                font-weight: bold;
+                margin: 10px 0;
+            }
+            table {
+                width: 100%;
+                border-collapse: collapse;
+                margin-bottom: 30px;
+                font-size: 14px;
+            }
+            th, td {
+                padding: 10px;
+                border: 1px solid #ddd;
+                text-align: left;
+            }
+            th {
+                background-color: #f2f2f2;
+                font-weight: bold;
+                position: sticky;
+                top: 0;
+            }
+            tr:nth-child(even) {
+                background-color: #f9f9f9;
+            }
+            .section {
+                margin-bottom: 40px;
+                overflow-x: auto;
+            }
+            footer {
+                text-align: center;
+                margin-top: 40px;
+                padding-top: 20px;
+                border-top: 1px solid #eee;
+                color: #777;
+            }
+            .highlight-critical { background-color: rgba(220, 53, 69, 0.1); }
+            .highlight-blocker { background-color: rgba(253, 126, 20, 0.1); }
+        </style>
+    </head>
+    <body>
+        <div class="container">
+            <header>
+                <h1>Báo cáo phân tích mức độ nghiêm trọng</h1>
+                <p>Thời gian: 01:26:20 23/5/2025</p>
+            </header>
+            
+            <div class="summary">
+                <div class="summary-item critical">
+                    <div>Critical</div>
+                    <div class="number">0</div>
+                </div>
+                <div class="summary-item blocker">
+                    <div>Blocker</div>
+                    <div class="number">0</div>
+                </div>
+                <div class="summary-item cosmetic">
+                    <div>Cosmetic</div>
+                    <div class="number">1</div>
+                </div>
+                <div class="summary-item minor">
+                    <div>Minor</div>
+                    <div class="number">0</div>
+                </div>
+                <div class="summary-item unknown">
+                    <div>Unknown</div>
+                    <div class="number">0</div>
+                </div>
+            </div>
+            
+            <div class="section">
+                <h2>Chi tiết kết quả phân tích</h2>
+                <table id="severity-table">
+                    <thead>
+                        <tr>
+                            <th>Test Case</th>
+                            <th>Mô tả đầy đủ</th>
+                            <th>File</th>
+                            <th>Mức độ nghiêm trọng</th>
+                            <th>Mức ưu tiên</th>
+                            <th>Lý do</th>
+                            <th>Tác động</th>
+                            <th>Đề xuất</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        
+        <tr>
+          <td>✅ TC-UI-009: Hiển thị stack component trong section đội ngũ</td>
+          <td>function () {
+  return this.titlePath().join(' ');
+}</td>
+          <td>C:\FS\VRA2\clone folder\VRA\tests\e2e\display.test.js</td>
+          <td style="color: #ffc107; font-weight: bold;">🟡 COSMETIC</td>
+          <td style="color: #28a745;">LOW</td>
+          <td>Test case này liên quan đến việc hiển thị stack component trong section đội ngũ. Lỗi 'undefined' có thể chỉ ra rằng dữ liệu hiển thị bị thiếu hoặc không được tải đúng cách, dẫn đến giao diện không hoàn chỉnh. Tuy nhiên, nó không ngăn cản người dùng sử dụng các tính năng khác của trang web.</td>
+          <td>Người dùng có thể thấy một phần của giao diện bị thiếu hoặc không hiển thị đúng, ảnh hưởng đến trải nghiệm người dùng nhưng không làm gián đoạn luồng công việc.</td>
+          <td>Kiểm tra lại dữ liệu đầu vào và logic hiển thị của stack component để đảm bảo dữ liệu được tải và hiển thị chính xác. Có thể cần kiểm tra API hoặc nguồn dữ liệu để đảm bảo tính toàn vẹn của dữ liệu.</td>
+        </tr>
+      
+                    </tbody>
+                </table>
+            </div>
+            
+            <div class="section">
+                <h2>Khuyến nghị</h2>
+                <p>Dựa trên phân tích, những lỗi sau đây cần được ưu tiên xử lý:</p>
+                <ul>
+                    <li>Không có lỗi nghiêm trọng cần ưu tiên xử lý.</li>
+                </ul>
+            </div>
+            
+            <footer>
+                <p>Báo cáo được tạo tự động bởi VRA Test Framework với Gemini AI</p>
+                <p>Thời gian tạo báo cáo: Fri May 23 2025 01:26:20 GMT+0700 (Giờ Đông Dương)</p>
+            </footer>
+        </div>
+        
+        <script>
+            // Highlight critical and blocker issues
+            document.addEventListener('DOMContentLoaded', function() {
+                const table = document.getElementById('severity-table');
+                const rows = table.getElementsByTagName('tr');
+                
+                for (let i = 1; i < rows.length; i++) {
+                    const severityCell = rows[i].cells[3];
+                    if (severityCell.textContent.includes('CRITICAL')) {
+                        rows[i].classList.add('highlight-critical');
+                    } else if (severityCell.textContent.includes('BLOCKER')) {
+                        rows[i].classList.add('highlight-blocker');
+                    }
+                }
+            });
+        </script>
+    </body>
+    </html>
+    

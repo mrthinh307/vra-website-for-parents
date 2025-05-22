@@ -1,22 +1,31 @@
 {
-  "name": "tests",
-  "version": "1.0.0",
-  "main": "index.js",
+  "name": "vra-tests",
   "type": "module",
+  "version": "1.0.0",
+  "description": "Test framework for VRA project",
+  "main": "runTests.js",
   "scripts": {
-    "test": "mocha --no-timeouts \"**/*.test.js\"",
-    "test:e2e": "mocha --no-timeouts \"e2e/**/*.test.js\"",
-    "test:file": "mocha --no-timeouts",
-    "test:report": "node ../scripts/autoScreenshot.js",
-    "test:example": "mocha --no-timeouts example-with-screenshots.js"
+    "test": "node runTests.js --all",
+    "test:e2e": "node runTests.js --e2e",
+    "test:analyze": "node runTests.js --all --analyze",
+    "test:e2e:analyze": "node runTests.js --e2e --analyze",
+    "test:screenshot": "node runTests.js --all --screenshot"
   },
-  "author": "",
-  "license": "ISC",
-  "description": "",
   "dependencies": {
+    "@google/genai": "^1.0.1",
     "chai": "^5.2.0",
     "chromedriver": "^136.0.3",
+    "glob": "^10.3.10",
+    "minimist": "^1.2.8",
     "mocha": "^11.4.0",
+    "puppeteer": "^22.0.0",
     "selenium-webdriver": "^4.32.0"
-  }
+  },
+  "keywords": [
+    "test",
+    "vra",
+    "automation"
+  ],
+  "author": "VRA Team",
+  "license": "ISC"
 }

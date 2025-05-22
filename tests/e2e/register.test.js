@@ -19,8 +19,8 @@ describe('Register Functionality', function () {
             await driver.get("http://localhost:3000/");
             await driver.findElement(By.xpath("//*[@id='root']/div/div/div/div[2]/button[2]")).click();
             await driver.findElement(By.name('name')).sendKeys('Thinhh Nguyen');
-            await driver.findElement(By.name('email')).sendKeys('0000000008@gmail.com');
-            await driver.findElement(By.name('phone')).sendKeys('0000000008');
+            await driver.findElement(By.name('email')).sendKeys('0000000010@gmail.com');
+            await driver.findElement(By.name('phone')).sendKeys('0000000010');
             await driver.findElement(By.name('password')).sendKeys('Password123');
             await driver.findElement(By.name('confirmPassword')).sendKeys('Password123');
             await driver.findElement(By.xpath("/html/body/div[1]/div/main/div/div/div/div/div[2]/button")).click();
