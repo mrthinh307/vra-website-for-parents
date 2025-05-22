@@ -1,31 +1,85 @@
-import React from 'react';
-import { useNavigate } from 'react-router-dom';
+import React, { useEffect, useState } from 'react';
+import { useNavigate, useOutletContext } from 'react-router-dom';
 import { Home, ChevronRight } from 'lucide-react';
 import PersonalInfo from '../../components/PersonalInfo';
 import dayjs from 'dayjs';
 import './PersonalInfoPage.css';
+import { ProfileService, DetailedChildProfile } from '../../services/profileService';
+import { SupervisorService } from '../../services/supervisorService';
+
+interface MainLayoutContext {
+  isLoggedIn: boolean;
+  user: { username: string; avatar?: string } | null;
+}
 
 const PersonalInfoPage: React.FC = () => {
   const navigate = useNavigate();
+  const [studentData, setStudentData] = useState<DetailedChildProfile | null>(null);
+  const [loading, setLoading] = useState(true);
+  const [supervisor, setSupervisor] = useState<any>(null);
+  const { isLoggedIn, user } = useOutletContext<MainLayoutContext>();
 
-  // Mock data - in a real application, this would come from an API
-  const mockStudentData = {
-    fullName: "Nguyễn Văn AA",
-    avatar: "",
-    age: 15,
-    dateOfBirth: dayjs("2009-05-15"),
-    gender: "male",
-    language: "vietnamese",
-    guardianName: "Nguyễn Văn B",
-    guardianPhone: "0123456789",
-    guardianEmail: "nguyenvanb@example.com",
-    relationship: "parent"
-  };
+  //Fetch supervisor data when user is available
+  useEffect(() => {   
+    const fetchSupervisor = async () => {
+      if (!user?.username) return;
+      
+      try {
+        console.log('Fetching supervisor for email:', user.username);
+        const supervisorService = SupervisorService.getInstance();
+        const supervisorData = await supervisorService.getSupervisorByEmail(user.username);
+        console.log('Fetched supervisor data:', supervisorData);
+        setSupervisor(supervisorData);
+      } catch (err) {
+        console.error('Error fetching supervisor:', err);
+      }
+    };
+
+    fetchSupervisor();
+  }, [user?.username]);
+
+  useEffect(() => {
+    const fetchStudentData = async () => {
+      if (!supervisor?.id) {
+        console.log('No supervisor ID available, skipping fetch');
+        return;
+      }
+
+      try {
+        setLoading(true);
+        const profileService = ProfileService.getInstance();
+        console.log('Fetching child profiles for supervisorId:', supervisor.id);
+        const profiles = await profileService.getDetailedChildProfiles(supervisor.id);
+        console.log('Fetched child profiles:', profiles);
+        
+        if (profiles.length > 0) {
+          setStudentData(profiles[0]);
+        }
+      } catch (error) {
+        console.error('Error fetching student data:', error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchStudentData();
+  }, [supervisor?.id]);
+
   return (
     <div className="personal-info-container">
       <div className="personal-info-form">
         <h2>Thông tin cá nhân</h2>
-        <PersonalInfo studentData={mockStudentData} />
+        {loading ? (
+          <div className="flex justify-center items-center h-64">
+            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-white"></div>
+          </div>
+        ) : studentData ? (
+          <PersonalInfo studentData={studentData} />
+        ) : (
+          <div className="text-center text-white">
+            Không tìm thấy thông tin học sinh
+          </div>
+        )}
       </div>
     </div>
   );
