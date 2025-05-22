@@ -1,0 +1,22 @@
+{
+  "name": "tests",
+  "version": "1.0.0",
+  "main": "index.js",
+  "type": "module",
+  "scripts": {
+    "test": "mocha --no-timeouts \"**/*.test.js\"",
+    "test:e2e": "mocha --no-timeouts \"e2e/**/*.test.js\"",
+    "test:file": "mocha --no-timeouts",
+    "test:report": "node ../scripts/autoScreenshot.js",
+    "test:example": "mocha --no-timeouts example-with-screenshots.js"
+  },
+  "author": "",
+  "license": "ISC",
+  "description": "",
+  "dependencies": {
+    "chai": "^5.2.0",
+    "chromedriver": "^136.0.3",
+    "mocha": "^11.4.0",
+    "selenium-webdriver": "^4.32.0"
+  }
+}
