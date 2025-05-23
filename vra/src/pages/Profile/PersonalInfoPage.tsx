@@ -73,12 +73,19 @@ const PersonalInfoPage: React.FC = () => {
           <div className="flex justify-center items-center h-64">
             <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-white"></div>
           </div>
-        ) : studentData ? (
-          <PersonalInfo studentData={studentData} />
         ) : (
-          <div className="text-center text-white">
-            Không tìm thấy thông tin học sinh
-          </div>
+          <PersonalInfo studentData={studentData || {
+            fullName: '',
+            avatar: '',
+            age: 0,
+            dateOfBirth: '',
+            gender: '',
+            language: '',
+            guardianName: supervisor?.name || '',
+            guardianPhone: '',
+            guardianEmail: supervisor?.email || '',
+            relationship: ''
+          }} />
         )}
       </div>
     </div>
