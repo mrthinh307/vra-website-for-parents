@@ -35,12 +35,11 @@ function App() {
   return (
     <Router>
       <Routes>
-        {/* Main Layout contains consistent header and footer */}
-        <Route element={<MainLayout />}>
+        {/* Main Layout contains consistent header and footer */}        <Route element={<MainLayout />}>
           {/* Child routes rendered within MainLayout */}          <Route path="/" element={<HomePage />} />
-          <Route path="/lesson-list" element={<VRALessonList />} />
-          <Route path="/report-detail/:lessonProgressId" element={<VRADetailReport />} />
-          <Route path="/report-detail" element={<VRADetailReport />} />
+          <Route path="/lesson-list" element={<ProtectedRoute element={<VRALessonList />} />} />
+          <Route path="/report-detail/:lessonProgressId" element={<ProtectedRoute element={<VRADetailReport />} />} />
+          <Route path="/report-detail" element={<ProtectedRoute element={<VRADetailReport />} />} />
           <Route path="/profile" element={<ProtectedRoute element={<PersonalInfoPage />} />} />
         </Route>
       </Routes>
