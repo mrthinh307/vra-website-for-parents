@@ -1,0 +1,273 @@
+
+    <!DOCTYPE html>
+    <html>
+    <head>
+      <meta charset="UTF-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <title>VRA Test Report - 2025-05-23T04:33:26.218Z</title>
+      <style>
+        body {
+          font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+          line-height: 1.6;
+          margin: 0;
+          padding: 20px;
+          background-color: #f8f9fa;
+          color: #333;
+        }
+        .container {
+          max-width: 1200px;
+          margin: 0 auto;
+          padding: 20px;
+          background: #fff;
+          box-shadow: 0 0 10px rgba(0,0,0,0.1);
+          border-radius: 5px;
+        }
+        header {
+          text-align: center;
+          padding: 20px;
+          margin-bottom: 30px;
+          background: #f0f4f8;
+          border-radius: 5px;
+        }
+        h1 {
+          margin: 0;
+          color: #2c3e50;
+        }
+        .summary {
+          display: flex;
+          justify-content: space-around;
+          margin-bottom: 30px;
+          text-align: center;
+        }
+        .summary-item {
+          padding: 15px;
+          border-radius: 5px;
+          min-width: 150px;
+        }
+        .summary-item.total { background-color: #eef2f7; }
+        .summary-item.passed { background-color: #d4edda; color: #155724; }
+        .summary-item.failed { background-color: #f8d7da; color: #721c24; }
+        .summary-item.pending { background-color: #fff3cd; color: #856404; }
+        .summary-value {
+          font-size: 2em;
+          font-weight: bold;
+        }
+        .progress-bar {
+          height: 30px;
+          width: 100%;
+          background-color: #f0f0f0;
+          border-radius: 15px;
+          margin-bottom: 30px;
+          overflow: hidden;
+        }
+        .progress-value {
+          height: 100%;
+          background-color: #28a745;
+          text-align: center;
+          line-height: 30px;
+          color: white;
+          font-weight: bold;
+          transition: width 1s;
+        }
+        .test-sections {
+          margin-bottom: 30px;
+        }
+        .test-section {
+          margin-bottom: 20px;
+        }
+        h2 {
+          color: #2c3e50;
+          padding-bottom: 8px;
+          border-bottom: 1px solid #eee;
+        }
+        .test-list {
+          list-style: none;
+          padding: 0;
+        }
+        .test-item {
+          margin-bottom: 15px;
+          padding: 15px;
+          border-radius: 5px;
+          box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .test-item.success { background-color: #f3f9f4; border-left: 5px solid #28a745; }
+        .test-item.error { background-color: #fdf7f7; border-left: 5px solid #dc3545; }
+        .test-title {
+          font-weight: bold;
+          margin-bottom: 5px;
+          font-size: 1.1em;
+        }
+        .test-info {
+          display: flex;
+          justify-content: space-between;
+          font-size: 0.9em;
+          color: #666;
+          margin-bottom: 8px;
+        }
+        .duration {
+          font-family: monospace;
+        }
+        .file {
+          font-style: italic;
+        }
+        .error-message {
+          background-color: #f8d7da;
+          padding: 10px;
+          border-radius: 4px;
+          margin: 10px 0;
+          color: #721c24;
+        }
+        .error-stack {
+          background-color: #f8f9fa;
+          padding: 10px;
+          border-radius: 4px;
+          margin-top: 10px;
+          max-height: 200px;
+          overflow: auto;
+        }
+        .error-stack pre {
+          margin: 0;
+          font-size: 0.85em;
+          white-space: pre-wrap;
+        }
+        .footer {
+          text-align: center;
+          margin-top: 30px;
+          padding-top: 20px;
+          border-top: 1px solid #eee;
+          color: #666;
+          font-size: 0.9em;
+        }
+        .error-screenshot {
+          max-width: 100%;
+          margin-top: 15px;
+          border: 1px solid #ddd;
+          border-radius: 4px;
+        }
+        /* Severity styling */
+        .severity-info {
+          margin: 15px 0;
+          padding: 10px;
+          background-color: #f8f9fa;
+          border-radius: 4px;
+          border-left: 4px solid #6c757d;
+        }
+        .severity-row {
+          display: flex;
+          margin-bottom: 5px;
+        }
+        .severity-label {
+          font-weight: bold;
+          min-width: 100px;
+        }
+        .severity-value {
+          flex-grow: 1;
+        }
+        .severity-minor { color: #28a745; }
+        .severity-cosmetic { color: #ffc107; }
+        .severity-blocker { color: #fd7e14; }
+        .severity-critical { color: #dc3545; }
+        .priority-high { color: #dc3545; }
+        .priority-medium { color: #ffc107; }
+        .priority-low { color: #28a745; }
+      </style>
+    </head>
+    <body>
+      <div class="container">
+        <header>
+          <h1>VRA Test Report</h1>
+          <p>Generated on: 11:33:26 23/5/2025</p>
+        </header>
+
+        <div class="summary">
+          <div class="summary-item total">
+            <div class="summary-value">5</div>
+            <div class="summary-label">Total Tests</div>
+          </div>
+          <div class="summary-item passed">
+            <div class="summary-value">5</div>
+            <div class="summary-label">Passed</div>
+          </div>
+          <div class="summary-item failed">
+            <div class="summary-value">0</div>
+            <div class="summary-label">Failed</div>
+          </div>
+          <div class="summary-item pending">
+            <div class="summary-value">0</div>
+            <div class="summary-label">Pending</div>
+          </div>
+        </div>
+
+        <div class="progress-bar">
+          <div class="progress-value" style="width: 100.00%">100.00%</div>
+        </div>
+
+        <div class="test-sections">
+          
+          
+          <div class="test-section">
+            <h2>Passed Tests (5)</h2>
+            <ul class="test-list">
+              
+      <li class="test-item success">
+        <div class="test-title">✅ TC-DN-001: Đăng nhập thành công với thông tin hợp lệ</div>
+        <div class="test-info">
+          <span class="duration">1565ms</span>
+          <span class="file">C:\FS\VRA2\VRA\tests\e2e\login.test.js</span>
+        </div>
+      </li>
+    
+      <li class="test-item success">
+        <div class="test-title">❌ TC-DN-002: Đăng nhập thất bại với thông tin (email hoặc mật khẩu) không hợp lệ</div>
+        <div class="test-info">
+          <span class="duration">864ms</span>
+          <span class="file">C:\FS\VRA2\VRA\tests\e2e\login.test.js</span>
+        </div>
+      </li>
+    
+      <li class="test-item success">
+        <div class="test-title">❌ TC-DN-003: Đăng nhập thất bại khi để trống cả email và mật khẩu</div>
+        <div class="test-info">
+          <span class="duration">98ms</span>
+          <span class="file">C:\FS\VRA2\VRA\tests\e2e\login.test.js</span>
+        </div>
+      </li>
+    
+      <li class="test-item success">
+        <div class="test-title">✅ TC-DN-004: Nhấn nút "Đăng nhập" trên header khi đã scroll xuống sẽ scroll tới login form</div>
+        <div class="test-info">
+          <span class="duration">2191ms</span>
+          <span class="file">C:\FS\VRA2\VRA\tests\e2e\login.test.js</span>
+        </div>
+      </li>
+    
+      <li class="test-item success">
+        <div class="test-title">✅ TC-DN-005: Kiểm tra chức năng ẩn/hiện mật khẩu</div>
+        <div class="test-info">
+          <span class="duration">504ms</span>
+          <span class="file">C:\FS\VRA2\VRA\tests\e2e\login.test.js</span>
+        </div>
+      </li>
+    
+            </ul>
+          </div>
+        </div>
+
+        <div class="footer">
+          <p>VRA Test Framework Report</p>
+          <p>© 2025 VRA Team</p>
+        </div>
+      </div>
+      
+      <script>
+        // Hiệu ứng hiển thị thanh tiến trình
+        document.addEventListener('DOMContentLoaded', function() {
+          setTimeout(() => {
+            const progressValue = document.querySelector('.progress-value');
+            progressValue.style.width = '100.00%';
+          }, 100);
+        });
+      </script>
+    </body>
+    </html>
+    

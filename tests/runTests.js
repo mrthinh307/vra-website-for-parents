@@ -46,7 +46,6 @@ if (argv.help) {
   Ví dụ:
     node runTests.js --e2e --format html --output e2e-report
     node runTests.js --file ./e2e/display.test.js --screenshot
-    node runTests.js --all --analyze --format all
   `);
   process.exit(0);
 }
@@ -85,9 +84,11 @@ async function main() {
       console.log('Chạy các test end-to-end...');
       await testRunner.runE2ETests(options);
     } else if (argv.all) {
-      console.log('Chạy tất cả các test...');
-      const files = testRunner.getTestFiles('.');
-      await testRunner.runTests(files, options);
+      // console.log('Chạy tất cả các test...');
+      // const files = testRunner.getTestFiles('.');
+      // await testRunner.runTests(files, options);
+      console.log('Tính năng chưa hoàn thành');
+      process.exit(1);
     } else {
       console.log('Không có test nào được chỉ định. Sử dụng --help để xem hướng dẫn.');
       process.exit(1);

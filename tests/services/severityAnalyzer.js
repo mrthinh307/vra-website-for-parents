@@ -72,15 +72,15 @@ class SeverityAnalyzer {
       const severityColor = this.severityColors[analysis.severity] || this.severityColors.unknown;
       const severityIcon = this.severityIcons[analysis.severity] || this.severityIcons.unknown;
       const priorityColor = this.priorityColors[analysis.priority] || this.priorityColors.unknown;
-      
+      const errorStackReason = testCase.err && testCase.err.stack ? testCase.err.stack.split('\n')[0].trim() : (analysis.reasoning || 'N/A'); // Fallback to AI reasoning if no stack
+
       return `
         <tr>
           <td>${testCase.title}</td>
-          <td>${testCase.fullTitle}</td>
           <td>${testCase.file || 'N/A'}</td>
           <td style="color: ${severityColor}; font-weight: bold;">${severityIcon} ${analysis.severity.toUpperCase()}</td>
           <td style="color: ${priorityColor};">${analysis.priority.toUpperCase()}</td>
-          <td>${analysis.reasoning}</td>
+          <td>${errorStackReason}</td>
           <td>${analysis.impact}</td>
           <td>${analysis.suggestedAction}</td>
         </tr>
@@ -225,11 +225,10 @@ class SeverityAnalyzer {
                     <thead>
                         <tr>
                             <th>Test Case</th>
-                            <th>Mô tả đầy đủ</th>
                             <th>File</th>
                             <th>Mức độ nghiêm trọng</th>
                             <th>Mức ưu tiên</th>
-                            <th>Lý do</th>
+                            <th>Lý do (Từ Error Stack)</th>
                             <th>Tác động</th>
                             <th>Đề xuất</th>
                         </tr>
@@ -332,12 +331,13 @@ class SeverityAnalyzer {
     analysisResults.forEach((item, index) => {
       const { testCase, analysis } = item;
       const severityIcon = this.severityIcons[analysis.severity] || this.severityIcons.unknown;
-      
+      const errorStackReason = testCase.err && testCase.err.stack ? testCase.err.stack.split('\n')[0].trim() : (analysis.reasoning || 'N/A');
+
       data.push(`${index + 1}. ${testCase.title}`);
       data.push(`   - File: ${testCase.file || 'N/A'}`);
       data.push(`   - Mức độ nghiêm trọng: ${severityIcon} ${analysis.severity.toUpperCase()}`);
       data.push(`   - Mức ưu tiên: ${analysis.priority.toUpperCase()}`);
-      data.push(`   - Lý do: ${analysis.reasoning}`);
+      data.push(`   - Lý do (Từ Error Stack): ${errorStackReason}`);
       data.push(`   - Tác động: ${analysis.impact}`);
       data.push(`   - Đề xuất: ${analysis.suggestedAction}`);
       data.push('');

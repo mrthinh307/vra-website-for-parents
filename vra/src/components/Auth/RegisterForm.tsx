@@ -20,14 +20,22 @@ export type RegisterFormData = {
 
 // Hàm kiểm tra định dạng email
 const isValidEmail = (email: string): boolean => {
-  const emailRegex = /^[a-zA-Z0-9._%+-]+@(gmail\.com|edu\.vn)$/;
-  return emailRegex.test(email);
+  // General email regex + specific domain check
+  const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+  const domainRegex = /@(gmail\.com|edu\.vn)$/;
+  return emailRegex.test(email) && domainRegex.test(email);
 };
 
 // Hàm kiểm tra định dạng số điện thoại
 const isValidPhone = (phone: string): boolean => {
   const phoneRegex = /^0\d{9}$/;
   return phoneRegex.test(phone);
+};
+
+// Hàm kiểm tra độ mạnh mật khẩu
+const isValidPassword = (password: string): boolean => {
+  // Ví dụ: Tối thiểu 8 ký tự
+  return password.length >= 8;
 };
 
 const RegisterForm: React.FC<RegisterFormProps> = ({
@@ -52,6 +60,24 @@ const RegisterForm: React.FC<RegisterFormProps> = ({
     confirmPassword: "",
   });
 
+  const resetForm = () => {
+    setRegisterData({
+      name: "",
+      email: "",
+      phone: "",
+      password: "",
+      confirmPassword: "",
+      avatar_url: "",
+    });
+    setErrors({
+      name: "",
+      email: "",
+      phone: "",
+      password: "",
+      confirmPassword: "",
+    });
+  };
+
   const handleRegisterChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     setRegisterData((prev) => ({
@@ -70,11 +96,11 @@ const RegisterForm: React.FC<RegisterFormProps> = ({
     
     // Kiểm tra validation
     const newErrors = {
-      name: data.name ? "" : "Vui lòng nhập họ và tên",
-      email: data.email ? (isValidEmail(data.email) ? "" : "Email phải có đuôi gmail.com hoặc edu.vn") : "Vui lòng nhập email",
-      phone: data.phone ? (isValidPhone(data.phone) ? "" : "Số điện thoại phải bắt đầu bằng số 0 và có 10 chữ số") : "Vui lòng nhập số điện thoại",
-      password: data.password ? "" : "Vui lòng nhập mật khẩu",
-      confirmPassword: data.confirmPassword === data.password ? "" : "Mật khẩu và xác nhận mật khẩu phải giống nhau"
+      name: !data.name ? "Vui lòng nhập họ và tên" : data.name.length < 2 ? "Họ và tên phải có ít nhất 2 ký tự" : "",
+      email: !data.email ? "Vui lòng nhập email" : !isValidEmail(data.email) ? "Email không hợp lệ hoặc không thuộc miền @gmail.com/@edu.vn" : "",
+      phone: !data.phone ? "Vui lòng nhập số điện thoại" : !isValidPhone(data.phone) ? "Số điện thoại phải bắt đầu bằng 0 và có 10 chữ số" : "",
+      password: !data.password ? "Vui lòng nhập mật khẩu" : !isValidPassword(data.password) ? "Mật khẩu phải có ít nhất 8 ký tự" : "",
+      confirmPassword: !data.confirmPassword ? "Vui lòng xác nhận mật khẩu" : data.confirmPassword !== data.password ? "Mật khẩu và xác nhận mật khẩu phải giống nhau" : ""
     };
     
     setErrors(newErrors);
@@ -88,14 +114,7 @@ const RegisterForm: React.FC<RegisterFormProps> = ({
     onSubmit(data);
 
     // Reset form after submission
-    setRegisterData({
-      email: "",
-      phone: "",
-      password: "",
-      confirmPassword: "",
-      name: "",
-      avatar_url: "",
-    });
+    resetForm();
   };
 
   if (!isOpen) return null;
@@ -103,7 +122,10 @@ const RegisterForm: React.FC<RegisterFormProps> = ({
   return (
     <div
       className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 modal-overlay"
-      onClick={onClose}
+      onClick={()  => {
+        resetForm();
+        onClose();
+      }}
     >
       <div
         className={`bg-white p-8 rounded-3xl w-[95%] max-w-[480px] relative border-4 border-primary-color shadow-2xl modal ${isOpen ? "modal-visible" : ""
@@ -111,7 +133,10 @@ const RegisterForm: React.FC<RegisterFormProps> = ({
         onClick={(e) => e.stopPropagation()}
       >
         <button
-          onClick={onClose}
+          onClick={() => {
+            resetForm();
+            onClose();
+          }}
           className="absolute top-4 right-4 text-gray-500 hover:text-gray-700 transition-colors duration-300 transform hover:rotate-90 p-1"
         >
           <X className="h-6 w-6" />
@@ -128,7 +153,7 @@ const RegisterForm: React.FC<RegisterFormProps> = ({
             Tham gia cùng cộng đồng để hỗ trợ trẻ phát triển toàn diện
           </p>
         </div>        <div className="space-y-4">
-          <div className={`form-input flex items-center border-2 ${errors.name ? 'border-red-500' : 'border-gray-300'} rounded-lg px-4 py-3 focus-within:border-primary-color transition-all duration-300`}>
+          <div className={`form-input flex items-center border-2 ${errors.name ? 'border-red-500 animate-shake' : 'border-gray-300'} rounded-lg px-4 py-3 focus-within:border-primary-color transition-all duration-300`}>
             <User className="h-5 w-5 text-gray-400 mr-3" />
             <input
               type="text"
@@ -140,9 +165,9 @@ const RegisterForm: React.FC<RegisterFormProps> = ({
               className="flex-1 text-gray-800 bg-transparent border-0 focus:outline-none"
             />
           </div>
-          {errors.name && <p className="text-red-500 text-xs mt-1">{errors.name}</p>}
+          {errors.name && <p className="text-red-500 text-xs mt-1 font-medium">{errors.name}</p>}
 
-          <div className={`form-input flex items-center border-2 ${errors.email ? 'border-red-500' : 'border-gray-300'} rounded-lg px-4 py-3 focus-within:border-primary-color transition-all duration-300`}>
+          <div className={`form-input flex items-center border-2 ${errors.email ? 'border-red-500 animate-shake' : 'border-gray-300'} rounded-lg px-4 py-3 focus-within:border-primary-color transition-all duration-300`}>
             <Mail className="h-5 w-5 text-gray-400 mr-3" />
             <input
               type="email"
@@ -153,9 +178,9 @@ const RegisterForm: React.FC<RegisterFormProps> = ({
               className="flex-1 text-gray-800 bg-transparent border-0 focus:outline-none"
             />
           </div>
-          {errors.email && <p className="text-red-500 text-xs mt-1">{errors.email}</p>}
+          {errors.email && <p className="text-red-500 text-xs mt-1 font-medium">{errors.email}</p>}
 
-          <div className={`form-input flex items-center border-2 ${errors.phone ? 'border-red-500' : 'border-gray-300'} rounded-lg px-4 py-3 focus-within:border-primary-color transition-all duration-300`}>
+          <div className={`form-input flex items-center border-2 ${errors.phone ? 'border-red-500 animate-shake' : 'border-gray-300'} rounded-lg px-4 py-3 focus-within:border-primary-color transition-all duration-300`}>
             <Phone className="h-5 w-5 text-gray-400 mr-3" />
             <input
               type="tel"
@@ -166,7 +191,7 @@ const RegisterForm: React.FC<RegisterFormProps> = ({
               className="flex-1 text-gray-800 bg-transparent border-0 focus:outline-none"
             />
           </div>
-          {errors.phone && <p className="text-red-500 text-xs mt-1">{errors.phone}</p>}          <div className={`form-input flex items-center border-2 ${errors.password ? 'border-red-500' : 'border-gray-300'} rounded-lg px-4 py-3 focus-within:border-primary-color transition-all duration-300`}>
+          {errors.phone && <p className="text-red-500 text-xs mt-1 font-medium">{errors.phone}</p>}          <div className={`form-input flex items-center border-2 ${errors.password ? 'border-red-500 animate-shake' : 'border-gray-300'} rounded-lg px-4 py-3 focus-within:border-primary-color transition-all duration-300`}>
             <Eye className="h-5 w-5 text-gray-400 mr-3" />
             <input
               type="password"
@@ -177,9 +202,9 @@ const RegisterForm: React.FC<RegisterFormProps> = ({
               className="flex-1 text-gray-800 bg-transparent border-0 focus:outline-none"
             />
           </div>
-          {errors.password && <p className="text-red-500 text-xs mt-1">{errors.password}</p>}
+          {errors.password && <p className="text-red-500 text-xs mt-1 font-medium">{errors.password}</p>}
 
-          <div className={`form-input flex items-center border-2 ${errors.confirmPassword ? 'border-red-500' : 'border-gray-300'} rounded-lg px-4 py-3 focus-within:border-primary-color transition-all duration-300`}>
+          <div className={`form-input flex items-center border-2 ${errors.confirmPassword ? 'border-red-500 animate-shake' : 'border-gray-300'} rounded-lg px-4 py-3 focus-within:border-primary-color transition-all duration-300`}>
             <Eye className="h-5 w-5 text-gray-400 mr-3" />
             <input
               type="password"
@@ -190,7 +215,7 @@ const RegisterForm: React.FC<RegisterFormProps> = ({
               className="flex-1 text-gray-800 bg-transparent border-0 focus:outline-none"
             />
           </div>
-          {errors.confirmPassword && <p className="text-red-500 text-xs mt-1">{errors.confirmPassword}</p>}
+          {errors.confirmPassword && <p className="text-red-500 text-xs mt-1 font-medium">{errors.confirmPassword}</p>}
           <AnimatedButton
             icon={HeartHandshake}
             text="Đăng ký"

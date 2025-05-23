@@ -4,7 +4,7 @@
     <head>
       <meta charset="UTF-8">
       <meta name="viewport" content="width=device-width, initial-scale=1.0">
-      <title>VRA Test Report - 2025-05-22T18:26:20.829Z</title>
+      <title>VRA Test Report - 2025-05-23T04:03:19.420Z</title>
       <style>
         body {
           font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
@@ -176,20 +176,20 @@
       <div class="container">
         <header>
           <h1>VRA Test Report</h1>
-          <p>Generated on: 01:26:20 23/5/2025</p>
+          <p>Generated on: 11:03:19 23/5/2025</p>
         </header>
 
         <div class="summary">
           <div class="summary-item total">
-            <div class="summary-value">14</div>
+            <div class="summary-value">15</div>
             <div class="summary-label">Total Tests</div>
           </div>
           <div class="summary-item passed">
-            <div class="summary-value">13</div>
+            <div class="summary-value">15</div>
             <div class="summary-label">Passed</div>
           </div>
           <div class="summary-item failed">
-            <div class="summary-value">1</div>
+            <div class="summary-value">0</div>
             <div class="summary-label">Failed</div>
           </div>
           <div class="summary-item pending">
@@ -199,159 +199,133 @@
         </div>
 
         <div class="progress-bar">
-          <div class="progress-value" style="width: 92.86%">92.86%</div>
+          <div class="progress-value" style="width: 100.00%">100.00%</div>
         </div>
 
         <div class="test-sections">
           
-            <div class="test-section">
-              <h2>Failed Tests (1)</h2>
-              <ul class="test-list">
-                
-        <li class="test-item error">
-          <div class="test-title">✅ TC-UI-009: Hiển thị stack component trong section đội ngũ</div>
-          <div class="test-info">
-            <span class="duration">1170ms</span>
-            <span class="file">C:\FS\VRA2\clone folder\VRA\tests\e2e\display.test.js</span>
-          </div>
-          <div class="error-message">❌ Không hiển thị component stack</div>
-          
-          <div class="severity-info">
-            <div class="severity-row severity-cosmetic">
-              <span class="severity-label">Mức độ:</span>
-              <span class="severity-value severity-cosmetic">COSMETIC</span>
-            </div>
-            <div class="severity-row">
-              <span class="severity-label">Ưu tiên:</span>
-              <span class="severity-value priority-low">LOW</span>
-            </div>
-            <div class="severity-row">
-              <span class="severity-label">Tác động:</span>
-              <span class="severity-value">Người dùng có thể thấy một phần của giao diện bị thiếu hoặc không hiển thị đúng, ảnh hưởng đến trải nghiệm người dùng nhưng không làm gián đoạn luồng công việc.</span>
-            </div>
-            <div class="severity-row">
-              <span class="severity-label">Phân tích:</span>
-              <span class="severity-value">Test case này liên quan đến việc hiển thị stack component trong section đội ngũ. Lỗi 'undefined' có thể chỉ ra rằng dữ liệu hiển thị bị thiếu hoặc không được tải đúng cách, dẫn đến giao diện không hoàn chỉnh. Tuy nhiên, nó không ngăn cản người dùng sử dụng các tính năng khác của trang web.</span>
-            </div>
-          </div>
-        
-          <div class="error-stack">
-            <pre>AssertionError [ERR_ASSERTION]: ❌ Không hiển thị component stack
-    at Context.&lt;anonymous&gt; (file:///C:/FS/VRA2/clone%20folder/VRA/tests/e2e/display.test.js:266:17)
-    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)</pre>
-          </div>
-          
-        </li>
-      
-              </ul>
-            </div>
-          
           
           <div class="test-section">
-            <h2>Passed Tests (13)</h2>
+            <h2>Passed Tests (15)</h2>
             <ul class="test-list">
               
       <li class="test-item success">
-        <div class="test-title">✅ TC-UI-001:Hiển thị đúng tiêu đề và nội dung hero section</div>
+        <div class="test-title">✅ TC-DK-001: Đăng ký thành công với thông tin hợp lệ</div>
         <div class="test-info">
-          <span class="duration">1380ms</span>
-          <span class="file">C:\FS\VRA2\clone folder\VRA\tests\e2e\display.test.js</span>
+          <span class="duration">2606ms</span>
+          <span class="file">C:\FS\VRA2\VRA\tests\e2e\register.test.js</span>
         </div>
       </li>
     
       <li class="test-item success">
-        <div class="test-title">✅ TC-UI-002: Hiển thị phần rotating text trong hero section</div>
+        <div class="test-title">❌ TC-DK-002: Đăng ký thất bại khi để trống trường "Họ và tên"</div>
         <div class="test-info">
-          <span class="duration">3773ms</span>
-          <span class="file">C:\FS\VRA2\clone folder\VRA\tests\e2e\display.test.js</span>
+          <span class="duration">837ms</span>
+          <span class="file">C:\FS\VRA2\VRA\tests\e2e\register.test.js</span>
         </div>
       </li>
     
       <li class="test-item success">
-        <div class="test-title">✅ TC-UI-003: Hiển thị đúng các phần tử có animation khi scroll</div>
+        <div class="test-title">❌ TC-DK-003: Đăng ký thất bại khi trường "Họ và tên" ít hơn 2 ký tự</div>
         <div class="test-info">
-          <span class="duration">234ms</span>
-          <span class="file">C:\FS\VRA2\clone folder\VRA\tests\e2e\display.test.js</span>
+          <span class="duration">823ms</span>
+          <span class="file">C:\FS\VRA2\VRA\tests\e2e\register.test.js</span>
         </div>
       </li>
     
       <li class="test-item success">
-        <div class="test-title">✅ TC-UI-004: Hiển thị form đăng nhập khi chưa đăng nhập</div>
+        <div class="test-title">❌ TC-DK-004: Đăng ký thất bại khi để trống trường "Email"</div>
         <div class="test-info">
-          <span class="duration">225ms</span>
-          <span class="file">C:\FS\VRA2\clone folder\VRA\tests\e2e\display.test.js</span>
+          <span class="duration">738ms</span>
+          <span class="file">C:\FS\VRA2\VRA\tests\e2e\register.test.js</span>
         </div>
       </li>
     
       <li class="test-item success">
-        <div class="test-title">✅ TC-UI-005: Hiển thị đúng các phần tử phụ trong form đăng nhập</div>
+        <div class="test-title">❌ TC-DK-005: Đăng ký thất bại khi "Email" không đúng định dạng (ví dụ: test@domain)</div>
         <div class="test-info">
-          <span class="duration">196ms</span>
-          <span class="file">C:\FS\VRA2\clone folder\VRA\tests\e2e\display.test.js</span>
+          <span class="duration">1090ms</span>
+          <span class="file">C:\FS\VRA2\VRA\tests\e2e\register.test.js</span>
         </div>
       </li>
     
       <li class="test-item success">
-        <div class="test-title">✅ TC-UI-006: Hiển thị phần "Tại sao chọn VRA" với đầy đủ thông tin</div>
+        <div class="test-title">❌ TC-DK-006: Đăng ký thất bại khi "Email" không thuộc miền @gmail.com hoặc @edu.vn</div>
         <div class="test-info">
-          <span class="duration">1216ms</span>
-          <span class="file">C:\FS\VRA2\clone folder\VRA\tests\e2e\display.test.js</span>
+          <span class="duration">938ms</span>
+          <span class="file">C:\FS\VRA2\VRA\tests\e2e\register.test.js</span>
         </div>
       </li>
     
       <li class="test-item success">
-        <div class="test-title">✅ TC-UI-007: Hiển thị chi tiết trong phần "Tại sao chọn VRA"</div>
+        <div class="test-title">❌ TC-DK-007: Đăng ký thất bại khi để trống trường "Số điện thoại"</div>
         <div class="test-info">
-          <span class="duration">1257ms</span>
-          <span class="file">C:\FS\VRA2\clone folder\VRA\tests\e2e\display.test.js</span>
+          <span class="duration">837ms</span>
+          <span class="file">C:\FS\VRA2\VRA\tests\e2e\register.test.js</span>
         </div>
       </li>
     
       <li class="test-item success">
-        <div class="test-title">✅ TC-UI-008: Hiển thị phần tính năng nổi bật với các thông tin chi tiết</div>
+        <div class="test-title">❌ TC-DK-008: Đăng ký thất bại khi "Số điện thoại" không bắt đầu bằng số 0</div>
         <div class="test-info">
-          <span class="duration">1209ms</span>
-          <span class="file">C:\FS\VRA2\clone folder\VRA\tests\e2e\display.test.js</span>
+          <span class="duration">923ms</span>
+          <span class="file">C:\FS\VRA2\VRA\tests\e2e\register.test.js</span>
         </div>
       </li>
     
       <li class="test-item success">
-        <div class="test-title">✅ TC-UI-010: Hiển thị phần đánh giá từ người dùng</div>
+        <div class="test-title">❌ TC-DK-009: Đăng ký thất bại khi "Số điện thoại" không đủ 10 chữ số</div>
         <div class="test-info">
-          <span class="duration">1181ms</span>
-          <span class="file">C:\FS\VRA2\clone folder\VRA\tests\e2e\display.test.js</span>
+          <span class="duration">892ms</span>
+          <span class="file">C:\FS\VRA2\VRA\tests\e2e\register.test.js</span>
         </div>
       </li>
     
       <li class="test-item success">
-        <div class="test-title">✅ TC-UI-011: Hiển thị chi tiết trong phần đánh giá từ người dùng</div>
+        <div class="test-title">❌ TC-DK-010: Đăng ký thất bại khi "Số điện thoại" có ký tự không phải số</div>
         <div class="test-info">
-          <span class="duration">1231ms</span>
-          <span class="file">C:\FS\VRA2\clone folder\VRA\tests\e2e\display.test.js</span>
+          <span class="duration">936ms</span>
+          <span class="file">C:\FS\VRA2\VRA\tests\e2e\register.test.js</span>
         </div>
       </li>
     
       <li class="test-item success">
-        <div class="test-title">✅ TC-UI-012: Ẩn/hiện mật khẩu khi click vào icon</div>
+        <div class="test-title">❌ TC-DK-011: Đăng ký thất bại khi để trống trường "Mật khẩu"</div>
         <div class="test-info">
-          <span class="duration">665ms</span>
-          <span class="file">C:\FS\VRA2\clone folder\VRA\tests\e2e\display.test.js</span>
+          <span class="duration">819ms</span>
+          <span class="file">C:\FS\VRA2\VRA\tests\e2e\register.test.js</span>
         </div>
       </li>
     
       <li class="test-item success">
-        <div class="test-title">✅ TC-UI-013: Hiển thị form đăng ký khi click vào nút đăng ký</div>
+        <div class="test-title">❌ TC-DK-012: Đăng ký thất bại khi "Mật khẩu" ít hơn 8 ký tự</div>
         <div class="test-info">
-          <span class="duration">2546ms</span>
-          <span class="file">C:\FS\VRA2\clone folder\VRA\tests\e2e\display.test.js</span>
+          <span class="duration">983ms</span>
+          <span class="file">C:\FS\VRA2\VRA\tests\e2e\register.test.js</span>
         </div>
       </li>
     
       <li class="test-item success">
-        <div class="test-title">✅ TC-UI-014: Hiển thị các phần tử trang và scroll thử nghiệm</div>
+        <div class="test-title">❌ TC-DK-013: Đăng ký thất bại khi để trống trường "Xác nhận mật khẩu"</div>
         <div class="test-info">
-          <span class="duration">2209ms</span>
-          <span class="file">C:\FS\VRA2\clone folder\VRA\tests\e2e\display.test.js</span>
+          <span class="duration">843ms</span>
+          <span class="file">C:\FS\VRA2\VRA\tests\e2e\register.test.js</span>
+        </div>
+      </li>
+    
+      <li class="test-item success">
+        <div class="test-title">❌ TC-DK-014: Đăng ký thất bại khi "Xác nhận mật khẩu" không khớp với "Mật khẩu"</div>
+        <div class="test-info">
+          <span class="duration">1031ms</span>
+          <span class="file">C:\FS\VRA2\VRA\tests\e2e\register.test.js</span>
+        </div>
+      </li>
+    
+      <li class="test-item success">
+        <div class="test-title">❌ TC-DK-015: Đăng ký thất bại khi tất cả các trường đều để trống</div>
+        <div class="test-info">
+          <span class="duration">397ms</span>
+          <span class="file">C:\FS\VRA2\VRA\tests\e2e\register.test.js</span>
         </div>
       </li>
     
@@ -370,7 +344,7 @@
         document.addEventListener('DOMContentLoaded', function() {
           setTimeout(() => {
             const progressValue = document.querySelector('.progress-value');
-            progressValue.style.width = '92.86%';
+            progressValue.style.width = '100.00%';
           }, 100);
         });
       </script>
