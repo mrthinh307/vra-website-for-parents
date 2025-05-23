@@ -1,33 +1,5 @@
 import { createClient, SupabaseClient } from '@supabase/supabase-js';
 
-// Interface cho dữ liệu hiển thị trên UI
-export interface ChildProfile {
-    id: number;
-    name: string;
-    dateOfBirth: string;
-    avatar: string;
-    supervisor: {
-        id: string;
-        name: string;
-        email: string;
-        avatar: string;
-    };
-}
-
-// Interface cho dữ liệu trả về từ Supabase
-interface ChildProfileData {
-    id: number;
-    name: string;
-    date_of_birth: string;
-    avatar_url: string;
-    Supervisor: {
-        id: string;
-        name: string;
-        email: string;
-        avatar_url: string;
-    }[] | null;
-}
-
 // Interface cho dữ liệu chi tiết profile
 export interface DetailedChildProfile {
     fullName: string;
@@ -51,6 +23,15 @@ interface DetailedChildProfileData {
         name: string;
         email: string;
     }[] | null;
+}
+
+// Interface cho thống kê học tập của trẻ
+export interface ChildLearningStats {
+    childName: string;
+    age: number;
+    totalSessions: number;
+    averageScore: number;
+    totalLearningTimeHours: number;
 }
 
 /**
@@ -129,23 +110,31 @@ export class ProfileService {
     }
    
     /**
-     * Chuyển đổi dữ liệu từ Supabase sang định dạng UI
-     * @param data Dữ liệu từ Supabase
-     * @returns ChildProfile
+     * Lấy thống kê học tập của trẻ theo supervisor
+     * @param supervisorId ID của supervisor
+     * @returns Promise<ChildLearningStats[]>
      */
-    private mapChildProfileData(data: ChildProfileData): ChildProfile {
-        const supervisor = Array.isArray(data.Supervisor) ? data.Supervisor[0] : data.Supervisor;
-        return {
-            id: data.id,
-            name: data.name,
-            dateOfBirth: data.date_of_birth,
-            avatar: data.avatar_url,
-            supervisor: {
-                id: supervisor?.id || '',
-                name: supervisor?.name || '',
-                email: supervisor?.email || '',
-                avatar: supervisor?.avatar_url || '',
-            },
-        };
+    async getChildLearningStats(supervisorId: string): Promise<ChildLearningStats[]> {
+        try {
+            const { data, error } = await ProfileService.supabase
+                .rpc('get_child_learning_summary', {
+                    supervisor_uuid: supervisorId
+                });
+            console.log("supervisorId", supervisorId);
+            console.log("data", data);
+            if (error) throw error;
+            if (!data) return [];
+
+            return data.map((item: any) => ({
+                childName: item.child_name,
+                age: item.age,
+                totalSessions: item.total_sessions,
+                averageScore: item.average_score,
+                totalLearningTimeHours: item.total_learning_time_hours
+            }));
+        } catch (error) {
+            console.error('Error fetching child learning stats:', error);
+            throw error;
+        }
     }
 }

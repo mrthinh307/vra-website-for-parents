@@ -36,6 +36,8 @@ import { CardBody, CardContainer, CardItem } from "../../components/lib-animated
 import Stack from "../../components/lib-animated/CardRotate";
 import AnimatedButton from "../../components/lib-animated/Button";
 import { LensDemo } from "./components/Lens";
+import { SupervisorService } from "../../services/supervisorService";
+import { ProfileService, ChildLearningStats } from "../../services/profileService";
 
 // Define the context type from MainLayout
 type MainLayoutContext = {
@@ -77,6 +79,9 @@ const HomePage: React.FC = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [currentTestimonial, setCurrentTestimonial] = useState(0);
   const [isLoggingIn, setIsLoggingIn] = useState(false);
+  const [supervisor, setSupervisor] = useState<any>(null);
+  const [childStats, setChildStats] = useState<ChildLearningStats | null>(null);
+  const [isLoadingStats, setIsLoadingStats] = useState(true);
 
   const testimonials = [
     {
@@ -333,6 +338,45 @@ const HomePage: React.FC = () => {
     setIsLoggingIn(false);
   };
 
+  useEffect(() => {
+    const fetchSupervisor = async () => {
+      if (!user?.username) return;
+      
+      try {
+        console.log('Fetching supervisor for email:', user.username);
+        const supervisorService = SupervisorService.getInstance();
+        const supervisorData = await supervisorService.getSupervisorByEmail(user.username);
+        console.log('Fetched supervisor data:', supervisorData);
+        setSupervisor(supervisorData);
+      } catch (err) {
+        console.error('Error fetching supervisor:', err);
+      }
+    };
+
+    fetchSupervisor();
+  }, [user?.username]);
+
+  useEffect(() => {
+    const fetchChildStats = async () => {
+      if (!supervisor?.id) return;
+      
+      try {
+        setIsLoadingStats(true);
+        const profileService = ProfileService.getInstance();
+        const stats = await profileService.getChildLearningStats(supervisor.id);
+        if (stats && stats.length > 0) {
+          setChildStats(stats[0]);
+        }
+      } catch (error) {
+        console.error('Error fetching child stats:', error);
+      } finally {
+        setIsLoadingStats(false);
+      }
+    };
+
+    fetchChildStats();
+  }, [supervisor?.id]);
+
   // Add mock child data
   const childData: ChildType = {
     name: "Nguyễn Văn A",
@@ -457,7 +501,7 @@ const HomePage: React.FC = () => {
                           transition={{ delay: 0.4, duration: 0.4 }}
                           className="text-blue-100"
                         >
-                          Phụ huynh của {childData.name}
+                          Phụ huynh của {childStats?.childName}
                         </motion.p>
                       </div>
                     </div>
@@ -472,37 +516,61 @@ const HomePage: React.FC = () => {
                         Thông tin học sinh
                       </h4>
                       <div className="flex items-center gap-4">
-                        <motion.div
-                          initial={{ scale: 0.5, opacity: 0 }}
-                          animate={{ scale: 1, opacity: 1 }}
-                          transition={{ delay: 0.6, duration: 0.4 }}
-                          className="h-12 w-12 rounded-full bg-accent-color flex items-center justify-center shadow-md"
-                        >
-                          <User className="h-6 w-6 text-white" />
-                        </motion.div>
-                        <div>
-                          <h5 className="text-white font-medium">
-                            {childData.name}
-                          </h5>
-                          <p className="text-blue-100">{childData.age} tuổi</p>
-                        </div>
+                        {isLoadingStats ? (
+                          <div className="text-white">Đang tải...</div>
+                        ) : childStats ? (
+                          <>
+                            <motion.div
+                              initial={{ scale: 0.5, opacity: 0.5 }}
+                              animate={{ scale: 1, opacity: 1 }}
+                              transition={{ delay: 0.6, duration: 0.4 }}
+                              className="h-12 w-12 rounded-full bg-accent-color flex items-center justify-center shadow-md"
+                            >
+                              <User className="h-6 w-6 text-white" />
+                            </motion.div>
+                            <div>
+                              <motion.h5
+                                initial={{ y: 20, opacity: 0 }}
+                                animate={{ y: 0, opacity: 1 }}
+                                transition={{ delay: 0.7, duration: 0.4 }}
+                                className="text-white font-medium"
+                              >
+                                {childStats.childName}
+                              </motion.h5>
+                              <motion.p
+                                initial={{ y: 20, opacity: 0 }}
+                                animate={{ y: 0, opacity: 1 }}
+                                transition={{ delay: 0.8, duration: 0.4 }}
+                                className="text-blue-100"
+                              >
+                                {childStats.age} tuổi
+                              </motion.p>
+                            </div>
+                          </>
+                        ) : (
+                          <div className="text-white">Chưa có thông tin học sinh</div>
+                        )}
                       </div>
                     </motion.div>
 
                     <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
-                      {[{
-                        title: "Buổi học đã tham gia",
-                        value: childData.sessionsCompleted,
-                        delay: 0.7
-                      }, {
-                        title: "Điểm trung bình học tập",
-                        value: childData.averageScore,
-                        delay: 0.8
-                      }, {
-                        title: "Tổng thời gian học",
-                        value: `${childData.totalStudyTime}h`,
-                        delay: 0.9
-                      }].map((item, index) => (
+                      {[
+                        {
+                          title: "Buổi học đã tham gia",
+                          value: isLoadingStats ? "..." : childStats?.totalSessions || 0,
+                          delay: 0.7
+                        },
+                        {
+                          title: "Điểm trung bình học tập",
+                          value: isLoadingStats ? "..." : childStats?.averageScore.toFixed(1) || 0,
+                          delay: 0.8
+                        },
+                        {
+                          title: "Tổng thời gian học",
+                          value: isLoadingStats ? "..." : `${childStats?.totalLearningTimeHours.toFixed(1) || 0}h`,
+                          delay: 0.9
+                        }
+                      ].map((item, index) => (
                         <motion.div
                           key={index}
                           initial={{ opacity: 0, y: 20 }}
