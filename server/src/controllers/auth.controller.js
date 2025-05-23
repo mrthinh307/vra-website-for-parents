@@ -79,9 +79,18 @@ exports.login = async (req, res) => {
       console.error("Error fetching supervisor:", supervisorError);
     }
 
+    // Thiết lập cookie cho token
+    const token = data.session.access_token;
+    res.cookie('access_token', token, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === 'production', // Chỉ sử dụng HTTPS trong production
+      maxAge: 7 * 24 * 60 * 60 * 1000, // 7 ngày
+      sameSite: 'lax'
+    });
+
     res.json({
       message: "Login successful",
-      token: data.session.access_token,
+      token: token, // Vẫn trả về token để client có thể lưu vào localStorage
       user: supervisor || {
         id: data.user.id,
         email: data.user.email,
@@ -92,5 +101,60 @@ exports.login = async (req, res) => {
   } catch (error) {
     console.error("Login error:", error);
     res.status(500).json({ message: "Error logging in", error: error.message });
+  }
+};
+
+// Xác thực token
+exports.validateToken = async (req, res) => {
+  try {
+    // Lấy token từ header hoặc cookie
+    const token = req.headers.authorization?.split(' ')[1] || req.cookies.access_token;
+    
+    if (!token) {
+      return res.status(401).json({ message: 'Token không tồn tại' });
+    }
+    
+    // Xác thực token với Supabase
+    const { data, error } = await supabase.auth.getUser(token);
+    
+    if (error || !data.user) {
+      return res.status(401).json({ message: 'Token không hợp lệ' });
+    }
+    
+    // Lấy thông tin user từ bảng Supervisor
+    const { data: supervisor, error: supervisorError } = await supabase
+      .from("Supervisor")
+      .select("id, email, name, avatar_url")
+      .eq("id", data.user.id)
+      .single();
+      
+    if (supervisorError) {
+      console.error("Error fetching supervisor:", supervisorError);
+    }
+    
+    res.json({
+      message: 'Token hợp lệ',
+      user: supervisor || {
+        id: data.user.id,
+        email: data.user.email,
+        username: data.user.email,
+      }
+    });
+  } catch (error) {
+    console.error('Validate token error:', error);
+    res.status(401).json({ message: 'Token không hợp lệ' });
+  }
+};
+
+// Đăng xuất
+exports.logout = async (req, res) => {
+  try {
+    // Xóa cookie access_token
+    res.clearCookie('access_token');
+    
+    res.json({ message: 'Đăng xuất thành công' });
+  } catch (error) {
+    console.error('Logout error:', error);
+    res.status(500).json({ message: 'Đăng xuất thất bại' });
   }
 };

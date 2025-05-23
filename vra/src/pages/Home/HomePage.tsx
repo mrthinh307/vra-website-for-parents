@@ -319,13 +319,20 @@ const HomePage: React.FC = () => {
       console.log("Login response data:", data);
 
       if (res.ok) {
-        setIsLoggedIn(true);
-        setUser({
+        const userData = {
           username: data.user?.username || email,
           email: data.user?.email || email,
           avatar: data.user?.avatar_url,
-        });
+        };
+        
+        setIsLoggedIn(true);
+        setUser(userData);
+        
+        // Lưu thông tin vào localStorage
+        localStorage.setItem("isLoggedIn", "true");
+        localStorage.setItem("user", JSON.stringify(userData));
         localStorage.setItem("access_token", data.token);
+
         setEmail("");
         setPassword("");
       } else {
