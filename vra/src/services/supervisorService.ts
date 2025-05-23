@@ -5,6 +5,8 @@ export interface Supervisor {
     email: string;
     name: string;
     avatar_url: string | null;
+    phone_numbers: string | null;
+    relationship: string | null;
 }
 
 export class SupervisorService {
@@ -35,7 +37,7 @@ export class SupervisorService {
         try {
             const { data, error } = await SupervisorService.supabase
                 .from('Supervisor')
-                .select('id, email, name, avatar_url')
+                .select('id, email, name, avatar_url, phone_numbers, relationship')
                 .eq('email', email)
                 .single();
 
@@ -48,6 +50,40 @@ export class SupervisorService {
         } catch (error) {
             console.error('Error in getSupervisorByEmail:', error);
             return null;
+        }
+    }
+
+    async updateSupervisor(supervisorId: string, updateData: {
+        name?: string;
+        email?: string;
+        avatar_url?: string;
+        phone_numbers?: string;
+        relationship?: string;
+    }): Promise<any> {
+        try {
+            console.log('Bắt đầu cập nhật thông tin supervisor:', updateData);
+            
+            const { data, error } = await SupervisorService.supabase
+                .from('Supervisor')
+                .update(updateData)
+                .eq('id', supervisorId)
+                .select()
+                .single();
+
+            if (error) {
+                console.error('Lỗi khi cập nhật thông tin supervisor:', error);
+                throw error;
+            }
+
+            if (!data) {
+                throw new Error('Không tìm thấy thông tin supervisor để cập nhật');
+            }
+
+            console.log('Cập nhật thông tin supervisor thành công:', data);
+            return data;
+        } catch (error) {
+            console.error('Lỗi chi tiết khi cập nhật thông tin supervisor:', error);
+            throw error;
         }
     }
 } 

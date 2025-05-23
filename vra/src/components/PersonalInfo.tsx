@@ -4,105 +4,161 @@ import { UserOutlined, PhoneOutlined, MailOutlined, TeamOutlined, UploadOutlined
 import dayjs from 'dayjs';
 import type { UploadProps } from 'antd';
 import type { RcFile } from 'antd/es/upload';
+import { ProfileService, DetailedChildProfile } from '../services/profileService';
+import { SupervisorService } from '../services/supervisorService';
+import { useOutletContext } from 'react-router-dom';
 
 const { Option } = Select;
 
 interface PersonalInfoProps {
-  studentData?: {
-    fullName: string;
-    avatar: string;
-    age: number;
-    dateOfBirth: string | dayjs.Dayjs;
-    gender: string;
-    language: string;
-    guardianName: string;
-    guardianPhone: string;
-    guardianEmail: string;
-    relationship: string;
-  };
+  studentData?: DetailedChildProfile;
+  supervisorId?: string;
 }
 
-const PersonalInfo: React.FC<PersonalInfoProps> = ({ studentData }) => {
+// Define the context type from MainLayout
+type MainLayoutContext = {
+  isLoggedIn: boolean;
+  user: { username: string; avatar?: string } | null;
+};
+
+const PersonalInfo: React.FC<PersonalInfoProps> = ({ studentData: initialStudentData, supervisorId }) => {
   const [form] = Form.useForm();
   const [loading, setLoading] = useState(false);
-  const [currentData, setCurrentData] = useState(() => {
-    if (studentData) {
-      return {
-        ...studentData,
-        dateOfBirth: studentData.dateOfBirth ? dayjs(studentData.dateOfBirth) : null
-      };
-    }
-    return null;
-  });
+  const [currentData, setCurrentData] = useState<DetailedChildProfile | null>(null);
   const [avatarUrl, setAvatarUrl] = useState<string>('');
+  const [supervisor, setSupervisor] = useState<any>(null);
+  const { user } = useOutletContext<MainLayoutContext>();
 
-  // Set initial form values when currentData changes
+  // Fetch supervisor data when user is available
   useEffect(() => {
-    if (currentData) {
-      form.setFieldsValue(currentData);
-    }
-  }, [currentData, form]);
+    const fetchSupervisor = async () => {
+      if (!user?.username) return;
+      
+      try {
+        console.log('Fetching supervisor for email:', user.username);
+        const supervisorService = SupervisorService.getInstance();
+        const supervisorData = await supervisorService.getSupervisorByEmail(user.username);
+        console.log('Fetched supervisor data:', supervisorData);
+        setSupervisor(supervisorData);
+      } catch (err) {
+        console.error('Error fetching supervisor:', err);
+      }
+    };
 
-  // Hàm fetch dữ liệu từ database
-  const fetchStudentData = async () => {
-    try {
-      setLoading(true);
-      // TODO: Thay thế bằng API call thực tế
-      const response = await fetch('/api/student/profile');
-      const data = await response.json();
-      
-      // Chuyển đổi dateOfBirth string thành dayjs object
+    fetchSupervisor();
+  }, [user?.username]);
+
+  // Load data when component mounts or supervisorId changes
+  useEffect(() => {
+    const loadData = async () => {
+      if (!supervisorId) return;
+
+      try {
+        setLoading(true);
+        const profileService = ProfileService.getInstance();
+        const profiles = await profileService.getDetailedChildProfiles(supervisorId);
+        
+        if (profiles.length > 0) {
+          console.log('Loaded profile data:', profiles[0]);
+          const formattedData = {
+            ...profiles[0],
+            dateOfBirth: profiles[0].dateOfBirth ? dayjs(profiles[0].dateOfBirth) : dayjs(),
+            guardianName: profiles[0].guardianName,
+            guardianPhone: profiles[0].guardianPhone,
+            guardianEmail: profiles[0].guardianEmail,
+            relationship: profiles[0].relationship
+          };
+          console.log('Formatted data for form:', formattedData);
+          setCurrentData(formattedData);
+          form.setFieldsValue(formattedData);
+          // Set avatar URL from database
+          if (formattedData.avatar) {
+            setAvatarUrl(formattedData.avatar);
+          }
+        }
+      } catch (error) {
+        console.error('Error loading student data:', error);
+        message.error('Có lỗi xảy ra khi tải thông tin học sinh!');
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    loadData();
+  }, [supervisorId, form]);
+
+  // Set initial form values when initialStudentData changes
+  useEffect(() => {
+    if (initialStudentData) {
+      console.log('Setting initial student data:', initialStudentData);
       const formattedData = {
-        ...data,
-        dateOfBirth: dayjs(data.dateOfBirth)
+        ...initialStudentData,
+        dateOfBirth: initialStudentData.dateOfBirth ? dayjs(initialStudentData.dateOfBirth) : dayjs(),
+        guardianName: initialStudentData.guardianName,
+        guardianPhone: initialStudentData.guardianPhone,
+        guardianEmail: initialStudentData.guardianEmail,
+        relationship: initialStudentData.relationship
       };
-      
+      console.log('Formatted initial data for form:', formattedData);
       setCurrentData(formattedData);
       form.setFieldsValue(formattedData);
-    } catch (error) {
-      message.error('Không thể tải thông tin học sinh!');
-      console.error('Error fetching student data:', error);
-    } finally {
-      setLoading(false);
+      // Set avatar URL from initial data
+      if (initialStudentData.avatar) {
+        setAvatarUrl(initialStudentData.avatar);
+      }
     }
-  };
-
-  // Fetch dữ liệu khi component mount
-  useEffect(() => {
-    fetchStudentData();
-  }, []);
+  }, [initialStudentData, form]);
 
   const handleSubmit = async (values: any) => {
     try {
+      console.log('Bắt đầu xử lý submit form với giá trị:', values);
+      console.log('Supervisor ID:', supervisor?.id);
+      if (!supervisor?.id) {
+        console.error('Không có supervisorId');
+        message.error('Không thể cập nhật thông tin: Thiếu ID người giám hộ');
+        return;
+      }
+
       setLoading(true);
-      // Chuyển đổi dateOfBirth từ dayjs sang string ISO
+      const profileService = ProfileService.getInstance();
+      const supervisorService = SupervisorService.getInstance();
+      
+      // Format the data for submission
       const formattedValues = {
         ...values,
-        dateOfBirth: values.dateOfBirth.format('YYYY-MM-DD'),
+        fullName: values.fullName.trim(),
+        dateOfBirth: values.dateOfBirth ? values.dateOfBirth.format('YYYY-MM-DD') : dayjs().format('YYYY-MM-DD'),
         avatar: avatarUrl || currentData?.avatar
       };
-      // TODO: Thay thế bằng API call thực tế
-      const response = await fetch('/api/student/profile', {
-        method: 'PUT',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(formattedValues)
-      });
-      if (!response.ok) {
-        throw new Error('Cập nhật thất bại');
-      }
-      const updatedData = await response.json();
+      console.log('Dữ liệu đã được format:', formattedValues);
+
+      // Update child profile
+      console.log('Gọi API cập nhật profile với supervisorId:', supervisor.id);
+      const updatedData = await profileService.updateProfile(formattedValues, supervisor.id);
+      console.log('Nhận được dữ liệu cập nhật từ server:', updatedData);
+
+      // Update supervisor information
+      const supervisorUpdateData = {
+        name: values.guardianName,
+        email: values.guardianEmail,
+        phone_numbers: values.guardianPhone,
+        relationship: values.relationship
+      };
+      await supervisorService.updateSupervisor(supervisor.id, supervisorUpdateData);
+      
       setCurrentData({
         ...updatedData,
         dateOfBirth: dayjs(updatedData.dateOfBirth)
       });
+      console.log('Đã cập nhật state currentData');
+      
       message.success('Cập nhật thông tin thành công!');
     } catch (error) {
-      console.error('Error updating info:', error);
+      console.error('Chi tiết lỗi khi cập nhật thông tin:', error);
       message.error('Có lỗi xảy ra khi cập nhật thông tin!');
     } finally {
       setLoading(false);
+      console.log('Đã hoàn thành quá trình cập nhật');
     }
   };
 
@@ -136,8 +192,7 @@ const PersonalInfo: React.FC<PersonalInfoProps> = ({ studentData }) => {
       return;
     }
     if (info.file.status === 'done') {
-      // TODO: Thay thế bằng API call thực tế để upload ảnh
-      // Giả lập URL ảnh sau khi upload
+      // TODO: Implement image upload to Supabase storage
       const imageUrl = URL.createObjectURL(info.file.originFileObj as Blob);
       setAvatarUrl(imageUrl);
       setLoading(false);
@@ -161,7 +216,10 @@ const PersonalInfo: React.FC<PersonalInfoProps> = ({ studentData }) => {
           guardianName: '',
           guardianPhone: '',
           guardianEmail: '',
-          relationship: ''
+          relationship: '',
+          supervisorName: '',
+          supervisorEmail: '',
+          supervisorPhone: ''
         }}
         className="personal-form"
         requiredMark={false}
@@ -173,6 +231,11 @@ const PersonalInfo: React.FC<PersonalInfoProps> = ({ studentData }) => {
             src={avatarUrl || currentData?.avatar}
             icon={<UserOutlined />}
             className="avatar-glow mb-4"
+            onError={() => {
+              // If image fails to load, show default icon
+              setAvatarUrl('');
+              return true;
+            }}
           />
           <Upload
             name="avatar"
@@ -301,9 +364,8 @@ const PersonalInfo: React.FC<PersonalInfoProps> = ({ studentData }) => {
         </div>
         <div className="flex justify-center mt-8">
           <button
-            type="button"
+            type="submit"
             disabled={loading}
-            onClick={showConfirmAndSubmit}
             className="px-8 py-3 w-auto min-w-[200px] text-white font-medium rounded-md hover:bg-opacity-90 transition-all duration-300"
           >
             {loading ? 'Đang lưu...' : 'Lưu thông tin'}

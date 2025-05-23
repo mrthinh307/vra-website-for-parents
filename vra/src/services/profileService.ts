@@ -1,11 +1,12 @@
 import { createClient, SupabaseClient } from '@supabase/supabase-js';
+import dayjs from 'dayjs';
 
 // Interface cho dữ liệu chi tiết profile
 export interface DetailedChildProfile {
     fullName: string;
     avatar: string;
     age: number;
-    dateOfBirth: string;
+    dateOfBirth: string | dayjs.Dayjs;
     gender: string;
     language: string;
     guardianName: string;
@@ -22,6 +23,8 @@ interface DetailedChildProfileData {
     Supervisor: {
         name: string;
         email: string;
+        phone_numbers: string;
+        relationship: string;
     }[] | null;
 }
 
@@ -76,7 +79,9 @@ export class ProfileService {
                     date_of_birth,
                     Supervisor:supervisor_id (
                         name,
-                        email
+                        email,
+                        phone_numbers,
+                        relationship
                     )
                 `)
                 .eq('supervisor_id', supervisorId);
@@ -98,9 +103,9 @@ export class ProfileService {
                     gender: 'male', // Default value as per SQL query
                     language: 'vietnamese', // Default value as per SQL query
                     guardianName: supervisor?.name || '',
-                    guardianPhone: '0123456789', // Default value as per SQL query
+                    guardianPhone: supervisor?.phone_numbers || '',
                     guardianEmail: supervisor?.email || '',
-                    relationship: 'parent' // Default value as per SQL query
+                    relationship: supervisor?.relationship || ''
                 };
             });
         } catch (error) {
@@ -134,6 +139,70 @@ export class ProfileService {
             }));
         } catch (error) {
             console.error('Error fetching child learning stats:', error);
+            throw error;
+        }
+    }
+
+    /**
+     * Cập nhật thông tin profile của trẻ
+     * @param profileData Dữ liệu profile cần cập nhật
+     * @param supervisorId ID của supervisor
+     * @returns Promise<DetailedChildProfile>
+     */
+    async updateProfile(profileData: DetailedChildProfile, supervisorId: string): Promise<DetailedChildProfile> {
+        try {
+            console.log('Bắt đầu cập nhật profile với dữ liệu:', profileData);
+            console.log('Supervisor ID:', supervisorId);
+            
+            // First, get the child ID using supervisor_id
+            const { data: childData, error: childError } = await ProfileService.supabase
+                .from('Child')
+                .select('id')
+                .eq('supervisor_id', supervisorId)
+                .single();
+
+            if (childError) {
+                console.error('Lỗi khi tìm child:', childError);
+                throw childError;
+            }
+
+            if (!childData) {
+                throw new Error('Không tìm thấy thông tin học sinh');
+            }
+
+            // Then update using the child ID
+            const { data, error } = await ProfileService.supabase
+                .from('Child')
+                .update({
+                    name: profileData.fullName,
+                    avatar_url: profileData.avatar,
+                    date_of_birth: profileData.dateOfBirth
+                })
+                .eq('id', childData.id)
+                .select()
+                .single();
+
+            if (error) {
+                console.error('Lỗi khi cập nhật profile:', error);
+                throw error;
+            }
+            
+            if (!data) {
+                console.error('Không tìm thấy profile để cập nhật với ID:', childData.id);
+                throw new Error('Không tìm thấy profile để cập nhật');
+            }
+
+            console.log('Cập nhật profile thành công. Dữ liệu trả về:', data);
+
+            const updatedProfile = {
+                ...profileData,
+                dateOfBirth: data.date_of_birth
+            };
+            
+            console.log('Dữ liệu profile sau khi cập nhật:', updatedProfile);
+            return updatedProfile;
+        } catch (error) {
+            console.error('Lỗi chi tiết khi cập nhật profile:', error);
             throw error;
         }
     }
