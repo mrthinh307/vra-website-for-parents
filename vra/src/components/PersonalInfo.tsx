@@ -25,8 +25,23 @@ interface PersonalInfoProps {
 const PersonalInfo: React.FC<PersonalInfoProps> = ({ studentData }) => {
   const [form] = Form.useForm();
   const [loading, setLoading] = useState(false);
-  const [currentData, setCurrentData] = useState(studentData);
+  const [currentData, setCurrentData] = useState(() => {
+    if (studentData) {
+      return {
+        ...studentData,
+        dateOfBirth: studentData.dateOfBirth ? dayjs(studentData.dateOfBirth) : null
+      };
+    }
+    return null;
+  });
   const [avatarUrl, setAvatarUrl] = useState<string>('');
+
+  // Set initial form values when currentData changes
+  useEffect(() => {
+    if (currentData) {
+      form.setFieldsValue(currentData);
+    }
+  }, [currentData, form]);
 
   // Hàm fetch dữ liệu từ database
   const fetchStudentData = async () => {
@@ -128,17 +143,31 @@ const PersonalInfo: React.FC<PersonalInfoProps> = ({ studentData }) => {
       setLoading(false);
       message.success('Upload ảnh thành công!');
     }
-  };  return (
+  };
+
+  return (
     <div>
       {/* Title is already in parent component */}
-        <Form
+      <Form
         form={form}
         layout="vertical"
-        initialValues={currentData}
+        initialValues={currentData || {
+          fullName: '',
+          avatar: '',
+          age: 0,
+          dateOfBirth: null,
+          gender: '',
+          language: '',
+          guardianName: '',
+          guardianPhone: '',
+          guardianEmail: '',
+          relationship: ''
+        }}
         className="personal-form"
         requiredMark={false}
         onFinish={handleSubmit}
-      >        <div className="flex flex-col items-center justify-center mb-8">
+      >
+        <div className="flex flex-col items-center justify-center mb-8">
           <Avatar
             size={150}
             src={avatarUrl || currentData?.avatar}
@@ -155,7 +184,8 @@ const PersonalInfo: React.FC<PersonalInfoProps> = ({ studentData }) => {
                 onSuccess?.("ok");
               }, 0);
             }}
-          >              <button
+          >
+            <button
               type="button"
               className="flex items-center justify-center px-3 py-1 bg-black bg-opacity-25 rounded-md border border-white border-opacity-20 hover:bg-opacity-40 transition-all duration-300 text-sm avatar-upload-btn"
             >
@@ -163,7 +193,9 @@ const PersonalInfo: React.FC<PersonalInfoProps> = ({ studentData }) => {
               Thay đổi ảnh
             </button>
           </Upload>
-        </div><div className="grid grid-cols-1 md:grid-cols-2 gap-6">          <Form.Item
+        </div>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <Form.Item
             label="Họ và tên"
             name="fullName"
             rules={[{ required: true, message: 'Vui lòng nhập họ và tên' }]}
@@ -179,7 +211,8 @@ const PersonalInfo: React.FC<PersonalInfoProps> = ({ studentData }) => {
             className="flex-1"
           >
             <Input prefix={<UserOutlined />} placeholder="Nhập tuổi" style={{ height: '42px' }} />
-          </Form.Item><Form.Item
+          </Form.Item>
+          <Form.Item
             label="Ngày sinh"
             name="dateOfBirth"
             rules={[{ required: true, message: 'Vui lòng chọn ngày sinh' }]}
@@ -214,10 +247,12 @@ const PersonalInfo: React.FC<PersonalInfoProps> = ({ studentData }) => {
               <Option value="chinese">Tiếng Trung</Option>
             </Select>
           </Form.Item>
-        </div><div className="border-t pt-6 mt-6">
+        </div>
+        <div className="border-t pt-6 mt-6">
           <h3 className="text-xl font-semibold mb-6">Thông tin người giám hộ</h3>
           
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">            <Form.Item
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <Form.Item
               label="Tên người giám hộ"
               name="guardianName"
               rules={[{ required: true, message: 'Vui lòng nhập tên người giám hộ' }]}
@@ -236,7 +271,8 @@ const PersonalInfo: React.FC<PersonalInfoProps> = ({ studentData }) => {
               className="flex-1"
             >
               <Input prefix={<PhoneOutlined />} placeholder="Nhập số điện thoại" style={{ height: '42px' }} />
-            </Form.Item><Form.Item
+            </Form.Item>
+            <Form.Item
               label="Email"
               name="guardianEmail"
               rules={[
@@ -262,7 +298,8 @@ const PersonalInfo: React.FC<PersonalInfoProps> = ({ studentData }) => {
               </Select>
             </Form.Item>
           </div>
-        </div>        <div className="flex justify-center mt-8">
+        </div>
+        <div className="flex justify-center mt-8">
           <button
             type="button"
             disabled={loading}

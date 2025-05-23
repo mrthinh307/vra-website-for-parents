@@ -78,7 +78,7 @@ const PersonalInfoPage: React.FC = () => {
             fullName: '',
             avatar: '',
             age: 0,
-            dateOfBirth: '',
+            dateOfBirth: dayjs(),
             gender: '',
             language: '',
             guardianName: supervisor?.name || '',
