@@ -234,7 +234,7 @@ const LessonList: React.FC = () => {
                     <th className="px-6 py-3 text-sm font-medium text-gray-500 uppercase tracking-wider text-center">
                       <div className="flex items-center justify-center bg-blue-100 rounded-full px-3 py-1.5">
                         <List className="h-3 w-3 text-blue-600 mr-2" />
-                        STT
+                        ID
                       </div>
                     </th>
                     <th className="px-6 py-3 text-sm font-medium text-gray-500 uppercase tracking-wider text-center">

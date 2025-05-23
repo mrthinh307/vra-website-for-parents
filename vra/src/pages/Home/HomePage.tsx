@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useOutletContext } from "react-router-dom";
+import { motion } from "framer-motion";
 import {
   Eye,
   EyeOff,
@@ -13,6 +14,7 @@ import {
   ArrowLeft,
   Rotate3dIcon,
   NotebookText,
+  BookAIcon,
 } from "lucide-react";
 import {
   anh1,
@@ -43,14 +45,8 @@ type MainLayoutContext = {
   scrollToLoginForm: () => void;
   isLoggedIn: boolean;
   setIsLoggedIn: (isLoggedIn: boolean) => void;
-  user: { username: string; avatar?: string } | null;
-  setUser: (user: { username: string; avatar?: string } | null) => void;
-};
-
-// Add User type
-type UserType = {
-  username: string;
-  avatar?: string;
+  user: { username: string; email: string; avatar?: string } | null;
+  setUser: (user: { username: string; email: string; avatar?: string } | null) => void;
 };
 
 // Add Child type
@@ -80,6 +76,7 @@ const HomePage: React.FC = () => {
   const [email, setEmail] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [currentTestimonial, setCurrentTestimonial] = useState(0);
+  const [isLoggingIn, setIsLoggingIn] = useState(false);
 
   const testimonials = [
     {
@@ -264,7 +261,12 @@ const HomePage: React.FC = () => {
         }),
       });      const result = await res.json();
       if (res.ok) {
-        alert("Đăng ký thành công!");
+        setUser({
+          username: data.name,
+          email: data.email,
+          avatar: data.avatar_url,
+        });
+        setIsLoggedIn(true);
         setShowRegisterForm(false);
       } else {
         // Xử lý các loại thông báo lỗi khác nhau từ server
@@ -292,6 +294,7 @@ const HomePage: React.FC = () => {
       alert("Vui lòng nhập đầy đủ thông tin đăng nhập!");
       return;
     }
+    setIsLoggingIn(true);
     try {
       console.log(
         "Sending login request to:",
@@ -314,6 +317,7 @@ const HomePage: React.FC = () => {
         setIsLoggedIn(true);
         setUser({
           username: data.user?.username || email,
+          email: data.user?.email || email,
           avatar: data.user?.avatar_url,
         });
         localStorage.setItem("access_token", data.token);
@@ -326,11 +330,7 @@ const HomePage: React.FC = () => {
       console.error("Login error:", err);
       alert("Có lỗi xảy ra khi đăng nhập!");
     }
-  };
-
-  const handleLogout = () => {
-    setIsLoggedIn(false);
-    setUser(null);
+    setIsLoggingIn(false);
   };
 
   // Add mock child data
@@ -423,29 +423,63 @@ const HomePage: React.FC = () => {
               {/* Right side content */}
               <div className="w-full md:w-5/12 mt-8 md:mt-0">
                 {isLoggedIn ? (
-                  <div className="bg-white/10 backdrop-blur-lg p-6 rounded-2xl animate-slideInRight">
+                  <motion.div
+                    className="bg-white/10 backdrop-blur-lg p-6 rounded-2xl shadow-xl"
+                    initial={{ opacity: 0, x: 100 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    transition={{ duration: 0.5, ease: "easeOut" }}
+                    whileHover={{ 
+                      scale: 1.03, 
+                      boxShadow: "0px 0px 25px rgba(100, 180, 255, 0.5)" 
+                    }}
+                  >
                     <div className="flex items-center gap-4 mb-6">
-                      <div className="h-16 w-16 rounded-full bg-primary-color flex items-center justify-center">
+                      <motion.div
+                        initial={{ scale: 0.5, opacity: 0 }}
+                        animate={{ scale: 1, opacity: 1 }}
+                        transition={{ delay: 0.2, duration: 0.4 }}
+                        className="h-16 w-16 rounded-full bg-primary-color flex items-center justify-center shadow-lg"
+                      >
                         <User className="h-8 w-8 text-white" />
-                      </div>
+                      </motion.div>
                       <div>
-                        <h3 className="text-white text-xl font-bold">
+                        <motion.h3
+                          initial={{ y: 20, opacity: 0 }}
+                          animate={{ y: 0, opacity: 1 }}
+                          transition={{ delay: 0.3, duration: 0.4 }}
+                          className="text-white text-xl font-bold"
+                        >
                           {user?.username}
-                        </h3>
-                        <p className="text-blue-100">
+                        </motion.h3>
+                        <motion.p
+                          initial={{ y: 20, opacity: 0 }}
+                          animate={{ y: 0, opacity: 1 }}
+                          transition={{ delay: 0.4, duration: 0.4 }}
+                          className="text-blue-100"
+                        >
                           Phụ huynh của {childData.name}
-                        </p>
+                        </motion.p>
                       </div>
                     </div>
 
-                    <div className="bg-white/5 p-4 rounded-xl mb-6">
+                    <motion.div
+                      initial={{ opacity: 0, y: 20 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      transition={{ delay: 0.5, duration: 0.4 }}
+                      className="bg-white/5 p-4 rounded-xl mb-6 shadow-md"
+                    >
                       <h4 className="text-white font-semibold mb-3">
                         Thông tin học sinh
                       </h4>
                       <div className="flex items-center gap-4">
-                        <div className="h-12 w-12 rounded-full bg-accent-color flex items-center justify-center">
+                        <motion.div
+                          initial={{ scale: 0.5, opacity: 0 }}
+                          animate={{ scale: 1, opacity: 1 }}
+                          transition={{ delay: 0.6, duration: 0.4 }}
+                          className="h-12 w-12 rounded-full bg-accent-color flex items-center justify-center shadow-md"
+                        >
                           <User className="h-6 w-6 text-white" />
-                        </div>
+                        </motion.div>
                         <div>
                           <h5 className="text-white font-medium">
                             {childData.name}
@@ -453,44 +487,54 @@ const HomePage: React.FC = () => {
                           <p className="text-blue-100">{childData.age} tuổi</p>
                         </div>
                       </div>
-                    </div>
+                    </motion.div>
 
                     <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
-                      <div className="bg-white/5 p-4 rounded-xl">
-                        <h4 className="text-white font-semibold mb-2">
-                          Buổi học đã tham gia
-                        </h4>
-                        <p className="text-2xl text-white font-bold">
-                          {childData.sessionsCompleted}
-                        </p>
-                      </div>
-                      <div className="bg-white/5 p-4 rounded-xl">
-                        <h4 className="text-white font-semibold mb-2">
-                          Điểm trung bình học tập
-                        </h4>
-                        <p className="text-2xl text-white font-bold">
-                          {childData.averageScore}
-                        </p>
-                      </div>
-                      <div className="bg-white/5 p-4 rounded-xl">
-                        <h4 className="text-white font-semibold mb-2">
-                          Tổng thời gian học
-                        </h4>
-                        <p className="text-2xl text-white font-bold">
-                          {childData.totalStudyTime}h
-                        </p>
-                      </div>
+                      {[{
+                        title: "Buổi học đã tham gia",
+                        value: childData.sessionsCompleted,
+                        delay: 0.7
+                      }, {
+                        title: "Điểm trung bình học tập",
+                        value: childData.averageScore,
+                        delay: 0.8
+                      }, {
+                        title: "Tổng thời gian học",
+                        value: `${childData.totalStudyTime}h`,
+                        delay: 0.9
+                      }].map((item, index) => (
+                        <motion.div
+                          key={index}
+                          initial={{ opacity: 0, y: 20 }}
+                          animate={{ opacity: 1, y: 0 }}
+                          transition={{ delay: item.delay, duration: 0.4 }}
+                          className="bg-white/5 p-4 rounded-xl shadow-md hover:bg-white/10 transition-colors"
+                        >
+                          <h4 className="text-white font-semibold mb-2">
+                            {item.title}
+                          </h4>
+                          <p className="text-2xl text-white font-bold">
+                            {item.value}
+                          </p>
+                        </motion.div>
+                      ))}
                     </div>
 
-                    <div className="flex justify-end">
-                      <button
+                    <motion.div
+                      initial={{ opacity: 0, y: 20 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      transition={{ delay: 1.0, duration: 0.4 }}
+                      className="flex justify-end"
+                    >
+                      <AnimatedButton
+                        icon={BookAIcon}
+                        text="Xem chi tiết"
+                        size="md"
+                        className="bg-blue-500 hover:bg-blue-400 text-white shadow-[0_0_15px_3px_rgba(59,130,246,0.5)] hover:shadow-[0_0_20px_5px_rgba(59,130,246,0.7)]"
                         onClick={() => alert("Chức năng đang được phát triển")}
-                        className="btn text-white border-2 border-white font-bold px-6 py-2 rounded-full transition-all duration-500 hover:bg-white/10"
-                      >
-                        Xem chi tiết
-                      </button>
-                    </div>
-                  </div>
+                      />
+                    </motion.div>
+                  </motion.div>
                 ) : (
                   <div
                     id="login-form"
@@ -546,13 +590,6 @@ const HomePage: React.FC = () => {
                               </button>
                             </div>
                           </div>
-                          {/* 
-                          <button
-                            className="btn btn-primary text-white font-bold w-full py-3 rounded-lg hover:bg-primary-light transform hover:scale-[1.02] transition-all duration-300 shadow-md hover:shadow-lg"
-                            onClick={handleLogin}
-                          >
-                            Đăng nhập
-                          </button> */}
                           <AnimatedButton
                             icon={LogIn}
                             text="Đăng nhập"
@@ -561,6 +598,7 @@ const HomePage: React.FC = () => {
                             withFullWidth={true}
                             primary
                             onClick={handleLogin}
+                            isLoading={isLoggingIn}
                           />
                         </div>
 
@@ -595,7 +633,6 @@ const HomePage: React.FC = () => {
                             </button>
                           </span>
                         </div>
-
                         <div className="text-center">
                           <div className="h-px bg-gray-300 w-full mb-3"></div>
                           <p className="text-gray-700 text-xs">
@@ -864,7 +901,7 @@ const HomePage: React.FC = () => {
                     icon={ArrowRight}
                     text="Tìm hiểu ngay"
                     size="md"
-                    className="bg-blue-600"
+                    className="bg-[linear-gradient(135deg,_var(--primary-color),_var(--primary-light))]"
                     onClick={scrollToTop}
                   />
                 </div>

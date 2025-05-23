@@ -164,12 +164,17 @@ const TaskList: React.FC<TaskListProps> = ({
                     </div>
                   ) : (
                     <button
-                      onClick={onGenerateFeedback}
-                      className="w-full flex items-center justify-center bg-blue-100 hover:bg-blue-200 rounded-full px-3 py-1.5 transition-colors duration-200"
-                    >
-                      <Bot className="h-3 w-3 text-[#19395E] mr-2" />
-                      <span>Thêm nhận xét từ VRA AI</span>
-                    </button>
+                    onClick={onGenerateFeedback}
+                    className="w-full flex items-center justify-center bg-blue-100 hover:bg-blue-200 rounded-full px-16 py-1.5 transition-colors duration-200 glow-button animate-pulse-slow relative overflow-hidden"
+                    style={{
+                      boxShadow: '0 0 10px 2px rgba(59, 130, 246, 0.6), 0 0 20px 4px rgba(59, 130, 246, 0.4)',
+                      transition: 'all 0.2s ease-in-out'
+                    }}
+                  >
+                    <Bot className="h-5 w-5 text-[#19395E] mr-2 animate-bounce-slow" />
+                    <span>THÊM NHẬN XÉT TỪ VRA AI</span>
+                    <div className="absolute inset-0 bg-white/30 shine-effect"></div>
+                  </button>
                   )}
                 </th>
               </tr>

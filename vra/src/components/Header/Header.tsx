@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { Link, useLocation } from "react-router-dom";
-import { Menu, X, User, LogOut, Plane, DoorOpen, DoorClosedLocked, Key, KeyIcon, KeyRoundIcon } from "lucide-react";
+import { Menu, X, User, LogOut, KeyRoundIcon } from "lucide-react";
 import { Logo1 } from "../../assets/images";
 import UserMenu from "../Navigation/UserMenu";
 import AnimatedButton from "../lib-animated/Button";
@@ -108,11 +108,8 @@ const Header: React.FC<HeaderProps> = ({
               </>
             ) : (
               <div className="flex items-center gap-4">
-                <div className="flex items-center gap-2 bg-primary-color/10 px-4 py-2 rounded-full">
-                  <div className="h-8 w-8 rounded-full bg-primary-color flex items-center justify-center">
-                    <User className="h-5 w-5 text-white" />
-                  </div>
-                  <span className="text-primary-color font-medium">{user?.username}</span>
+                <div className="flex items-center gap-2 bg-primary-color/10 py-2 rounded-full">
+                  <span className="text-primary-color font-medium text-[16.8px]">{user?.username}</span>
                 </div>
                 <UserMenu onLogout={onLogout || (() => { })} />
               </div>

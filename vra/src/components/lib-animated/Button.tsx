@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { motion, HTMLMotionProps, useAnimationControls } from "framer-motion";
 import { cn } from "../../lib/utils";
-import { LucideIcon } from "lucide-react";
+import { LucideIcon, Loader2 } from "lucide-react";
 
 interface AnimatedButtonProps extends Omit<HTMLMotionProps<"button">, "children"> {
   icon: LucideIcon;
@@ -12,6 +12,7 @@ interface AnimatedButtonProps extends Omit<HTMLMotionProps<"button">, "children"
   className?: string;
   primary?: boolean;
   rounded?: boolean;
+  isLoading?: boolean;
 }
 
 const AnimatedButton: React.FC<AnimatedButtonProps> = ({
@@ -23,6 +24,7 @@ const AnimatedButton: React.FC<AnimatedButtonProps> = ({
   rounded = true,
   primary = false,
   className,
+  isLoading = false,
   ...props
 }) => {
   const shineControls = useAnimationControls();
@@ -90,13 +92,15 @@ const AnimatedButton: React.FC<AnimatedButtonProps> = ({
         withFullWidth ? "w-full" : "",
         rounded ? "rounded-full" : "",
         primary ? "rounded-lg" : "", // Assuming primary might use different rounding
+        isLoading ? "opacity-70 cursor-not-allowed" : "", // Styles for loading state
         className // Allows overriding default bg and adding custom shadows
       )}
       initial="initial"
-      whileHover="hover"
-      whileTap={{ scale: 0.97 }}
-      onHoverStart={handleHoverStart}
-      onHoverEnd={handleHoverEnd}
+      whileHover={isLoading ? undefined : "hover"}
+      whileTap={isLoading ? undefined : { scale: 0.97 }}
+      onHoverStart={isLoading ? undefined : handleHoverStart}
+      onHoverEnd={isLoading ? undefined : handleHoverEnd}
+      disabled={isLoading}
       {...props}
     >
       {/* Shine pseudo-element controlled by Framer Motion */}
@@ -109,43 +113,46 @@ const AnimatedButton: React.FC<AnimatedButtonProps> = ({
       <div className={cn(
         "relative flex items-center justify-center w-full h-full z-10", // Ensure content is above shine
       )}>
-        {/* Container to hold both elements */}
-        <div className={cn(
-          "relative h-full flex items-center justify-center min-w-[5rem]", 
-        )}>
-          {/* Icon slides from left to center */}
-          <motion.div
-            className="absolute left-0 right-0 mx-auto flex items-center justify-center"
-            variants={{
-              initial: { x: -35, opacity: 0, scale: 0.8 }, // Start further left and smaller
-              hover: { x: 0, opacity: 1, scale: 1 }
-            }}
-            transition={{ 
-              type: "spring", 
-              stiffness: 350, 
-              damping: 20,
-              delay: 0.05, // Slight delay for icon
-            }}
-          >
-            <Icon size={getIconSize()} />
-          </motion.div>
+        {isLoading ? (
+          <Loader2 size={getIconSize()} className="animate-spin" />
+        ) : (
+          <div className={cn(
+            "relative h-full flex items-center justify-center min-w-[5rem]", 
+          )}>
+            {/* Icon slides from left to center */}
+            <motion.div
+              className="absolute left-0 right-0 mx-auto flex items-center justify-center"
+              variants={{
+                initial: { x: -35, opacity: 0, scale: 0.8 }, // Start further left and smaller
+                hover: { x: 0, opacity: 1, scale: 1 }
+              }}
+              transition={{ 
+                type: "spring", 
+                stiffness: 350, 
+                damping: 20,
+                delay: 0.05, // Slight delay for icon
+              }}
+            >
+              <Icon size={getIconSize()} />
+            </motion.div>
 
-          {/* Text slides to the right and fades out */}
-          <motion.span
-            className="mx-auto flex items-center justify-center whitespace-nowrap"
-            variants={{
-              initial: { x: 0, opacity: 1, scale: 1 },
-              hover: { x: 35, opacity: 0, scale: 0.8 } // Move further right and shrink
-            }}
-            transition={{ 
-              type: "spring", 
-              stiffness: 350, 
-              damping: 20
-            }}
-          >
-            {text}
-          </motion.span>
-        </div>
+            {/* Text slides to the right and fades out */}
+            <motion.span
+              className="mx-auto flex items-center justify-center whitespace-nowrap"
+              variants={{
+                initial: { x: 0, opacity: 1, scale: 1 },
+                hover: { x: 35, opacity: 0, scale: 0.8 } // Move further right and shrink
+              }}
+              transition={{ 
+                type: "spring", 
+                stiffness: 350, 
+                damping: 20
+              }}
+            >
+              {text}
+            </motion.span>
+          </div>
+        )}
       </div>
     </motion.button>
   );
