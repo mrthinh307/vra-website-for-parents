@@ -81,12 +81,18 @@ exports.login = async (req, res) => {
 
     // Thiết lập cookie cho token
     const token = data.session.access_token;
+    const expiresIn = 7 * 24 * 60 * 60; // 7 ngày trong giây
+    
     res.cookie('access_token', token, {
       httpOnly: true,
       secure: process.env.NODE_ENV === 'production', // Chỉ sử dụng HTTPS trong production
-      maxAge: 7 * 24 * 60 * 60 * 1000, // 7 ngày
+      maxAge: expiresIn * 1000, // 7 ngày trong milliseconds
       sameSite: 'lax'
     });
+    
+    // Thêm session vào session store
+    const sessionStore = require('../services/sessionStore');
+    sessionStore.addSession(token, data.user.id, expiresIn);
 
     res.json({
       message: "Login successful",
@@ -114,10 +120,18 @@ exports.validateToken = async (req, res) => {
       return res.status(401).json({ message: 'Token không tồn tại' });
     }
     
+    // Kiểm tra xem token có trong session store không
+    const sessionStore = require('../services/sessionStore');
+    if (!sessionStore.isValidSession(token)) {
+      return res.status(401).json({ message: 'Phiên đăng nhập đã hết hạn hoặc không hợp lệ' });
+    }
+    
     // Xác thực token với Supabase
     const { data, error } = await supabase.auth.getUser(token);
     
     if (error || !data.user) {
+      // Nếu token không hợp lệ, xóa khỏi session store
+      sessionStore.removeSession(token);
       return res.status(401).json({ message: 'Token không hợp lệ' });
     }
     
@@ -149,6 +163,15 @@ exports.validateToken = async (req, res) => {
 // Đăng xuất
 exports.logout = async (req, res) => {
   try {
+    // Lấy token từ header hoặc cookie
+    const token = req.headers.authorization?.split(' ')[1] || req.cookies.access_token;
+    
+    if (token) {
+      // Xóa session khỏi session store
+      const sessionStore = require('../services/sessionStore');
+      sessionStore.removeSession(token);
+    }
+    
     // Xóa cookie access_token
     res.clearCookie('access_token');
     
