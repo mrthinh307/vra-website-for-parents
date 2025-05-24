@@ -16,9 +16,11 @@ describe('Login Functionality', function () {
     const FEATURES_SECTION_ID = "features";
 
     const USER_INFO_HEADER_XPATH = "//div[contains(@class, 'header')]//div[contains(@class, 'bg-primary-color/10')]";
+    const LOGOUT_BUTTON_XPATH = "//button[contains(.,'Đăng xuất')]";
 
     before(async function () {
         driver = await new Builder().forBrowser('chrome').build();
+        await driver.manage().window().maximize();
     });
 
     after(async function () {
@@ -30,6 +32,32 @@ describe('Login Functionality', function () {
     beforeEach(async function() {
         await driver.get(BASE_URL);
         await driver.wait(until.elementLocated(By.xpath("//body")), 7000);
+    });
+
+    afterEach(async function() {
+        try {
+            // Check if user is logged in by looking for user info in header
+            const userInfo = await driver.findElements(By.xpath(USER_INFO_HEADER_XPATH));
+            if (userInfo.length > 0 && await userInfo[0].isDisplayed()) {
+                // Click on user info to show logout button
+                await userInfo[0].click();
+                await driver.sleep(500);
+                
+                // Find and click logout button
+                const logoutButton = await driver.findElement(By.xpath(LOGOUT_BUTTON_XPATH));
+                await logoutButton.click();
+                
+                // Wait for logout to complete and login form to appear
+                await driver.wait(until.elementLocated(By.xpath(LOGIN_FORM_CONTAINER_XPATH)), 7000);
+            }
+        } catch (error) {
+            console.log('No need to logout - user was not logged in');
+        }
+        
+        // Clear cookies and local storage
+        await driver.manage().deleteAllCookies();
+        await driver.executeScript('window.localStorage.clear();');
+        await driver.executeScript('window.sessionStorage.clear();');
     });
 
     it('✅ TC-DN-001: Đăng nhập thành công với thông tin hợp lệ', async function () {

@@ -1,0 +1,1245 @@
+
+    <!DOCTYPE html>
+    <html lang="vi">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>VRA Test Report</title>
+        <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+        <style>
+            :root {
+                --primary-color: #3498db;
+                --success-color: #2ecc71;
+                --warning-color: #f1c40f;
+                --danger-color: #e74c3c;
+                --info-color: #3498db;
+                --dark-color: #2c3e50;
+                --light-color: #ecf0f1;
+                --border-radius: 12px;
+                --shadow-sm: 0 2px 4px rgba(0,0,0,0.05);
+                --shadow-md: 0 4px 6px rgba(0,0,0,0.1);
+                --shadow-lg: 0 10px 15px rgba(0,0,0,0.1);
+            }
+
+            * {
+                margin: 0;
+                padding: 0;
+                box-sizing: border-box;
+            }
+
+            body {
+                font-family: 'Inter', sans-serif;
+                line-height: 1.6;
+                color: var(--dark-color);
+                background-color: #f8fafc;
+            }
+
+            .container {
+                max-width: 1200px;
+                margin: 2rem auto;
+                padding: 0 1.5rem;
+            }
+
+            header {
+                background: linear-gradient(135deg, #fff 0%, #f8fafc 100%);
+                border-radius: var(--border-radius);
+                padding: 2rem;
+                margin-bottom: 2rem;
+                box-shadow: var(--shadow-md);
+                border: 1px solid rgba(0,0,0,0.1);
+                position: relative;
+                overflow: hidden;
+            }
+
+            header::before {
+                content: '';
+                position: absolute;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 4px;
+                background: linear-gradient(90deg, var(--primary-color), var(--info-color));
+            }
+
+            h1 {
+                font-size: 2rem;
+                font-weight: 700;
+                margin-bottom: 0.5rem;
+                color: var(--dark-color);
+            }
+
+            .timestamp {
+                color: #64748b;
+                font-size: 0.875rem;
+            }
+
+            .summary {
+                display: grid;
+                grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+                gap: 1.5rem;
+                margin-bottom: 2rem;
+            }
+
+            .summary-card {
+                background: white;
+                padding: 1.5rem;
+                border-radius: var(--border-radius);
+                box-shadow: var(--shadow-sm);
+                border: 1px solid rgba(0,0,0,0.1);
+                transition: transform 0.2s ease, box-shadow 0.2s ease;
+            }
+
+            .summary-card:hover {
+                transform: translateY(-2px);
+                box-shadow: var(--shadow-md);
+            }
+
+            .summary-card .label {
+                font-size: 0.875rem;
+                color: #64748b;
+                margin-bottom: 0.5rem;
+            }
+
+            .summary-card .value {
+                font-size: 2rem;
+                font-weight: 700;
+                color: var(--dark-color);
+            }
+
+            .card-total { border-top: 4px solid var(--primary-color); }
+            .card-passed { border-top: 4px solid var(--success-color); }
+            .card-failed { border-top: 4px solid var(--danger-color); }
+            .card-pending { border-top: 4px solid var(--warning-color); }
+
+            .progress-container {
+                background: white;
+                padding: 2rem;
+                border-radius: var(--border-radius);
+                box-shadow: var(--shadow-sm);
+                margin-bottom: 2rem;
+                border: 1px solid rgba(0,0,0,0.1);
+            }
+
+            .progress-bar {
+                height: 1.5rem;
+                background: #e2e8f0;
+                border-radius: 9999px;
+                overflow: hidden;
+                margin: 1rem 0;
+            }
+
+            .progress-value {
+                height: 100%;
+                background: linear-gradient(90deg, var(--success-color), #27ae60);
+                border-radius: 9999px;
+                transition: width 1s ease-in-out;
+            }
+
+            .test-section {
+                background: white;
+                border-radius: var(--border-radius);
+                box-shadow: var(--shadow-sm);
+                margin-bottom: 2rem;
+                border: 1px solid rgba(0,0,0,0.1);
+                overflow: hidden;
+            }
+
+            .section-header {
+                padding: 1.5rem;
+                background: #f8fafc;
+                border-bottom: 1px solid rgba(0,0,0,0.1);
+            }
+
+            .section-title {
+                font-size: 1.25rem;
+                font-weight: 600;
+                color: var(--dark-color);
+                display: flex;
+                align-items: center;
+                gap: 0.5rem;
+            }
+
+            .test-list {
+                list-style: none;
+                padding: 0;
+            }
+
+            .test-item {
+                padding: 1.5rem;
+                border-bottom: 1px solid rgba(0,0,0,0.1);
+                transition: background-color 0.2s ease;
+            }
+
+            .test-item:last-child {
+                border-bottom: none;
+            }
+
+            .test-item:hover {
+                background-color: #f8fafc;
+            }
+
+            .test-title {
+                font-weight: 600;
+                color: var(--dark-color);
+                margin-bottom: 0.5rem;
+            }
+
+            .test-meta {
+                display: flex;
+                gap: 1rem;
+                font-size: 0.875rem;
+                color: #64748b;
+                margin-bottom: 0.5rem;
+            }
+
+            .meta-item {
+                display: flex;
+                align-items: center;
+                gap: 0.25rem;
+            }
+
+            .error-message {
+                background: #fef2f2;
+                border-left: 4px solid var(--danger-color);
+                padding: 1rem;
+                margin-top: 1rem;
+                border-radius: 0.375rem;
+                font-family: monospace;
+                font-size: 0.875rem;
+                color: #991b1b;
+                white-space: pre-wrap;
+            }
+
+            .error-stack {
+                background: #f8fafc;
+                padding: 1rem;
+                border-radius: 0.375rem;
+                margin-top: 1rem;
+                max-height: 200px;
+                overflow-y: auto;
+                font-family: monospace;
+                font-size: 0.75rem;
+                color: #475569;
+            }
+
+            footer {
+                text-align: center;
+                padding: 2rem;
+                color: #64748b;
+                font-size: 0.875rem;
+            }
+
+            .badge {
+                display: inline-flex;
+                align-items: center;
+                padding: 0.25rem 0.75rem;
+                border-radius: 9999px;
+                font-size: 0.75rem;
+                font-weight: 500;
+            }
+
+            .badge-success { 
+                background-color: #dcfce7;
+                color: #166534;
+            }
+
+            .badge-danger { 
+                background-color: #fee2e2;
+                color: #991b1b;
+            }
+
+            .badge-warning { 
+                background-color: #fef3c7;
+                color: #92400e;
+            }
+
+            /* Severity Levels Styling */
+            .severity-badge {
+                display: inline-flex;
+                align-items: center;
+                padding: 0.35rem 0.75rem;
+                border-radius: 6px;
+                font-weight: 600;
+                font-size: 0.75rem;
+                text-transform: uppercase;
+                letter-spacing: 0.5px;
+                margin-right: 0.5rem;
+            }
+
+            .severity-blocker {
+                background-color: #fee2e2;
+                color: #991b1b;
+                border: 1px solid #f87171;
+            }
+
+            .severity-critical {
+                background-color: #fef2f2;
+                color: #dc2626;
+                border: 1px solid #fca5a5;
+            }
+
+            .severity-major {
+                background-color: #fff7ed;
+                color: #c2410c;
+                border: 1px solid #fdba74;
+            }
+
+            .severity-minor {
+                background-color: #ecfdf5;
+                color: #047857;
+                border: 1px solid #6ee7b7;
+            }
+
+            .severity-cosmetic {
+                background-color: #f0f9ff;
+                color: #0369a1;
+                border: 1px solid #7dd3fc;
+            }
+
+            /* Priority Levels Styling */
+            .priority-badge {
+                display: inline-flex;
+                align-items: center;
+                padding: 0.25rem 0.65rem;
+                border-radius: 4px;
+                font-weight: 500;
+                font-size: 0.75rem;
+                text-transform: uppercase;
+                margin-left: 0.5rem;
+            }
+
+            .priority-high {
+                background-color: #fef2f2;
+                color: #dc2626;
+                border: 1px solid #fca5a5;
+            }
+
+            .priority-medium {
+                background-color: #fffbeb;
+                color: #b45309;
+                border: 1px solid #fcd34d;
+            }
+
+            .priority-low {
+                background-color: #f0fdf4;
+                color: #15803d;
+                border: 1px solid #86efac;
+            }
+
+            /* Test Status Styling */
+            .test-item {
+                position: relative;
+                transition: all 0.3s ease;
+            }
+
+            .test-item.passed {
+                background-color: #f0fdf4;
+                border-left: 4px solid #22c55e;
+            }
+
+            .test-item.failed {
+                border-left: 4px solid #dc2626;
+            }
+
+            .test-item.failed.severity-blocker {
+                background-color: #fef2f2;
+                border-left: 4px solid #dc2626;
+            }
+
+            .test-item.failed.severity-critical {
+                background-color: #fff1f2;
+                border-left: 4px solid #e11d48;
+            }
+
+            .severity-info {
+                display: flex;
+                align-items: center;
+                margin: 1rem 0;
+                padding: 1rem;
+                background-color: #f8fafc;
+                border-radius: 8px;
+                border: 1px solid #e2e8f0;
+            }
+
+            .severity-info-item {
+                display: flex;
+                align-items: center;
+                margin-right: 2rem;
+            }
+
+            .severity-info-label {
+                font-weight: 500;
+                color: #64748b;
+                margin-right: 0.5rem;
+            }
+
+            /* Icons for severity and priority */
+            .severity-icon, .priority-icon {
+                margin-right: 0.25rem;
+                width: 16px;
+                height: 16px;
+            }
+
+            .severity-blocker .severity-icon {
+                color: #dc2626;
+            }
+
+            .severity-critical .severity-icon {
+                color: #e11d48;
+            }
+
+            .priority-high .priority-icon {
+                color: #dc2626;
+            }
+
+            /* Hover effects */
+            .test-item:hover {
+                box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+            }
+
+            .test-item.passed:hover {
+                background-color: #ecfdf5;
+            }
+
+            .test-item.failed:hover {
+                background-color: #fef2f2;
+            }
+
+            /* Animation for status changes */
+            @keyframes highlightFailure {
+                0% { background-color: transparent; }
+                50% { background-color: #fee2e2; }
+                100% { background-color: transparent; }
+            }
+
+            @keyframes highlightSuccess {
+                0% { background-color: transparent; }
+                50% { background-color: #dcfce7; }
+                100% { background-color: transparent; }
+            }
+
+            .test-item.animate-failure {
+                animation: highlightFailure 1s ease-in-out;
+            }
+
+            .test-item.animate-success {
+                animation: highlightSuccess 1s ease-in-out;
+            }
+
+            @media (max-width: 768px) {
+                .container {
+                    padding: 1rem;
+                }
+
+                .summary {
+                    grid-template-columns: 1fr;
+                }
+
+                .test-meta {
+                    flex-direction: column;
+                    gap: 0.5rem;
+                }
+            }
+        </style>
+    </head>
+    <body>
+        <div class="container">
+            <header>
+                <h1>VRA Test Report</h1>
+                <p class="timestamp">Generated on: 09:05:56 24/5/2025</p>
+            </header>
+
+            <div class="summary">
+                <div class="summary-card card-total">
+                    <div class="label">Total Tests</div>
+                    <div class="value">37</div>
+                </div>
+                <div class="summary-card card-passed">
+                    <div class="label">Passed</div>
+                    <div class="value">35</div>
+                </div>
+                <div class="summary-card card-failed">
+                    <div class="label">Failed</div>
+                    <div class="value">2</div>
+                </div>
+                <div class="summary-card card-pending">
+                    <div class="label">Pending</div>
+                    <div class="value">0</div>
+                </div>
+            </div>
+
+            <div class="progress-container">
+                <div class="section-title">Test Progress</div>
+                <div class="progress-bar">
+                    <div class="progress-value" style="width: 94.59%"></div>
+                </div>
+                <div style="text-align: center; color: #64748b;">
+                    Pass Rate: 94.59%
+                </div>
+            </div>
+
+            
+                <div class="test-section">
+                    <div class="section-header">
+                        <div class="section-title">
+                            <span class="badge badge-danger">Failed Tests (2)</span>
+                        </div>
+                    </div>
+                    <ul class="test-list">
+                        
+        <li class="test-item failed severity-blocker">
+          <div class="test-title">should fail</div>
+          <div class="test-meta">
+            <span class="meta-item">
+              <svg class="severity-icon" width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+              </svg>
+              0ms
+            </span>
+            <span class="meta-item">
+              <svg class="severity-icon" width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-6l-2-2H5a2 2 0 00-2 2z"></path>
+              </svg>
+              C:\FS\VRA2\VRA\tests\e2e\dummy.test.js
+            </span>
+          </div>
+          
+          <div class="severity-info">
+            <div class="severity-info-item">
+              <span class="severity-info-label">Mức độ:</span>
+              <span class="severity-badge severity-severity-blocker">
+                <svg class="severity-icon" width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path>
+                </svg>
+                BLOCKER
+              </span>
+            </div>
+            <div class="severity-info-item">
+              <span class="severity-info-label">Ưu tiên:</span>
+              <span class="priority-badge priority-priority-high">
+                <svg class="priority-icon" width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path>
+                </svg>
+                HIGH
+              </span>
+            </div>
+          </div>
+        
+          <div class="error-message">Lỗi UI: Nút đăng nhập không hiển thị đúng kích thước</div>
+          
+          
+        </li>
+      
+        <li class="test-item failed severity-cosmetic">
+          <div class="test-title">✅ TC-UI-009: Hiển thị stack component trong section đội ngũ</div>
+          <div class="test-meta">
+            <span class="meta-item">
+              <svg class="severity-icon" width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+              </svg>
+              1197ms
+            </span>
+            <span class="meta-item">
+              <svg class="severity-icon" width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-6l-2-2H5a2 2 0 00-2 2z"></path>
+              </svg>
+              C:\FS\VRA2\VRA\tests\e2e\display.test.js
+            </span>
+          </div>
+          
+          <div class="severity-info">
+            <div class="severity-info-item">
+              <span class="severity-info-label">Mức độ:</span>
+              <span class="severity-badge severity-severity-cosmetic">
+                <svg class="severity-icon" width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path>
+                </svg>
+                COSMETIC
+              </span>
+            </div>
+            <div class="severity-info-item">
+              <span class="severity-info-label">Ưu tiên:</span>
+              <span class="priority-badge priority-priority-low">
+                <svg class="priority-icon" width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path>
+                </svg>
+                LOW
+              </span>
+            </div>
+          </div>
+        
+          <div class="error-message">❌ Không hiển thị component stack</div>
+          
+          
+        </li>
+      
+                    </ul>
+                </div>
+            
+
+            <div class="test-section">
+                <div class="section-header">
+                    <div class="section-title">
+                        <span class="badge badge-success">Passed Tests (35)</span>
+                    </div>
+                </div>
+                <ul class="test-list">
+                    
+      <li class="test-item passed">
+        <div class="test-title">✅ TC-DK-001: Đăng ký thành công với thông tin hợp lệ</div>
+        <div class="test-meta">
+          <span class="meta-item">
+            <svg class="severity-icon" width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+            </svg>
+            3467ms
+          </span>
+          <span class="meta-item">
+            <svg class="severity-icon" width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-6l-2-2H5a2 2 0 00-2 2z"></path>
+            </svg>
+            C:\FS\VRA2\VRA\tests\e2e\register.test.js
+          </span>
+        </div>
+      </li>
+    
+      <li class="test-item passed">
+        <div class="test-title">❌ TC-DK-002: Đăng ký thất bại khi để trống trường "Họ và tên"</div>
+        <div class="test-meta">
+          <span class="meta-item">
+            <svg class="severity-icon" width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+            </svg>
+            1719ms
+          </span>
+          <span class="meta-item">
+            <svg class="severity-icon" width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-6l-2-2H5a2 2 0 00-2 2z"></path>
+            </svg>
+            C:\FS\VRA2\VRA\tests\e2e\register.test.js
+          </span>
+        </div>
+      </li>
+    
+      <li class="test-item passed">
+        <div class="test-title">❌ TC-DK-003: Đăng ký thất bại khi trường "Họ và tên" ít hơn 2 ký tự</div>
+        <div class="test-meta">
+          <span class="meta-item">
+            <svg class="severity-icon" width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+            </svg>
+            1828ms
+          </span>
+          <span class="meta-item">
+            <svg class="severity-icon" width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-6l-2-2H5a2 2 0 00-2 2z"></path>
+            </svg>
+            C:\FS\VRA2\VRA\tests\e2e\register.test.js
+          </span>
+        </div>
+      </li>
+    
+      <li class="test-item passed">
+        <div class="test-title">❌ TC-DK-004: Đăng ký thất bại khi để trống trường "Email"</div>
+        <div class="test-meta">
+          <span class="meta-item">
+            <svg class="severity-icon" width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+            </svg>
+            1580ms
+          </span>
+          <span class="meta-item">
+            <svg class="severity-icon" width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-6l-2-2H5a2 2 0 00-2 2z"></path>
+            </svg>
+            C:\FS\VRA2\VRA\tests\e2e\register.test.js
+          </span>
+        </div>
+      </li>
+    
+      <li class="test-item passed">
+        <div class="test-title">❌ TC-DK-005: Đăng ký thất bại khi "Email" không đúng định dạng (ví dụ: test@domain)</div>
+        <div class="test-meta">
+          <span class="meta-item">
+            <svg class="severity-icon" width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+            </svg>
+            1911ms
+          </span>
+          <span class="meta-item">
+            <svg class="severity-icon" width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-6l-2-2H5a2 2 0 00-2 2z"></path>
+            </svg>
+            C:\FS\VRA2\VRA\tests\e2e\register.test.js
+          </span>
+        </div>
+      </li>
+    
+      <li class="test-item passed">
+        <div class="test-title">❌ TC-DK-006: Đăng ký thất bại khi "Email" không thuộc miền @gmail.com hoặc @edu.vn</div>
+        <div class="test-meta">
+          <span class="meta-item">
+            <svg class="severity-icon" width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+            </svg>
+            1810ms
+          </span>
+          <span class="meta-item">
+            <svg class="severity-icon" width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-6l-2-2H5a2 2 0 00-2 2z"></path>
+            </svg>
+            C:\FS\VRA2\VRA\tests\e2e\register.test.js
+          </span>
+        </div>
+      </li>
+    
+      <li class="test-item passed">
+        <div class="test-title">❌ TC-DK-007: Đăng ký thất bại khi để trống trường "Số điện thoại"</div>
+        <div class="test-meta">
+          <span class="meta-item">
+            <svg class="severity-icon" width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+            </svg>
+            1628ms
+          </span>
+          <span class="meta-item">
+            <svg class="severity-icon" width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-6l-2-2H5a2 2 0 00-2 2z"></path>
+            </svg>
+            C:\FS\VRA2\VRA\tests\e2e\register.test.js
+          </span>
+        </div>
+      </li>
+    
+      <li class="test-item passed">
+        <div class="test-title">❌ TC-DK-008: Đăng ký thất bại khi "Số điện thoại" không bắt đầu bằng số 0</div>
+        <div class="test-meta">
+          <span class="meta-item">
+            <svg class="severity-icon" width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+            </svg>
+            1955ms
+          </span>
+          <span class="meta-item">
+            <svg class="severity-icon" width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-6l-2-2H5a2 2 0 00-2 2z"></path>
+            </svg>
+            C:\FS\VRA2\VRA\tests\e2e\register.test.js
+          </span>
+        </div>
+      </li>
+    
+      <li class="test-item passed">
+        <div class="test-title">❌ TC-DK-009: Đăng ký thất bại khi "Số điện thoại" không đủ 10 chữ số</div>
+        <div class="test-meta">
+          <span class="meta-item">
+            <svg class="severity-icon" width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+            </svg>
+            1908ms
+          </span>
+          <span class="meta-item">
+            <svg class="severity-icon" width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-6l-2-2H5a2 2 0 00-2 2z"></path>
+            </svg>
+            C:\FS\VRA2\VRA\tests\e2e\register.test.js
+          </span>
+        </div>
+      </li>
+    
+      <li class="test-item passed">
+        <div class="test-title">❌ TC-DK-010: Đăng ký thất bại khi "Số điện thoại" có ký tự không phải số</div>
+        <div class="test-meta">
+          <span class="meta-item">
+            <svg class="severity-icon" width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+            </svg>
+            1748ms
+          </span>
+          <span class="meta-item">
+            <svg class="severity-icon" width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-6l-2-2H5a2 2 0 00-2 2z"></path>
+            </svg>
+            C:\FS\VRA2\VRA\tests\e2e\register.test.js
+          </span>
+        </div>
+      </li>
+    
+      <li class="test-item passed">
+        <div class="test-title">❌ TC-DK-011: Đăng ký thất bại khi để trống trường "Mật khẩu"</div>
+        <div class="test-meta">
+          <span class="meta-item">
+            <svg class="severity-icon" width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+            </svg>
+            1638ms
+          </span>
+          <span class="meta-item">
+            <svg class="severity-icon" width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-6l-2-2H5a2 2 0 00-2 2z"></path>
+            </svg>
+            C:\FS\VRA2\VRA\tests\e2e\register.test.js
+          </span>
+        </div>
+      </li>
+    
+      <li class="test-item passed">
+        <div class="test-title">❌ TC-DK-012: Đăng ký thất bại khi "Mật khẩu" ít hơn 6 ký tự</div>
+        <div class="test-meta">
+          <span class="meta-item">
+            <svg class="severity-icon" width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+            </svg>
+            1694ms
+          </span>
+          <span class="meta-item">
+            <svg class="severity-icon" width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-6l-2-2H5a2 2 0 00-2 2z"></path>
+            </svg>
+            C:\FS\VRA2\VRA\tests\e2e\register.test.js
+          </span>
+        </div>
+      </li>
+    
+      <li class="test-item passed">
+        <div class="test-title">❌ TC-DK-013: Đăng ký thất bại khi để trống trường "Xác nhận mật khẩu"</div>
+        <div class="test-meta">
+          <span class="meta-item">
+            <svg class="severity-icon" width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+            </svg>
+            1649ms
+          </span>
+          <span class="meta-item">
+            <svg class="severity-icon" width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-6l-2-2H5a2 2 0 00-2 2z"></path>
+            </svg>
+            C:\FS\VRA2\VRA\tests\e2e\register.test.js
+          </span>
+        </div>
+      </li>
+    
+      <li class="test-item passed">
+        <div class="test-title">❌ TC-DK-014: Đăng ký thất bại khi "Xác nhận mật khẩu" không khớp với "Mật khẩu"</div>
+        <div class="test-meta">
+          <span class="meta-item">
+            <svg class="severity-icon" width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+            </svg>
+            1937ms
+          </span>
+          <span class="meta-item">
+            <svg class="severity-icon" width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-6l-2-2H5a2 2 0 00-2 2z"></path>
+            </svg>
+            C:\FS\VRA2\VRA\tests\e2e\register.test.js
+          </span>
+        </div>
+      </li>
+    
+      <li class="test-item passed">
+        <div class="test-title">❌ TC-DK-015: Đăng ký thất bại khi tất cả các trường đều để trống</div>
+        <div class="test-meta">
+          <span class="meta-item">
+            <svg class="severity-icon" width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+            </svg>
+            703ms
+          </span>
+          <span class="meta-item">
+            <svg class="severity-icon" width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-6l-2-2H5a2 2 0 00-2 2z"></path>
+            </svg>
+            C:\FS\VRA2\VRA\tests\e2e\register.test.js
+          </span>
+        </div>
+      </li>
+    
+      <li class="test-item passed">
+        <div class="test-title">✅ TC-DN-001: Đăng nhập thành công với thông tin hợp lệ</div>
+        <div class="test-meta">
+          <span class="meta-item">
+            <svg class="severity-icon" width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+            </svg>
+            1301ms
+          </span>
+          <span class="meta-item">
+            <svg class="severity-icon" width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-6l-2-2H5a2 2 0 00-2 2z"></path>
+            </svg>
+            C:\FS\VRA2\VRA\tests\e2e\login.test.js
+          </span>
+        </div>
+      </li>
+    
+      <li class="test-item passed">
+        <div class="test-title">❌ TC-DN-002: Đăng nhập thất bại với thông tin (email hoặc mật khẩu) không hợp lệ</div>
+        <div class="test-meta">
+          <span class="meta-item">
+            <svg class="severity-icon" width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+            </svg>
+            1051ms
+          </span>
+          <span class="meta-item">
+            <svg class="severity-icon" width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-6l-2-2H5a2 2 0 00-2 2z"></path>
+            </svg>
+            C:\FS\VRA2\VRA\tests\e2e\login.test.js
+          </span>
+        </div>
+      </li>
+    
+      <li class="test-item passed">
+        <div class="test-title">❌ TC-DN-003: Đăng nhập thất bại khi để trống cả email và mật khẩu</div>
+        <div class="test-meta">
+          <span class="meta-item">
+            <svg class="severity-icon" width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+            </svg>
+            114ms
+          </span>
+          <span class="meta-item">
+            <svg class="severity-icon" width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-6l-2-2H5a2 2 0 00-2 2z"></path>
+            </svg>
+            C:\FS\VRA2\VRA\tests\e2e\login.test.js
+          </span>
+        </div>
+      </li>
+    
+      <li class="test-item passed">
+        <div class="test-title">✅ TC-DN-004: Nhấn nút "Đăng nhập" trên header khi đã scroll xuống sẽ scroll tới login form</div>
+        <div class="test-meta">
+          <span class="meta-item">
+            <svg class="severity-icon" width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+            </svg>
+            2203ms
+          </span>
+          <span class="meta-item">
+            <svg class="severity-icon" width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-6l-2-2H5a2 2 0 00-2 2z"></path>
+            </svg>
+            C:\FS\VRA2\VRA\tests\e2e\login.test.js
+          </span>
+        </div>
+      </li>
+    
+      <li class="test-item passed">
+        <div class="test-title">✅ TC-DN-005: Kiểm tra chức năng ẩn/hiện mật khẩu</div>
+        <div class="test-meta">
+          <span class="meta-item">
+            <svg class="severity-icon" width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+            </svg>
+            608ms
+          </span>
+          <span class="meta-item">
+            <svg class="severity-icon" width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-6l-2-2H5a2 2 0 00-2 2z"></path>
+            </svg>
+            C:\FS\VRA2\VRA\tests\e2e\login.test.js
+          </span>
+        </div>
+      </li>
+    
+      <li class="test-item passed">
+        <div class="test-title">✅ TC-DG-001: Đánh giá buổi học thành công</div>
+        <div class="test-meta">
+          <span class="meta-item">
+            <svg class="severity-icon" width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+            </svg>
+            38698ms
+          </span>
+          <span class="meta-item">
+            <svg class="severity-icon" width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-6l-2-2H5a2 2 0 00-2 2z"></path>
+            </svg>
+            C:\FS\VRA2\VRA\tests\e2e\evaluate-lesson.test.js
+          </span>
+        </div>
+      </li>
+    
+      <li class="test-item passed">
+        <div class="test-title">should pass</div>
+        <div class="test-meta">
+          <span class="meta-item">
+            <svg class="severity-icon" width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+            </svg>
+            0ms
+          </span>
+          <span class="meta-item">
+            <svg class="severity-icon" width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-6l-2-2H5a2 2 0 00-2 2z"></path>
+            </svg>
+            C:\FS\VRA2\VRA\tests\e2e\dummy.test.js
+          </span>
+        </div>
+      </li>
+    
+      <li class="test-item passed">
+        <div class="test-title">✅ TC-UI-001:Hiển thị đúng tiêu đề và nội dung hero section</div>
+        <div class="test-meta">
+          <span class="meta-item">
+            <svg class="severity-icon" width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+            </svg>
+            1388ms
+          </span>
+          <span class="meta-item">
+            <svg class="severity-icon" width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-6l-2-2H5a2 2 0 00-2 2z"></path>
+            </svg>
+            C:\FS\VRA2\VRA\tests\e2e\display.test.js
+          </span>
+        </div>
+      </li>
+    
+      <li class="test-item passed">
+        <div class="test-title">✅ TC-UI-002: Hiển thị phần rotating text trong hero section</div>
+        <div class="test-meta">
+          <span class="meta-item">
+            <svg class="severity-icon" width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+            </svg>
+            3764ms
+          </span>
+          <span class="meta-item">
+            <svg class="severity-icon" width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-6l-2-2H5a2 2 0 00-2 2z"></path>
+            </svg>
+            C:\FS\VRA2\VRA\tests\e2e\display.test.js
+          </span>
+        </div>
+      </li>
+    
+      <li class="test-item passed">
+        <div class="test-title">✅ TC-UI-003: Hiển thị đúng các phần tử có animation khi scroll</div>
+        <div class="test-meta">
+          <span class="meta-item">
+            <svg class="severity-icon" width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+            </svg>
+            202ms
+          </span>
+          <span class="meta-item">
+            <svg class="severity-icon" width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-6l-2-2H5a2 2 0 00-2 2z"></path>
+            </svg>
+            C:\FS\VRA2\VRA\tests\e2e\display.test.js
+          </span>
+        </div>
+      </li>
+    
+      <li class="test-item passed">
+        <div class="test-title">✅ TC-UI-004: Hiển thị form đăng nhập khi chưa đăng nhập</div>
+        <div class="test-meta">
+          <span class="meta-item">
+            <svg class="severity-icon" width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+            </svg>
+            267ms
+          </span>
+          <span class="meta-item">
+            <svg class="severity-icon" width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-6l-2-2H5a2 2 0 00-2 2z"></path>
+            </svg>
+            C:\FS\VRA2\VRA\tests\e2e\display.test.js
+          </span>
+        </div>
+      </li>
+    
+      <li class="test-item passed">
+        <div class="test-title">✅ TC-UI-005: Hiển thị đúng các phần tử phụ trong form đăng nhập</div>
+        <div class="test-meta">
+          <span class="meta-item">
+            <svg class="severity-icon" width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+            </svg>
+            245ms
+          </span>
+          <span class="meta-item">
+            <svg class="severity-icon" width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-6l-2-2H5a2 2 0 00-2 2z"></path>
+            </svg>
+            C:\FS\VRA2\VRA\tests\e2e\display.test.js
+          </span>
+        </div>
+      </li>
+    
+      <li class="test-item passed">
+        <div class="test-title">✅ TC-UI-006: Hiển thị phần "Tại sao chọn VRA" với đầy đủ thông tin</div>
+        <div class="test-meta">
+          <span class="meta-item">
+            <svg class="severity-icon" width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+            </svg>
+            1220ms
+          </span>
+          <span class="meta-item">
+            <svg class="severity-icon" width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-6l-2-2H5a2 2 0 00-2 2z"></path>
+            </svg>
+            C:\FS\VRA2\VRA\tests\e2e\display.test.js
+          </span>
+        </div>
+      </li>
+    
+      <li class="test-item passed">
+        <div class="test-title">✅ TC-UI-007: Hiển thị chi tiết trong phần "Tại sao chọn VRA"</div>
+        <div class="test-meta">
+          <span class="meta-item">
+            <svg class="severity-icon" width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+            </svg>
+            1251ms
+          </span>
+          <span class="meta-item">
+            <svg class="severity-icon" width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-6l-2-2H5a2 2 0 00-2 2z"></path>
+            </svg>
+            C:\FS\VRA2\VRA\tests\e2e\display.test.js
+          </span>
+        </div>
+      </li>
+    
+      <li class="test-item passed">
+        <div class="test-title">✅ TC-UI-008: Hiển thị phần tính năng nổi bật với các thông tin chi tiết</div>
+        <div class="test-meta">
+          <span class="meta-item">
+            <svg class="severity-icon" width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+            </svg>
+            1191ms
+          </span>
+          <span class="meta-item">
+            <svg class="severity-icon" width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-6l-2-2H5a2 2 0 00-2 2z"></path>
+            </svg>
+            C:\FS\VRA2\VRA\tests\e2e\display.test.js
+          </span>
+        </div>
+      </li>
+    
+      <li class="test-item passed">
+        <div class="test-title">✅ TC-UI-010: Hiển thị phần đánh giá từ người dùng</div>
+        <div class="test-meta">
+          <span class="meta-item">
+            <svg class="severity-icon" width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+            </svg>
+            1198ms
+          </span>
+          <span class="meta-item">
+            <svg class="severity-icon" width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-6l-2-2H5a2 2 0 00-2 2z"></path>
+            </svg>
+            C:\FS\VRA2\VRA\tests\e2e\display.test.js
+          </span>
+        </div>
+      </li>
+    
+      <li class="test-item passed">
+        <div class="test-title">✅ TC-UI-011: Hiển thị chi tiết trong phần đánh giá từ người dùng</div>
+        <div class="test-meta">
+          <span class="meta-item">
+            <svg class="severity-icon" width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+            </svg>
+            1228ms
+          </span>
+          <span class="meta-item">
+            <svg class="severity-icon" width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-6l-2-2H5a2 2 0 00-2 2z"></path>
+            </svg>
+            C:\FS\VRA2\VRA\tests\e2e\display.test.js
+          </span>
+        </div>
+      </li>
+    
+      <li class="test-item passed">
+        <div class="test-title">✅ TC-UI-012: Ẩn/hiện mật khẩu khi click vào icon</div>
+        <div class="test-meta">
+          <span class="meta-item">
+            <svg class="severity-icon" width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+            </svg>
+            716ms
+          </span>
+          <span class="meta-item">
+            <svg class="severity-icon" width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-6l-2-2H5a2 2 0 00-2 2z"></path>
+            </svg>
+            C:\FS\VRA2\VRA\tests\e2e\display.test.js
+          </span>
+        </div>
+      </li>
+    
+      <li class="test-item passed">
+        <div class="test-title">✅ TC-UI-013: Hiển thị form đăng ký khi click vào nút đăng ký</div>
+        <div class="test-meta">
+          <span class="meta-item">
+            <svg class="severity-icon" width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+            </svg>
+            2819ms
+          </span>
+          <span class="meta-item">
+            <svg class="severity-icon" width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-6l-2-2H5a2 2 0 00-2 2z"></path>
+            </svg>
+            C:\FS\VRA2\VRA\tests\e2e\display.test.js
+          </span>
+        </div>
+      </li>
+    
+      <li class="test-item passed">
+        <div class="test-title">✅ TC-UI-014: Hiển thị các phần tử trang và scroll thử nghiệm</div>
+        <div class="test-meta">
+          <span class="meta-item">
+            <svg class="severity-icon" width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+            </svg>
+            2252ms
+          </span>
+          <span class="meta-item">
+            <svg class="severity-icon" width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-6l-2-2H5a2 2 0 00-2 2z"></path>
+            </svg>
+            C:\FS\VRA2\VRA\tests\e2e\display.test.js
+          </span>
+        </div>
+      </li>
+    
+                </ul>
+            </div>
+
+            <footer>
+                <p>Generated by VRA Test Framework</p>
+                <p>© 2025 VRA Team</p>
+            </footer>
+        </div>
+        
+        <script>
+            document.addEventListener('DOMContentLoaded', function() {
+                // Animate progress bar
+                setTimeout(() => {
+                    const progressValue = document.querySelector('.progress-value');
+                    progressValue.style.width = '94.59%';
+                }, 300);
+
+                // Add smooth scroll to error stack traces
+                document.querySelectorAll('.error-stack').forEach(stack => {
+                    stack.addEventListener('scroll', function() {
+                        this.classList.toggle('scrolled', this.scrollTop > 0);
+                    });
+                });
+            });
+        </script>
+    </body>
+    </html>
+    
