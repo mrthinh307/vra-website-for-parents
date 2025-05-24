@@ -138,7 +138,7 @@ describe('Lesson Evaluation Functionality', function () {
         
         // Fix: Ensure the input value is a proper string
         const chatInput = await driver.findElement(By.xpath('//*[@id="root"]/div/main/div/div[2]/div/div[4]/div[1]/input'));
-        await chatInput.sendKeys('Bé có bị ngu không?');
+        await chatInput.sendKeys('Bé có bị đao không?');
         
         const sendButton = await driver.findElement(By.xpath('//*[@id="root"]/div/main/div/div[2]/div/div[4]/div[1]/button'));
         await sendButton.click();

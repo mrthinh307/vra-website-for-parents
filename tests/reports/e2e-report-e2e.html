@@ -198,28 +198,78 @@
                 gap: 0.25rem;
             }
 
-            .error-message {
-                background: #fef2f2;
-                border-left: 4px solid var(--danger-color);
-                padding: 1rem;
+            .error-container {
                 margin-top: 1rem;
-                border-radius: 0.375rem;
-                font-family: monospace;
-                font-size: 0.875rem;
+                border-radius: 8px;
+                overflow: hidden;
+                border: 1px solid #fecaca;
+            }
+
+            .error-header {
+                background-color: #fee2e2;
+                padding: 0.75rem 1rem;
+                display: flex;
+                align-items: center;
+                gap: 0.5rem;
                 color: #991b1b;
+                font-weight: 600;
+            }
+
+            .error-header svg {
+                width: 20px;
+                height: 20px;
+            }
+
+            .error-content {
+                background-color: #fff1f1;
+                padding: 1rem;
+                font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+                font-size: 0.875rem;
+                color: #7f1d1d;
                 white-space: pre-wrap;
             }
 
-            .error-stack {
-                background: #f8fafc;
-                padding: 1rem;
-                border-radius: 0.375rem;
+            .error-details {
+                margin-top: 0.5rem;
+                padding: 0.75rem;
+                background-color: #fff5f5;
+                border-radius: 6px;
+                font-size: 0.875rem;
+            }
+
+            .error-location {
+                display: flex;
+                align-items: center;
+                gap: 0.5rem;
+                color: #991b1b;
+                font-size: 0.875rem;
+                margin-bottom: 0.5rem;
+            }
+
+            .error-stack-trace {
                 margin-top: 1rem;
-                max-height: 200px;
-                overflow-y: auto;
-                font-family: monospace;
+                padding: 1rem;
+                background-color: #f8fafc;
+                border-radius: 6px;
+                border: 1px solid #e2e8f0;
+            }
+
+            .error-stack-trace pre {
+                margin: 0;
+                font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
                 font-size: 0.75rem;
                 color: #475569;
+                overflow-x: auto;
+            }
+
+            .error-stack-trace-header {
+                display: flex;
+                align-items: center;
+                gap: 0.5rem;
+                color: #64748b;
+                font-size: 0.875rem;
+                font-weight: 500;
+                margin-bottom: 0.5rem;
             }
 
             footer {
@@ -446,21 +496,21 @@
         <div class="container">
             <header>
                 <h1>VRA Test Report</h1>
-                <p class="timestamp">Generated on: 09:05:56 24/5/2025</p>
+                <p class="timestamp">Generated on: 10:43:06 24/5/2025</p>
             </header>
 
             <div class="summary">
                 <div class="summary-card card-total">
                     <div class="label">Total Tests</div>
-                    <div class="value">37</div>
+                    <div class="value">35</div>
                 </div>
                 <div class="summary-card card-passed">
                     <div class="label">Passed</div>
-                    <div class="value">35</div>
+                    <div class="value">34</div>
                 </div>
                 <div class="summary-card card-failed">
                     <div class="label">Failed</div>
-                    <div class="value">2</div>
+                    <div class="value">1</div>
                 </div>
                 <div class="summary-card card-pending">
                     <div class="label">Pending</div>
@@ -471,65 +521,21 @@
             <div class="progress-container">
                 <div class="section-title">Test Progress</div>
                 <div class="progress-bar">
-                    <div class="progress-value" style="width: 94.59%"></div>
+                    <div class="progress-value" style="width: 97.14%"></div>
                 </div>
                 <div style="text-align: center; color: #64748b;">
-                    Pass Rate: 94.59%
+                    Pass Rate: 97.14%
                 </div>
             </div>
 
-            
-                <div class="test-section">
-                    <div class="section-header">
-                        <div class="section-title">
-                            <span class="badge badge-danger">Failed Tests (2)</span>
-                        </div>
+            <div class="test-section">
+                <div class="section-header">
+                    <div class="section-title">
+                        <span class="badge badge-danger">Failed Tests (1)</span>
                     </div>
-                    <ul class="test-list">
-                        
-        <li class="test-item failed severity-blocker">
-          <div class="test-title">should fail</div>
-          <div class="test-meta">
-            <span class="meta-item">
-              <svg class="severity-icon" width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-              </svg>
-              0ms
-            </span>
-            <span class="meta-item">
-              <svg class="severity-icon" width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-6l-2-2H5a2 2 0 00-2 2z"></path>
-              </svg>
-              C:\FS\VRA2\VRA\tests\e2e\dummy.test.js
-            </span>
-          </div>
-          
-          <div class="severity-info">
-            <div class="severity-info-item">
-              <span class="severity-info-label">Mức độ:</span>
-              <span class="severity-badge severity-severity-blocker">
-                <svg class="severity-icon" width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path>
-                </svg>
-                BLOCKER
-              </span>
-            </div>
-            <div class="severity-info-item">
-              <span class="severity-info-label">Ưu tiên:</span>
-              <span class="priority-badge priority-priority-high">
-                <svg class="priority-icon" width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path>
-                </svg>
-                HIGH
-              </span>
-            </div>
-          </div>
-        
-          <div class="error-message">Lỗi UI: Nút đăng nhập không hiển thị đúng kích thước</div>
-          
-          
-        </li>
-      
+                </div>
+                <ul class="test-list">
+                    
         <li class="test-item failed severity-cosmetic">
           <div class="test-title">✅ TC-UI-009: Hiển thị stack component trong section đội ngũ</div>
           <div class="test-meta">
@@ -537,7 +543,7 @@
               <svg class="severity-icon" width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
               </svg>
-              1197ms
+              1467ms
             </span>
             <span class="meta-item">
               <svg class="severity-icon" width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -568,19 +574,55 @@
             </div>
           </div>
         
-          <div class="error-message">❌ Không hiển thị component stack</div>
-          
+          <div class="error-container">
+            <div class="error-header">
+              <svg width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+              </svg>
+              Chi tiết lỗi
+            </div>
+            <div class="error-content">
+              <div class="error-location">
+                <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z"></path>
+                </svg>
+                Vị trí: C:\FS\VRA2\VRA\tests\e2e\display.test.js
+              </div>
+              <div class="error-details">
+                <div class="error-reason">
+                  <strong>Lý do (Từ Error Stack):</strong><br/>
+                  AssertionError [ERR_ASSERTION]: ❌ Không hiển thị component stack
+                </div>
+                <div class="error-message">
+                  <strong>Chi tiết lỗi:</strong><br/>
+                  ❌ Không hiển thị component stack
+                </div>
+              </div>
+              
+                <div class="error-stack-trace">
+                  <div class="error-stack-trace-header">
+                    <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 17v-2m3 2v-4m3 4v-6m2 10H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+                    </svg>
+                    Stack Trace
+                  </div>
+                  <pre>AssertionError [ERR_ASSERTION]: ❌ Không hiển thị component stack
+    at Context.<anonymous> (file:///C:/FS/VRA2/VRA/tests/e2e/display.test.js:267:17)
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)</pre>
+                </div>
+              
+            </div>
+          </div>
           
         </li>
       
-                    </ul>
-                </div>
-            
+                </ul>
+            </div>
 
             <div class="test-section">
                 <div class="section-header">
                     <div class="section-title">
-                        <span class="badge badge-success">Passed Tests (35)</span>
+                        <span class="badge badge-success">Passed Tests (34)</span>
                     </div>
                 </div>
                 <ul class="test-list">
@@ -592,7 +634,7 @@
             <svg class="severity-icon" width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
             </svg>
-            3467ms
+            5964ms
           </span>
           <span class="meta-item">
             <svg class="severity-icon" width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -610,7 +652,7 @@
             <svg class="severity-icon" width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
             </svg>
-            1719ms
+            2984ms
           </span>
           <span class="meta-item">
             <svg class="severity-icon" width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -628,7 +670,7 @@
             <svg class="severity-icon" width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
             </svg>
-            1828ms
+            3318ms
           </span>
           <span class="meta-item">
             <svg class="severity-icon" width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -646,7 +688,7 @@
             <svg class="severity-icon" width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
             </svg>
-            1580ms
+            2614ms
           </span>
           <span class="meta-item">
             <svg class="severity-icon" width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -664,7 +706,7 @@
             <svg class="severity-icon" width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
             </svg>
-            1911ms
+            3004ms
           </span>
           <span class="meta-item">
             <svg class="severity-icon" width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -682,7 +724,7 @@
             <svg class="severity-icon" width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
             </svg>
-            1810ms
+            4085ms
           </span>
           <span class="meta-item">
             <svg class="severity-icon" width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -700,7 +742,7 @@
             <svg class="severity-icon" width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
             </svg>
-            1628ms
+            3745ms
           </span>
           <span class="meta-item">
             <svg class="severity-icon" width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -718,7 +760,7 @@
             <svg class="severity-icon" width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
             </svg>
-            1955ms
+            3875ms
           </span>
           <span class="meta-item">
             <svg class="severity-icon" width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -736,7 +778,7 @@
             <svg class="severity-icon" width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
             </svg>
-            1908ms
+            3133ms
           </span>
           <span class="meta-item">
             <svg class="severity-icon" width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -754,7 +796,7 @@
             <svg class="severity-icon" width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
             </svg>
-            1748ms
+            2262ms
           </span>
           <span class="meta-item">
             <svg class="severity-icon" width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -772,7 +814,7 @@
             <svg class="severity-icon" width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
             </svg>
-            1638ms
+            3681ms
           </span>
           <span class="meta-item">
             <svg class="severity-icon" width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -790,7 +832,7 @@
             <svg class="severity-icon" width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
             </svg>
-            1694ms
+            3129ms
           </span>
           <span class="meta-item">
             <svg class="severity-icon" width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -808,7 +850,7 @@
             <svg class="severity-icon" width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
             </svg>
-            1649ms
+            1630ms
           </span>
           <span class="meta-item">
             <svg class="severity-icon" width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -826,7 +868,7 @@
             <svg class="severity-icon" width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
             </svg>
-            1937ms
+            1918ms
           </span>
           <span class="meta-item">
             <svg class="severity-icon" width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -844,7 +886,7 @@
             <svg class="severity-icon" width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
             </svg>
-            703ms
+            1037ms
           </span>
           <span class="meta-item">
             <svg class="severity-icon" width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -862,7 +904,7 @@
             <svg class="severity-icon" width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
             </svg>
-            1301ms
+            1677ms
           </span>
           <span class="meta-item">
             <svg class="severity-icon" width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -880,7 +922,7 @@
             <svg class="severity-icon" width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
             </svg>
-            1051ms
+            2117ms
           </span>
           <span class="meta-item">
             <svg class="severity-icon" width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -898,7 +940,7 @@
             <svg class="severity-icon" width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
             </svg>
-            114ms
+            198ms
           </span>
           <span class="meta-item">
             <svg class="severity-icon" width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -916,7 +958,7 @@
             <svg class="severity-icon" width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
             </svg>
-            2203ms
+            2336ms
           </span>
           <span class="meta-item">
             <svg class="severity-icon" width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -934,7 +976,7 @@
             <svg class="severity-icon" width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
             </svg>
-            608ms
+            1469ms
           </span>
           <span class="meta-item">
             <svg class="severity-icon" width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -952,7 +994,7 @@
             <svg class="severity-icon" width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
             </svg>
-            38698ms
+            38188ms
           </span>
           <span class="meta-item">
             <svg class="severity-icon" width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -964,31 +1006,13 @@
       </li>
     
       <li class="test-item passed">
-        <div class="test-title">should pass</div>
-        <div class="test-meta">
-          <span class="meta-item">
-            <svg class="severity-icon" width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-            </svg>
-            0ms
-          </span>
-          <span class="meta-item">
-            <svg class="severity-icon" width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-6l-2-2H5a2 2 0 00-2 2z"></path>
-            </svg>
-            C:\FS\VRA2\VRA\tests\e2e\dummy.test.js
-          </span>
-        </div>
-      </li>
-    
-      <li class="test-item passed">
         <div class="test-title">✅ TC-UI-001:Hiển thị đúng tiêu đề và nội dung hero section</div>
         <div class="test-meta">
           <span class="meta-item">
             <svg class="severity-icon" width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
             </svg>
-            1388ms
+            2033ms
           </span>
           <span class="meta-item">
             <svg class="severity-icon" width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -1006,7 +1030,7 @@
             <svg class="severity-icon" width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
             </svg>
-            3764ms
+            3936ms
           </span>
           <span class="meta-item">
             <svg class="severity-icon" width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -1024,7 +1048,7 @@
             <svg class="severity-icon" width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
             </svg>
-            202ms
+            468ms
           </span>
           <span class="meta-item">
             <svg class="severity-icon" width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -1042,7 +1066,7 @@
             <svg class="severity-icon" width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
             </svg>
-            267ms
+            536ms
           </span>
           <span class="meta-item">
             <svg class="severity-icon" width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -1060,7 +1084,7 @@
             <svg class="severity-icon" width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
             </svg>
-            245ms
+            484ms
           </span>
           <span class="meta-item">
             <svg class="severity-icon" width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -1078,7 +1102,7 @@
             <svg class="severity-icon" width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
             </svg>
-            1220ms
+            1549ms
           </span>
           <span class="meta-item">
             <svg class="severity-icon" width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -1096,7 +1120,7 @@
             <svg class="severity-icon" width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
             </svg>
-            1251ms
+            1544ms
           </span>
           <span class="meta-item">
             <svg class="severity-icon" width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -1114,7 +1138,7 @@
             <svg class="severity-icon" width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
             </svg>
-            1191ms
+            1432ms
           </span>
           <span class="meta-item">
             <svg class="severity-icon" width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -1132,7 +1156,7 @@
             <svg class="severity-icon" width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
             </svg>
-            1198ms
+            1465ms
           </span>
           <span class="meta-item">
             <svg class="severity-icon" width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -1150,7 +1174,7 @@
             <svg class="severity-icon" width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
             </svg>
-            1228ms
+            1435ms
           </span>
           <span class="meta-item">
             <svg class="severity-icon" width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -1168,7 +1192,7 @@
             <svg class="severity-icon" width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
             </svg>
-            716ms
+            1227ms
           </span>
           <span class="meta-item">
             <svg class="severity-icon" width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -1186,7 +1210,7 @@
             <svg class="severity-icon" width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
             </svg>
-            2819ms
+            3469ms
           </span>
           <span class="meta-item">
             <svg class="severity-icon" width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -1204,7 +1228,7 @@
             <svg class="severity-icon" width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
             </svg>
-            2252ms
+            2601ms
           </span>
           <span class="meta-item">
             <svg class="severity-icon" width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -1229,7 +1253,7 @@
                 // Animate progress bar
                 setTimeout(() => {
                     const progressValue = document.querySelector('.progress-value');
-                    progressValue.style.width = '94.59%';
+                    progressValue.style.width = '97.14%';
                 }, 300);
 
                 // Add smooth scroll to error stack traces

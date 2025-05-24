@@ -87,7 +87,7 @@
         <div class="container">
             <header>
                 <h1>Báo cáo phân tích mức độ nghiêm trọng</h1>
-                <p>Thời gian: 09:05:56 24/5/2025</p>
+                <p>Thời gian: 10:43:06 24/5/2025</p>
             </header>
             
             <div class="summary">
@@ -97,7 +97,7 @@
                 </div>
                 <div class="summary-item blocker">
                     <div>Blocker</div>
-                    <div class="number">1</div>
+                    <div class="number">0</div>
                 </div>
                 <div class="summary-item cosmetic">
                     <div>Cosmetic</div>
@@ -130,23 +130,13 @@
                     <tbody>
                         
         <tr>
-          <td>should fail</td>
-          <td>C:\FS\VRA2\VRA\tests\e2e\dummy.test.js</td>
-          <td style="color: #fd7e14; font-weight: bold;">🟠 BLOCKER</td>
-          <td style="color: #dc3545;">HIGH</td>
-          <td>Error: Lỗi UI: Nút đăng nhập không hiển thị đúng kích thước</td>
-          <td>Người dùng có thể không thấy tiêu đề trang hoặc gặp lỗi khi ứng dụng cố gắng truy cập thông tin tiêu đề, gây khó khăn trong việc điều hướng và sử dụng ứng dụng.</td>
-          <td>Điều tra nguyên nhân gây ra lỗi `undefined` khi truy cập `titlePath`. Kiểm tra xem `titlePath` đã được khởi tạo đúng cách và có dữ liệu hay không. Sửa lỗi và chạy lại test case.</td>
-        </tr>
-      
-        <tr>
           <td>✅ TC-UI-009: Hiển thị stack component trong section đội ngũ</td>
           <td>C:\FS\VRA2\VRA\tests\e2e\display.test.js</td>
           <td style="color: #ffc107; font-weight: bold;">🟡 COSMETIC</td>
           <td style="color: #28a745;">LOW</td>
           <td>AssertionError [ERR_ASSERTION]: ❌ Không hiển thị component stack</td>
-          <td>Người dùng có thể thấy một phần tử bị thiếu hoặc hiển thị sai trong section đội ngũ, ảnh hưởng đến trải nghiệm người dùng nhưng không làm gián đoạn chức năng chính.</td>
-          <td>Kiểm tra dữ liệu đầu vào cho stack component và logic render để xác định nguyên nhân gây ra lỗi 'undefined'. Sửa lỗi hiển thị để đảm bảo giao diện người dùng nhất quán.</td>
+          <td>Người dùng có thể thấy một phần của giao diện bị thiếu hoặc hiển thị không chính xác, ảnh hưởng đến trải nghiệm người dùng nhưng không làm gián đoạn luồng công việc.</td>
+          <td>Kiểm tra dữ liệu đầu vào và logic hiển thị của stack component để đảm bảo dữ liệu được hiển thị chính xác. Ưu tiên sửa lỗi sau các lỗi chức năng quan trọng.</td>
         </tr>
       
                     </tbody>
@@ -157,13 +147,13 @@
                 <h2>Khuyến nghị</h2>
                 <p>Dựa trên phân tích, những lỗi sau đây cần được ưu tiên xử lý:</p>
                 <ul>
-                    <li><strong>should fail</strong>: Điều tra nguyên nhân gây ra lỗi `undefined` khi truy cập `titlePath`. Kiểm tra xem `titlePath` đã được khởi tạo đúng cách và có dữ liệu hay không. Sửa lỗi và chạy lại test case.</li>
+                    <li>Không có lỗi nghiêm trọng cần ưu tiên xử lý.</li>
                 </ul>
             </div>
             
             <footer>
                 <p>Báo cáo được tạo tự động bởi VRA Test Framework với Gemini AI</p>
-                <p>Thời gian tạo báo cáo: Sat May 24 2025 09:05:56 GMT+0700 (Giờ Đông Dương)</p>
+                <p>Thời gian tạo báo cáo: Sat May 24 2025 10:43:06 GMT+0700 (Giờ Đông Dương)</p>
             </footer>
         </div>
         
