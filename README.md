@@ -1,4 +1,4 @@
-# Readme for: VRA Test Framework
+# README for: VRA Test Framework
 
 Framework kiểm thử tự động cho dự án VRA, hỗ trợ việc chạy test, báo cáo kết quả và phân tích mức độ nghiêm trọng của lỗi.
 
