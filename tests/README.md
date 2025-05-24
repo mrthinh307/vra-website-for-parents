@@ -171,8 +171,3 @@ Báo cáo HTML sẽ hiển thị các lỗi được phân loại và màu sắc
    ```bash
    npm test
    ```
-
-## Lưu ý
-
-- API key của Google Gemini được cấu hình trong file `services/geminiAi.js`. Trong môi trường sản phẩm, nên sử dụng biến môi trường để lưu trữ API key.
-- Tính năng chụp ảnh màn hình yêu cầu cài đặt Puppeteer hoặc trình duyệt tương thích. 
