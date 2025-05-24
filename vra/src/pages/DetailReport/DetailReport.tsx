@@ -77,13 +77,13 @@ const DetailReport: React.FC = () => {
       const feedbacks: { [key: number]: { summary: string, full: string } } = {};
 
       for (const task of tasks) {
-        const promptSummary = `Hãy đưa ra nhận xét tóm tắt ngắn gọn (tối đa 20 từ) về nhiệm vụ "${task.name}" trong bài tập rửa tay của trẻ em bị tự kỷ. 
+        const promptSummary = `Hãy đưa ra nhận xét tóm tắt ngắn gọn (tối đa 20 từ) về nhiệm vụ "${task.name}" trong bài tập thực hành của trẻ em bị tự kỷ. 
         Thông tin bổ sung: 
         - Số lần nhắc nhở: ${task.remind} lần (số lần càng nhiều càng không tốt)
         - Thời gian phản hồi: ${task.response}s (thời gian >5s là chậm)
         - Hãy đưa ra nhận xét về kỹ thuật thực hiện nhiệm vụ.`;
 
-        const promptDetailed = `Hãy đưa ra nhận xét chi tiết (khoảng 3-4 câu) về nhiệm vụ "${task.name}" trong bài tập rửa tay của trẻ em bị tự kỷ. 
+        const promptDetailed = `Hãy đưa ra nhận xét chi tiết (khoảng 3-4 câu) về nhiệm vụ "${task.name}" trong bài tập thực hành của trẻ em bị tự kỷ. 
         Phân tích các yếu tố sau:
         1. Kỹ thuật thực hiện nhiệm vụ
         2. Thời gian phản hồi (${task.response}s, >5s được coi là chậm)
@@ -155,16 +155,16 @@ const DetailReport: React.FC = () => {
 
         return `
         Nhiệm vụ: ${task.name}
-        - Số lần nhắc nhở: ${task.remind} lần (càng ít càng tốt, ≥3 lần là cần cải thiện)
-        - Thời gian phản hồi: ${task.response}s (≤5s là tốt, >8s là cần cải thiện)
+        - Số lần nhắc nhở: ${task.remind} lần (càng ít điểm càng cao, ≥3 lần là cần cải thiện)
+        - Thời gian phản hồi: ${task.response}s (≤3s là tốt cộng thêm điểm, >8s là cần cải thiện)
         - Ghi chú: ${task.note}
-        ${feedback ? `- Nhận xét chi tiết: ${feedback.full}` : ''}
+        ${feedback ? `- Nhận xét chi tiết: ${feedback.summary}` : ''}
         `;
       }).join('\n');
 
       // Create prompt for overall evaluation
       const evaluationPrompt = `
-      Hãy đánh giá tổng quan về buổi học rửa tay của học sinh dựa trên thông tin về từng nhiệm vụ sau:
+      Hãy đánh giá tổng quan về buổi học thực hành của học sinh dựa trên thông tin về từng nhiệm vụ sau:
       
       ${taskData}
       
@@ -196,7 +196,7 @@ const DetailReport: React.FC = () => {
 
       // Set state with AI generated content
       setScore(validScore);
-      setEvaluationSummary(extractedSummary || "Học sinh đã hoàn thành các nhiệm vụ trong buổi học với một số điểm cần cải thiện. Cần hướng dẫn thêm về kỹ năng xịt xà phòng và rửa tay kỹ hơn.");
+      setEvaluationSummary(extractedSummary || "Học sinh đã hoàn thành các nhiệm vụ trong buổi học với một số điểm cần cải thiện. Cần hướng dẫn thêm về kỹ năng xịt xà phòng và thực hành kỹ hơn.");
     } catch (error) {
       console.error("Error generating AI evaluation:", error);
       // Show error state
@@ -207,7 +207,7 @@ const DetailReport: React.FC = () => {
         setEvaluationError(false);
         // Fallback to default values on error
         setScore(7);
-        setEvaluationSummary("Học sinh đã hoàn thành các nhiệm vụ, nhưng còn một số điểm cần cải thiện. Đề xuất tăng cường hướng dẫn về các thao tác rửa tay đúng cách.");
+        setEvaluationSummary("Học sinh đã hoàn thành các nhiệm vụ, nhưng còn một số điểm cần cải thiện. Đề xuất tăng cường hướng dẫn về các thao tác thực hành đúng cách.");
       }, 3000);
     } finally {
       // End loading state
@@ -255,7 +255,7 @@ const DetailReport: React.FC = () => {
             <div className="relative h-full flex items-center">
               <div className="px-8 md:px-12 py-6 text-white">
                 <h1 className="text-3xl md:text-4xl font-bold mb-2 text-white drop-shadow-md">Báo Cáo Chi Tiết</h1>
-                <p className="text-blue-100 max-w-xl">Thông tin chi tiết về buổi học rửa tay của học sinh</p>
+                <p className="text-blue-100 max-w-xl">Thông tin chi tiết về buổi học thực hành của học sinh</p>
               </div>
             </div>
           </div>
@@ -454,7 +454,7 @@ const DetailReport: React.FC = () => {
                         icon={MessageCircle}
                         text="Trao đổi thêm với VRA AI"
                         size="full"
-                        className="bg-[#19395E] hover:bg-[#254b76] text-white rounded-lg font-medium transition-all duration-200 shadow-sm flex items-center justify-center group text-base glow-button relative"
+                        className="bg-[#19395E] hover:bg-[#254b76] text-white rounded-lg font-medium transition-all duration-100 shadow-sm flex items-center justify-center group text-base glow-button relative animate-pulse-slow overflow-hidden"
                         style={{
                           boxShadow: '0 0 10px 2px rgba(25, 57, 94, 0.6), 0 0 20px 4px rgba(25, 57, 94, 0.4)'
                         }}

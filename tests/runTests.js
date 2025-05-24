@@ -60,33 +60,27 @@ async function main() {
   try {
     // Preparation
     const reportFormat = argv.format === 'all' ? null : argv.format;
-    const reportFilename = `${argv.output}`;
+    let reportFilename = `${argv.output}`;
     
-    // Runtime options
-    const options = {
-      reportFormat,
-      reportFilename,
-      takeScreenshots: argv.screenshot,
-      severityAnalysis: argv.analyze
-    };
-    
-    // Select the test mode
+    // Add test file name to report filename if specific file is being tested
     if (argv.file) {
       const testFile = path.resolve(process.cwd(), argv.file);
       if (fs.existsSync(testFile)) {
+        // Extract filename without extension and add to report name
+        const testFileName = path.basename(testFile, path.extname(testFile));
+        reportFilename = `${reportFilename}-${testFileName}`;
         console.log(`Chạy test từ file: ${testFile}`);
-        await testRunner.runTests(testFile, options);
+        await testRunner.runTests(testFile, { reportFormat, reportFilename, takeScreenshots: argv.screenshot, severityAnalysis: argv.analyze });
       } else {
         console.error(`Không tìm thấy file: ${testFile}`);
         process.exit(1);
       }
     } else if (argv.e2e) {
+      // For e2e tests, add e2e identifier
+      reportFilename = `${reportFilename}-e2e`;
       console.log('Chạy các test end-to-end...');
-      await testRunner.runE2ETests(options);
+      await testRunner.runE2ETests({ reportFormat, reportFilename, takeScreenshots: argv.screenshot, severityAnalysis: argv.analyze });
     } else if (argv.all) {
-      // console.log('Chạy tất cả các test...');
-      // const files = testRunner.getTestFiles('.');
-      // await testRunner.runTests(files, options);
       console.log('Tính năng chưa hoàn thành');
       process.exit(1);
     } else {
@@ -94,7 +88,7 @@ async function main() {
       process.exit(1);
     }
     
-    console.log('Đã hoàn thành việc chạy test và tạo báo cáo.');
+    console.log(`Đã hoàn thành việc chạy test và tạo báo cáo: ${reportFilename}`);
     
     // Hiển thị thông báo về tính năng phân tích mức độ nghiêm trọng
     if (argv.analyze) {

@@ -1,4 +1,4 @@
-import { Builder, By, until, Key } from 'selenium-webdriver';
+import { Builder, By, until } from 'selenium-webdriver';
 import 'chromedriver';
 import assert from 'assert';
 
@@ -9,9 +9,9 @@ describe('Register Functionality', function () {
     // Assuming this XPath correctly targets the button that opens the registration modal
     const OPEN_REGISTER_MODAL_BUTTON_XPATH = "//*[@id='root']/div/div/div/div[2]/button[2]";
     // XPath for the submit button within the registration modal
-    const SUBMIT_REGISTER_BUTTON_XPATH = "//div[contains(@class, 'modal-visible')]//button[.//span[contains(text(),'Đăng ký')]]";
+    const SUBMIT_REGISTER_BUTTON_XPATH = '//*[@id="root"]/div/main/div/div/div/div/div[2]/button';
     // XPath to identify the visible registration modal
-    const VISIBLE_MODAL_XPATH = "//div[contains(@class, 'modal') and contains(@class, 'modal-visible')]";
+    const VISIBLE_MODAL_XPATH = "//div[contains(@class, 'modal-overlay')]";
 
     // Helper function to fill form fields
     async function fillFormField(fieldName, value) {
@@ -46,6 +46,7 @@ describe('Register Functionality', function () {
 
     before(async function () {
         driver = await new Builder().forBrowser('chrome').build();
+        await driver.manage().window().maximize(); // Maximize browser window
     });
 
     after(async function () {
@@ -80,17 +81,13 @@ describe('Register Functionality', function () {
         const submitButton = await driver.findElement(By.xpath(SUBMIT_REGISTER_BUTTON_XPATH));
         await submitButton.click();
 
-        // Wait for and verify the success alert
-        await driver.wait(until.alertIsPresent(), 7000);
-        const alert = await driver.switchTo().alert();
-        const alertText = await alert.getText();
-        assert.strictEqual(alertText, "Đăng ký thành công!");
-        await alert.accept();
-
         // Verify modal is closed after successful registration
         await driver.wait(until.stalenessOf(submitButton), 7000); // Wait for modal to disappear
         const modalsAfterSuccess = await driver.findElements(By.xpath(VISIBLE_MODAL_XPATH));
         assert.strictEqual(modalsAfterSuccess.length, 0, 'Registration modal still visible after successful registration.');
+
+        const successMessage = await driver.findElement(By.xpath('//*[@id="root"]/div/main/div/div/section[1]/div/div/div[2]/div'));
+        assert(await successMessage.isDisplayed(), 'Đăng ký thành công!');
     });
 
     const validTestData = {
@@ -227,16 +224,16 @@ describe('Register Functionality', function () {
         await assertErrorState("Vui lòng nhập mật khẩu", "password");
     });
 
-    it('❌ TC-DK-012: Đăng ký thất bại khi "Mật khẩu" ít hơn 8 ký tự', async function () {
+    it('❌ TC-DK-012: Đăng ký thất bại khi "Mật khẩu" ít hơn 6 ký tự', async function () {
         await fillFormField('name', validTestData.name);
         await fillFormField('email', validTestData.email);
         await fillFormField('phone', validTestData.phone);
-        await fillFormField('password', 'Pass123'); // 7 chars
-        await fillFormField('confirmPassword', 'Pass123');
+        await fillFormField('password', '123'); // 7 chars
+        await fillFormField('confirmPassword', 'Pass12');
 
         const submitButton = await driver.findElement(By.xpath(SUBMIT_REGISTER_BUTTON_XPATH));
         await submitButton.click();
-        await assertErrorState("Mật khẩu phải có ít nhất 8 ký tự", "password");
+        await assertErrorState("Mật khẩu phải có ít nhất 6 ký tự", "password");
     });
 
     // --- Confirm Password Field Tests ---

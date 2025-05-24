@@ -7,6 +7,7 @@ describe('HomePage Display Tests', function () {
 
     before(async function () {
         driver = await new Builder().forBrowser('chrome').build();
+        await driver.manage().window().maximize();
     });
 
     after(async function () {
@@ -92,7 +93,7 @@ describe('HomePage Display Tests', function () {
             await driver.get("http://localhost:3000/");
             
             // Kiểm tra form đăng nhập
-            const loginForm = await driver.findElement(By.id('login-form'));
+            const loginForm = await driver.findElement(By.xpath('//*[@id="login-form"]'));
             assert(await loginForm.isDisplayed(), '❌ Form đăng nhập không hiển thị');
 
             // Kiểm tra các trường nhập liệu
