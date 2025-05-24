@@ -59,7 +59,7 @@ const EvaluationChatModal: React.FC<EvaluationChatModalProps> = ({
       
       // Create prompt
       const prompt = `
-      Bạn là VRA AI, một trợ lý phân tích buổi học rửa tay của trẻ bị tự kỷ.
+      Bạn là VRA AI, một trợ lý phân tích buổi học thực hành của trẻ bị tự kỷ.
       
       Thông tin về buổi học:
       Điểm số tổng thể: ${score}/10

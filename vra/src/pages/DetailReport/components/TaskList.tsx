@@ -48,15 +48,15 @@ const TaskList: React.FC<TaskListProps> = ({
   useEffect(() => {
     const fetchTasks = async () => {
       if (!lessonProgressId) {
-        // Dữ liệu demo cho trường hợp không có lessonProgressId
-        const demoTasks: Task[] = [
-          { stt: 1, name: "Bật vòi nước", remind: 4, response: 3.5, note: "Bật vòi hơi lâu" },
-          { stt: 2, name: "Làm ướt tay", remind: 2, response: 2.7, note: "Phản ứng chậm" },
-          { stt: 3, name: "Xịt xà phòng", remind: 4, response: 8.2, note: "Chưa nắm được cách xịt xà phòng" },
-          { stt: 4, name: "Rửa tay", remind: 2, response: 5.3, note: "Rửa tay không kỹ" },
-          { stt: 5, name: "Tắt vòi nước", remind: 4, response: 1.2, note: "Tắt sai cách" }
-        ];
-        setTasks(demoTasks);
+        // // Dữ liệu demo cho trường hợp không có lessonProgressId
+        // const demoTasks: Task[] = [
+        //   { stt: 1, name: "Bật vòi nước", remind: 4, response: 3.5, note: "Bật vòi hơi lâu" },
+        //   { stt: 2, name: "Làm ướt tay", remind: 2, response: 2.7, note: "Phản ứng chậm" },
+        //   { stt: 3, name: "Xịt xà phòng", remind: 4, response: 8.2, note: "Chưa nắm được cách xịt xà phòng" },
+        //   { stt: 4, name: "Thực hành", remind: 2, response: 5.3, note: "Thực hành không kỹ" },
+        //   { stt: 5, name: "Tắt vòi nước", remind: 4, response: 1.2, note: "Tắt sai cách" }
+        // ];
+        // setTasks(demoTasks);
         setLoading(false);
         return;
       }
@@ -90,7 +90,7 @@ const TaskList: React.FC<TaskListProps> = ({
               Hiển thị {tasks.length} nhiệm vụ
             </span>
           </h2>
-          <p className="text-gray-500 text-sm mt-1">Chi tiết các nhiệm vụ trong buổi học rửa tay</p>
+          <p className="text-gray-500 text-sm mt-1">Chi tiết các nhiệm vụ trong buổi học thực hành</p>
         </div>
       </div>
 
@@ -191,7 +191,7 @@ const TaskList: React.FC<TaskListProps> = ({
                 >
                   <td className="px-2 py-4 text-base text-gray-700 font-medium text-center">{task.stt}</td>
                   <td className="px-3 py-4 text-base text-center">
-                    <span className="font-medium text-blue-600">{task.name}</span>
+                    <span className="font-medium text-blue-600 capitalize">{task.name}</span>
                   </td>
                   <td className="px-2 py-4 text-base text-center">
                     {task.remind >= 3 ? (

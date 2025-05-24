@@ -40,14 +40,14 @@ const FeedbackDetailModal: React.FC<FeedbackDetailModalProps> = ({
         </div>
         
         {/* Feedback Content */}
-        <div className="p-6 md:p-8">
+        <div className="p-6 md:p-8 max-h-[60vh] overflow-y-auto">
           <div className="flex items-start space-x-4">
             <div className="bg-blue-100 rounded-full p-2 mt-1 flex-shrink-0">
               <Bot size={22} className="text-[#19395E]" />
             </div>
-            <div>
+            <div className="flex-1 min-w-0">
               <div className="text-sm text-[#19395E] font-medium mb-2">Phân tích của VRA AI:</div>
-              <div className="text-gray-700 leading-relaxed bg-gray-50 p-4 rounded-lg border border-gray-100 shadow-sm">
+              <div className="text-gray-700 leading-relaxed bg-gray-50 p-4 rounded-lg border border-gray-100 shadow-sm break-words">
                 {taskFeedbacks[currentTask.stt].full}
               </div>
             </div>
